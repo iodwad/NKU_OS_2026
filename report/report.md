@@ -90,8 +90,6 @@ Reset ROM -> OpenSBI -> kern_entry -> kern_init -> SBI 输出
 
 本模块分析课程代码如何生成可加载的内核镜像，以及内核入口和启动栈在内存中的位置。
 
-\Needspace{6\baselineskip}
-
 **涉及的核心文件和函数：**
 
 - `Makefile`
@@ -360,8 +358,6 @@ GDB 连接后观察到 `PC = 0x1000`、`priv = 3`，CPU 处于 M-mode。此时 s
 <a id="fig-opensbi-kern-entry"></a>
 ![图6 OpenSBI 入口与 kern_entry 断点](./images/accepted_14_opensbi_to_kern_entry.png)
 
-\Needspace{14\baselineskip}
-
 Reset ROM 部分逐条执行，OpenSBI 初始化部分使用 continue 运行到内核断点。kern_entry 的第一条机器指令为 `auipc sp,0x3`；执行一次 si 后，PC 变为 0x80200004，sp 变为 0x80203000，如[图1](#user-content-fig-la-stack)所示。
 
 六次 ROM 单步后的关键寄存器记录如下。这个过程中 priv 始终为 3，即 M-mode。
@@ -402,8 +398,6 @@ Reset ROM 部分逐条执行，OpenSBI 初始化部分使用 continue 运行到�
 6. **`0x1014: jr t0`**：跳转到 0x80000000，开始执行 OpenSBI。
 
 因此，这几条指令准备了 hart ID、设备树地址和 OpenSBI 动态启动信息，并将 CPU 控制权转移到 OpenSBI。OpenSBI 完成初始化后，再进入 0x80200000，即 uCore 的 kern_entry。
-
-\Needspace{30\baselineskip}
 
 ## 五、测试与验证
 
