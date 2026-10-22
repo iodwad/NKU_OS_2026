@@ -1,0 +1,3 @@
+$ gcc -fsanitize=address,undefined -fno-sanitize-recover=all -fno-omit-frame-pointer -fno-pie -no-pie -std=gnu99 -fno-builtin -Wall -Werror -Wno-unused -O1 -g -Ilibs -Ikern/mm -Ikern/debug -Ikern/driver tests/slub_host_tests.c -o /mnt/d/college_study_materials/junior_year_fall/OS/lab2/publish_work/lab2/code/evidence/slub_tests/publish_20261022/slub_host_tests
+
+EXIT_CODE=0

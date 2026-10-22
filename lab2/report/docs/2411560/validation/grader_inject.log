@@ -1,0 +1,4 @@
+$ python3 tools/inject.py /tmp/lab2_publish_grade_paths_fxn1qrb4
+lab2 injection complete
+
+EXIT_CODE=0

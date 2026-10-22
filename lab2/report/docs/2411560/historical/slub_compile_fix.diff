@@ -1,0 +1,11 @@
+--- before_typo_fix/slub.c
++++ after_typo_fix/slub.c
+@@ -217,7 +217,7 @@
+     assert(displacement < (size_t)slab->slots * slab->object_bytes);
+     assert(displacement % slab->object_bytes == 0);
+     size_t slot = displacement / slab->object_bytes;
+-    assert(slub->inuse > 0 && slub_slot_used(slab, slot));
++    assert(slab->inuse > 0 && slub_slot_used(slab, slot));
+     bool was_full = slab->inuse == slab->slots;
+     slab->used[slot/64] &= ~(1ULL << (slot%64));
+     *(uint16_t *)ptr = slab->free_head;

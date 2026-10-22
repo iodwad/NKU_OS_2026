@@ -1,0 +1,11 @@
+{
+  "pc": "0xffffffffc0200118",
+  "panic": false,
+  "live_objects": 0,
+  "slab_count": 0,
+  "owner_all_zero": true,
+  "all_partial_lists_empty": true,
+  "free_pages": 31723,
+  "slab_header_struct_bytes": 88,
+  "owner_bytes": 262144
+}

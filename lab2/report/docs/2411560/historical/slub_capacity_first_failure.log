@@ -1,0 +1,14 @@
+$ /mnt/d/college_study_materials/junior_year_fall/OS/lab2/slub_work/evidence/slub_tests/host_first_run/slub_host_tests oom_small
+slub_init: lazy slabs, 16-byte alignment, small classes 16..2048 bytes
+PMM alloc ppn=0x80200 original=1 actual=1 raw=0
+TRACE op=1 alloc slot=0 id=1 ptr=0x400000200060 size=1000 signature=2654435929 free=1
+TRACE op=2 alloc slot=1 id=2 ptr=0x400000200460 size=1000 signature=1013903498 free=1
+TRACE op=3 alloc slot=2 id=3 ptr=0x400000200860 size=1000 signature=3668340475 free=1
+PMM alloc ppn=0x80201 original=1 actual=1 raw=0
+TRACE op=4 alloc slot=3 id=4 ptr=0x400000201060 size=1000 signature=2027808044 free=0
+TRACE op=5 alloc slot=4 id=5 ptr=0x400000201460 size=1000 signature=387277725 free=0
+TRACE op=6 alloc slot=5 id=6 ptr=0x400000201860 size=1000 signature=3041712590 free=0
+TRACE op=7 fail size=1000 free=0
+FAIL oom_small:356 take(n)>=0
+
+EXIT_CODE=1

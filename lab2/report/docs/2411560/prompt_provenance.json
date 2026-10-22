@@ -1,0 +1,22 @@
+{
+  "Buddy_Implementation_Prompt.md": {
+    "source": "/mnt/d/college_study_materials/junior_year_fall/OS/lab2/buddy_work/evidence/final_audit/implementation_prompt.txt",
+    "sha256": "35720eba7ddb4acb4db3e92d3af37bf2fc954b68715090d8d452d4253d568cce",
+    "bytes": 17875
+  },
+  "Buddy_Test_Prompt.md": {
+    "source": "/mnt/d/college_study_materials/junior_year_fall/OS/lab2/buddy_work/evidence/final_audit/test_prompt.txt",
+    "sha256": "c9bb37edfd16a1d91e316abe3b16ffc5fce2e83b71cc858f8b2135173654d4ec",
+    "bytes": 20100
+  },
+  "SLUB_Implementation_Prompt.md": {
+    "source": "/mnt/d/college_study_materials/junior_year_fall/OS/lab2/slub_work/evidence/slub_implementation/original_prompt.txt",
+    "sha256": "a066c2f5e92d11bc91943db8df924e83d8f89f4d33cd83f50ada7083dc895727",
+    "bytes": 19666
+  },
+  "SLUB_Test_Prompt.md": {
+    "source": "/mnt/d/college_study_materials/junior_year_fall/OS/lab2/slub_work/evidence/slub_tests/original_prompt.txt",
+    "sha256": "b740f57ec84c3b0c5c8f4e71ee6eddbc79be50ae8e64e0648ee6dcfe05192e6e",
+    "bytes": 24478
+  }
+}

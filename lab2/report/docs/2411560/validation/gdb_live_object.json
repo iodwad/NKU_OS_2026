@@ -1,0 +1,11 @@
+{
+  "object_va": "0xffffffffc0416080",
+  "object_pa": "0x80416080",
+  "slab_va": "0xffffffffc0416000",
+  "slab_pa": "0x80416000",
+  "descriptor_va": "0xffffffffc02df370",
+  "descriptor_index": 1046,
+  "slot_size": 32,
+  "header_bytes": 96,
+  "data_pattern_verified": true
+}

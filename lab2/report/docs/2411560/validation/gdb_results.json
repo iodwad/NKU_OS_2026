@@ -1,0 +1,5 @@
+{
+  "gdb_exit": 0,
+  "qemu_exit": 0,
+  "sample_and_final_state_verified": true
+}

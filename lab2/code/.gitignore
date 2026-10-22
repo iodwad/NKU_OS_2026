@@ -1,0 +1,6 @@
+/bin/
+/obj/
+/evidence/
+__pycache__/
+core
+core.*
