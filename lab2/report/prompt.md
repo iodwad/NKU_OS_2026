@@ -1,5 +1,813 @@
 # Lab2 AI Prompt 原始归档
 
+本文件按任务归档实验中使用的提示词，各部分署名单独列出。
+
+- 2412565—张宸笛号：功能模块一·任务一（物理内存探测与页描述符初始化）、功能模块二·任务二（Best-Fit 连续物理内存分配算法）。
+- 2411560—朱泽帅：Buddy 实现与测试、SLUB 实现与测试，原有四份归档保留在后文。
+
+以下任务一、任务二根据提供的提示词整理，分别收录准备 `[RELY]` 的提示词和完整实现提示词。原文中的工程路径与源码状态描述保留其使用时的上下文。
+
+## 功能模块一：物理内存初始化
+
+### 任务一：实现物理内存探测与页描述符初始化功能
+
+负责人：2412565—张宸笛号。
+
+#### 1. 准备 [RELY] 的提示词
+
+我正在完成 OSLab 任务一：实现物理内存探测与页描述符初始化功能。
+
+目标函数：
+
+```
+static void page_init(void);
+```
+
+目标文件：
+`kern/mm/pmm.c`
+
+请你阅读当前项目的真实源码，帮助我编写符合实验要求的四段式提示词中的 [RELY] 部分。
+
+**本阶段只允许读取和分析源码，禁止修改任何文件，也不要实现 page_init()。**
+
+##### 任务说明
+
+`page_init()` 需要根据设备树提供的物理内存信息，建立可管理物理页的描述符布局，排除 OpenSBI、内核镜像和页描述符数组占用空间，再将完整空闲页面交给当前物理内存管理器管理。
+
+它应正确设置 `va_pa_offset`、`npage`、`pages`，输出物理内存探测范围，并完成初始空闲区注册。
+
+##### 源码检查要求
+
+请从 `kern/mm/pmm.c` 开始，沿着 include、函数声明和函数调用关系，查找相关定义。
+
+重点分析：
+
+1. `page_init()` 和 `pmm_init()` 的定义及调用关系。
+2. `get_memory_base()`、`get_memory_size()` 的声明、实现及返回值语义。
+3. `va_pa_offset`、`npage`、`pages` 的声明、类型和使用方式。
+4. `struct Page` 的完整定义、页面状态相关宏及其语义。
+5. `pa2page()` 如何将物理地址转换为 Page 描述符地址。
+6. `init_memmap()` 的实际声明、调用方式，以及 `pmm_manager` 的初始化时序。
+7. 物理内存上下界、地址转换和页面对齐相关宏定义。
+8. 链接符号 `end` 的声明、地址类型及其与内核镜像的关系。
+9. OpenSBI 和内核镜像的保留范围在当前项目中的确定方式。
+
+##### 输出格式
+
+请首先输出一份可以直接放入实验提示词的 [RELY]：
+
+[RELY]
+
+###### 1. 相关宏定义
+
+复制项目中实际存在的、与本任务直接相关的宏定义。
+
+###### 2. 数据结构
+
+复制 `struct Page` 及必要的相关数据结构定义。
+
+###### 3. 全局变量和链接符号
+
+复制相关变量的真实声明或定义，并说明其含义。
+
+###### 4. 可用函数与接口
+
+复制相关函数的真实签名，并简要说明其参数、返回值和用途。
+
+###### 5. 关键内存布局约定
+
+说明物理地址、虚拟地址、物理页号与 Page 描述符之间的转换关系，以及相关物理内存边界约定。
+
+##### 额外要求
+
+- 所有代码必须从真实工程文件中提取，不能凭经验编造。
+- 每组定义都需要注明来源文件及行号。
+- 不要把无关头文件完整复制出来，只保留当前任务所需的最小上下文。
+- 如果宏或函数依赖其他重要定义，应继续查找其依赖。
+- 区分源码明确规定的事实和你根据源码推导出的结论。
+- 对无法确认的内容明确标注“待确认”，不要猜测。
+- 最后单独列出可能影响 page_init() 实现的关键注意事项。
+
+本轮只完成源码分析和 [RELY] 整理，不进行任何代码修改。
+
+#### 2. 完整实现提示词
+
+[PROMPT]
+
+**任务**：修改 `kern/mm/pmm.c` 文件，实现 `page_init()` 函数，完成物理内存探测与物理页描述符初始化。
+
+根据设备树提供的物理内存信息，确定内核可管理的物理内存范围，建立物理页与 `Page` 描述符之间的对应关系，排除 OpenSBI、内核镜像以及页描述符数组等已占用区域，并将剩余完整空闲物理页注册到当前物理内存管理器，为后续物理页分配提供正确的初始状态。
+
+**操作要求**：
+
+1. 必须直接修改项目中的 `kern/mm/pmm.c`，而不是仅展示代码。
+2. 保留已有代码结构、函数签名及其他功能，只修改完成本任务所必需的代码。
+3. 优先使用项目已有的宏定义、数据结构和辅助函数，不得自行假设不存在的接口。
+4. 不得引入与当前任务无关的功能，不得修改现有公开接口。
+
+**输出要求**：根据下面的 [RELY]、[GUARANTEE] 和 [SPECIFICATION] 完成实现。修改后检查代码是否满足行为规格，并报告实际完成的验证。
+
+[RELY]
+
+以下代码片段均摘自当前工程。标为“源码事实”的内容有直接定义或调用依据；标为“推导”的内容由这些定义计算得到。
+
+###### 1. 相关宏定义
+
+页大小、物理页号和对齐操作分别定义在 [mmu.h (line 9)](/home/iodwad/OS/lab2/kern/mm/mmu.h:9) 与 [defs.h (line 54)](/home/iodwad/OS/lab2/libs/defs.h:54)：
+
+```
+#define PGSIZE          4096
+#define PGSHIFT         12
+#define PPN(la) (((uintptr_t)(la)) >> PGSHIFT)
+
+#define ROUNDDOWN(a, n) ({                                          \
+            size_t __a = (size_t)(a);                               \
+            (typeof(a))(__a - __a % (n));                           \
+        })
+
+#define ROUNDUP(a, n) ({                                            \
+            size_t __n = (size_t)(n);                               \
+            (typeof(a))(ROUNDDOWN((size_t)(a) + __n - 1, __n));     \
+        })
+```
+
+内存边界与映射常量摘自 [memlayout.h (line 5)](/home/iodwad/OS/lab2/kern/mm/memlayout.h:5)，DRAM 起点摘自 [riscv.h (line 152)](/home/iodwad/OS/lab2/libs/riscv.h:152)：
+
+```
+#define KERNBASE            0xFFFFFFFFC0200000
+#define KMEMSIZE            0x7E00000
+#define KERNTOP             (KERNBASE + KMEMSIZE)
+#define PHYSICAL_MEMORY_END         0x88000000
+#define PHYSICAL_MEMORY_OFFSET      0xFFFFFFFF40000000
+#define KERNEL_BEGIN_PADDR          0x80200000
+#define KERNEL_BEGIN_VADDR          0xFFFFFFFFC0200000
+
+#define DRAM_BASE          0x80000000
+```
+
+页面状态宏摘自 [memlayout.h (line 41)](/home/iodwad/OS/lab2/kern/mm/memlayout.h:41)：
+
+```
+#define PG_reserved                 0
+#define PG_property                 1
+
+#define SetPageReserved(page)       ((page)->flags |= (1UL << PG_reserved))
+#define ClearPageReserved(page)     ((page)->flags &= ~(1UL << PG_reserved))
+#define PageReserved(page)          (((page)->flags >> PG_reserved) & 1)
+#define SetPageProperty(page)       ((page)->flags |= (1UL << PG_property))
+#define ClearPageProperty(page)     ((page)->flags &= ~(1UL << PG_property))
+#define PageProperty(page)          (((page)->flags >> PG_property) & 1)
+```
+
+**源码事实：**`PG_reserved` 表示不能交给页分配器的保留页；`PG_property` 表示空闲连续块的首个描述符，其 `property` 保存该块页数。语义来自 [memlayout.h (line 34)](/home/iodwad/OS/lab2/kern/mm/memlayout.h:34) 的字段及宏注释，并与 [default_pmm.c (line 18)](/home/iodwad/OS/lab2/kern/mm/default_pmm.c:18) 的实现一致。
+
+###### 2. 数据结构
+
+`Page` 的完整定义摘自 [memlayout.h (line 34)](/home/iodwad/OS/lab2/kern/mm/memlayout.h:34)；其中的链表类型摘自 [list.h (line 17)](/home/iodwad/OS/lab2/libs/list.h:17)：
+
+```
+struct list_entry {
+    struct list_entry *prev, *next;
+};
+typedef struct list_entry list_entry_t;
+
+struct Page {
+    int ref;
+    uint64_t flags;
+    unsigned int property;
+    list_entry_t page_link;
+};
+```
+
+物理内存管理器接口摘自 [pmm.h (line 15)](/home/iodwad/OS/lab2/kern/mm/pmm.h:15)：
+
+```
+struct pmm_manager {
+    const char *name;
+    void (*init)(void);
+    void (*init_memmap)(struct Page *base, size_t n);
+    struct Page *(*alloc_pages)(size_t n);
+    void (*free_pages)(struct Page *base, size_t n);
+    size_t (*nr_free_pages)(void);
+    void (*check)(void);
+};
+```
+
+相关类型定义摘自 [defs.h (line 22)](/home/iodwad/OS/lab2/libs/defs.h:22)：
+
+```
+typedef unsigned long long uint64_t;
+typedef uint64_t uintptr_t;
+typedef uintptr_t size_t;
+typedef size_t ppn_t;
+```
+
+###### 3. 全局变量和链接符号
+
+实际定义摘自 [pmm.c (line 14)](/home/iodwad/OS/lab2/kern/mm/pmm.c:14)，对应的外部声明见 [pmm.h (line 78)](/home/iodwad/OS/lab2/kern/mm/pmm.h:78)：
+
+```
+struct Page *pages;
+size_t npage = 0;
+uint64_t va_pa_offset;
+const size_t nbase = DRAM_BASE / PGSIZE;
+const struct pmm_manager *pmm_manager;
+```
+
+**源码事实：**`pages` 是描述符数组的内核虚拟地址；`nbase` 是 DRAM 起点的物理页号。由 `page2ppn()` 和 `pa2page()` 可知，`npage` 用作**物理页号上界**，不是 `pages` 数组的元素数；当内存从 `DRAM_BASE` 连续延伸至该上界时，数组元素数为 `npage - nbase`。`va_pa_offset` 参与虚实地址换算。[pmm.c (line 14)](/home/iodwad/OS/lab2/kern/mm/pmm.c:14)、[pmm.h (line 83)](/home/iodwad/OS/lab2/kern/mm/pmm.h:83)
+
+链接脚本在 [kernel.ld (line 7)](/home/iodwad/OS/lab2/tools/kernel.ld:7) 将内核起始虚拟地址设为 `0xFFFFFFFFC0200000`，并在 `.bss` 之后以 `PROVIDE(end = .);` 定义 `end`。[init.c (line 18)](/home/iodwad/OS/lab2/kern/init/init.c:18) 和 [test_lab2.c (line 14)](/home/iodwad/OS/lab2/tools/test_lab2.c:14) 均以如下形式声明它：
+
+```
+extern char end[];
+```
+
+**源码事实：**`end` 是内核镜像末尾的**虚拟地址符号**，不是保存地址值的变量；内核已经用它确定需清零的 `.bss` 范围。[init.c (line 28)](/home/iodwad/OS/lab2/kern/init/init.c:28)
+
+###### 4. 可用函数与接口
+
+设备树接口的真实声明见 [dtb.h (line 10)](/home/iodwad/OS/lab2/kern/driver/dtb.h:10)：
+
+```
+void dtb_init(void);
+uint64_t get_memory_base(void);
+uint64_t get_memory_size(void);
+```
+
+**源码事实：\**两个 getter 直接返回 `dtb.c` 中初始为零的 `memory_base`、`memory_size`；`dtb_init()` 成功解析 `memory` 节点的 `reg` 属性后才更新它们。[dtb.c (line 78)](/home/iodwad/OS/lab2/kern/driver/dtb.c:78)、[dtb.c (line 103)](/home/iodwad/OS/lab2/kern/driver/dtb.c:103)、[dtb.c (line 144)](/home/iodwad/OS/lab2/kern/driver/dtb.c:144) 因而返回值分别是物理内存\**起始地址**与**字节长度**，不是末地址。[dtb.c (line 129)](/home/iodwad/OS/lab2/kern/driver/dtb.c:129)
+
+物理地址与描述符转换的实际实现见 [pmm.h (line 83)](/home/iodwad/OS/lab2/kern/mm/pmm.h:83)：
+
+```
+static inline ppn_t page2ppn(struct Page *page) { return page - pages + nbase; }
+
+static inline uintptr_t page2pa(struct Page *page) {
+    return page2ppn(page) << PGSHIFT;
+}
+
+static inline struct Page *pa2page(uintptr_t pa) {
+    if (PPN(pa) >= npage) {
+        panic("pa2page called with invalid pa");
+    }
+    return &pages[PPN(pa) - nbase];
+}
+```
+
+虚拟地址转物理地址的宏摘自 [pmm.h (line 54)](/home/iodwad/OS/lab2/kern/mm/pmm.h:54)：
+
+```
+#define PADDR(kva)                                                 \
+    ({                                                             \
+        uintptr_t __m_kva = (uintptr_t)(kva);                      \
+        if (__m_kva < KERNBASE) {                                  \
+            panic("PADDR called with invalid kva %08lx", __m_kva); \
+        }                                                          \
+        __m_kva - va_pa_offset;                                    \
+    })
+```
+
+**源码事实：**同一文件中的 `KADDR(pa)` 位于块注释内，当前不是可调用宏。[pmm.h (line 63)](/home/iodwad/OS/lab2/kern/mm/pmm.h:63)
+
+空闲区注册包装函数及实际调用见 [pmm.c (line 35)](/home/iodwad/OS/lab2/kern/mm/pmm.c:35)：
+
+```
+static void init_pmm_manager(void) {
+    pmm_manager = &default_pmm_manager;
+    cprintf("memory management: %s\n", pmm_manager->name);
+    pmm_manager->init();
+}
+
+static void init_memmap(struct Page *base, size_t n) {
+    pmm_manager->init_memmap(base, n);
+}
+```
+
+这里的 `base` 是首个**可用页的 `struct Page \*`**，`n` 是连续可用页数，函数无返回值。当前选用 `default_pmm_manager`；其 `init_memmap` 实现要求 `n > 0` 且注册前范围内每个描述符均为保留状态，随后将其改为空闲状态并计入空闲页数。[default_pmm.c (line 18)](/home/iodwad/OS/lab2/kern/mm/default_pmm.c:18)、[default_pmm.c (line 246)](/home/iodwad/OS/lab2/kern/mm/default_pmm.c:246)
+
+`pmm_init()` 的声明见 [pmm.h (line 36)](/home/iodwad/OS/lab2/kern/mm/pmm.h:36)。调用顺序是 `kern_init()` 先执行 `dtb_init()`、再执行 `pmm_init()`；后者依次执行 `init_pmm_manager()`、`page_init()`、`check_alloc_page()`。[init.c (line 28)](/home/iodwad/OS/lab2/kern/init/init.c:28)、[pmm.c (line 66)](/home/iodwad/OS/lab2/kern/mm/pmm.c:66) **当前 `pmm.c` 尚无 `page_init()` 的声明或定义**，只有预留位置和调用点。[pmm.c (line 64)](/home/iodwad/OS/lab2/kern/mm/pmm.c:64)
+
+输出接口的声明为 `int cprintf(const char *fmt, ...);`，见 [stdio.h (line 8)](/home/iodwad/OS/lab2/libs/stdio.h:8)。
+
+###### 5. 关键内存布局约定
+
+- **源码事实：**`DRAM_BASE` 为 `0x80000000`；内核物理起点常量为 `0x80200000`，对应虚拟起点 `KERNBASE = 0xFFFFFFFFC0200000`，映射偏移常量为 `PHYSICAL_MEMORY_OFFSET = 0xFFFFFFFF40000000`。[riscv.h (line 152)](/home/iodwad/OS/lab2/libs/riscv.h:152)、[memlayout.h (line 5)](/home/iodwad/OS/lab2/kern/mm/memlayout.h:5)
+- **源码事实：**[memlayout.h (line 9)](/home/iodwad/OS/lab2/kern/mm/memlayout.h:9) 的注释将默认 QEMU 配置中的 `[0x80000000, 0x80200000)` 标为 OpenSBI 占用区，并给出默认 RAM 上界 `0x88000000`。这是一项静态布局约定；设备树解析函数只提取内存节点的首组基址和大小。[dtb.c (line 78)](/home/iodwad/OS/lab2/kern/driver/dtb.c:78)
+- **推导：**内核镜像占用从 `KERNEL_BEGIN_PADDR` 起，到 `PADDR(end)` 附近；由于 `end` 是末尾符号，能交给页分配器的起点必须考虑它所在页及之后放置的描述符数组。描述符数组自身所占物理页也须保留。依据为链接脚本中的镜像起点、`end` 定义，以及 [test_lab2.c (line 43)](/home/iodwad/OS/lab2/tools/test_lab2.c:43)、[test_lab2.c (line 67)](/home/iodwad/OS/lab2/tools/test_lab2.c:67) 的检查。
+- **推导：**对 `DRAM_BASE ≤ pa` 且 `PPN(pa) < npage` 的地址，描述符索引为 `PPN(pa) - nbase`；反向地址为 `(page - pages + nbase) << PGSHIFT`。这里的 `pa2page()` 仅显式检查上界，**没有检查 `pa < DRAM_BASE`**。[pmm.h (line 83)](/home/iodwad/OS/lab2/kern/mm/pmm.h:83)
+- **源码事实：**随工程提供的测试期望 `va_pa_offset == PHYSICAL_MEMORY_OFFSET`、`npage == PPN(mem_base + mem_size)`，并检查 `pages` 页对齐、位于 `ROUNDUP(end, PGSIZE)` 之后，且内核尾页与描述符数组首地址对应页仍标为保留。[test_lab2.c (line 19)](/home/iodwad/OS/lab2/tools/test_lab2.c:19)、[test_lab2.c (line 31)](/home/iodwad/OS/lab2/tools/test_lab2.c:31)、[test_lab2.c (line 43)](/home/iodwad/OS/lab2/tools/test_lab2.c:43)、[test_lab2.c (line 67)](/home/iodwad/OS/lab2/tools/test_lab2.c:67)
+
+##### 可能影响 `page_init()` 实现的关键注意事项
+
+1. `init_memmap()` 所接收的范围必须已标记为 `PG_reserved`，且页数大于零；它会自行清除该范围的保留状态。[default_pmm.c (line 18)](/home/iodwad/OS/lab2/kern/mm/default_pmm.c:18)
+2. `pages` 的索引基点是 `DRAM_BASE`，所以描述符数量应覆盖从 `nbase` 到 `npage` 的物理页号；OpenSBI 所在页虽不可分配，仍落在该索引范围内。[pmm.c (line 22)](/home/iodwad/OS/lab2/kern/mm/pmm.c:22)、[pmm.h (line 104)](/home/iodwad/OS/lab2/kern/mm/pmm.h:104)
+3. `PHYSICAL_MEMORY_END` 是硬编码默认上界，而设备树 getter 提供运行时探测结果；两者是否总相同**待确认**。当前测试明确以 `mem_base + mem_size` 计算 `npage`。[memlayout.h (line 12)](/home/iodwad/OS/lab2/kern/mm/memlayout.h:12)、[test_lab2.c (line 31)](/home/iodwad/OS/lab2/tools/test_lab2.c:31)
+4. 设备树解析失败时两个 getter 可返回零；解析器未展示对多段内存或 DTB 保留映射的处理。因此，多段内存与额外保留区的处理要求**待确认**。[dtb.c (line 103)](/home/iodwad/OS/lab2/kern/driver/dtb.c:103)、[dtb.c (line 128)](/home/iodwad/OS/lab2/kern/driver/dtb.c:128)
+5. `page_init()` 当前既未定义也未提前声明；若按题目要求定义为 `static` 函数，需留意它在 `pmm_init()` 调用点之前的声明或定义位置。[pmm.c (line 64)](/home/iodwad/OS/lab2/kern/mm/pmm.c:64)
+
+[GUARANTEE]
+
+必须实现以下接口：
+
+```
+static void page_init(void);
+```
+
+该函数位于 `kern/mm/pmm.c`，不接收参数，也不返回结果，由 `pmm_init()` 调用。
+
+可以根据需要新增模块内部的 `static` 辅助函数，但不得修改现有公开接口。
+
+[SPECIFICATION]
+
+##### page_init
+
+**Pre-Condition**:
+
+- 系统已完成设备树初始化，可以通过现有接口获取物理内存的起始地址和大小。
+- 当前物理内存管理器已完成初始化，可以接收空闲物理页。
+- 内核链接符号 `end` 可用于确定内核镜像结束位置。
+- 当前工程的物理内存布局、地址转换机制及相关宏定义已经可用。
+
+**Post-Condition**:
+
+- 根据设备树信息确定有效物理内存范围，并通过控制台输出探测结果。
+- 正确初始化 `va_pa_offset`，使其符合当前工程定义的虚拟地址与物理地址映射关系。
+- 正确设置 `npage`，使其表示可管理物理页号的排他上界，并与设备树提供的有效内存范围及现有页号索引规则一致。
+- `pages` 指向内核镜像结束位置之后、满足页面对齐要求的合法虚拟地址。
+- 描述符数组覆盖当前工程要求管理的全部物理页，描述符数量及索引关系与 `nbase`、`npage`、`pa2page()` 保持一致。
+- 所有相关 `Page` 描述符完成必要初始化，其引用计数、页面属性和保留状态符合当前物理内存管理器要求。
+- OpenSBI、内核镜像、描述符数组及其他必须保留的区域不会被注册为空闲页面。
+- 剩余完整、未占用且满足页面对齐要求的物理页已注册到当前物理内存管理器。
+
+**Case 1：物理内存信息无效或无法完成合法布局**
+
+- 当设备树提供的物理内存起始地址或大小无效、地址范围计算发生溢出，或者物理内存范围与当前内核布局不兼容时，应通过 `panic()` 终止初始化。
+- 当物理内存不足以容纳内核及其所需的页描述符数组时，应终止初始化，不得越界访问或注册非法页面。
+
+**Case 2：存在可用的完整空闲页面**
+
+- 当有效物理内存能够容纳内核及页描述符数组，且排除保留区域后仍存在完整空闲页面时，应将这些页面交给当前物理内存管理器。
+- 注册的起始位置必须对应首个可分配物理页的 `Page` 描述符，注册数量必须与实际连续可用物理页数一致。
+- 注册前相关描述符必须满足当前物理内存管理器对保留状态的要求，注册后的页面状态由物理内存管理器维护。
+
+**Case 3：不存在可用的完整空闲页面**
+
+- 当内核和页描述符数组能够合法建立，但剩余内存不足以形成完整可分配物理页时，不得调用 `init_memmap()` 注册空区间。
+- 已占用的物理页面必须继续保持保留状态。
+
+**Requirements**:
+
+- 必须严格区分虚拟地址、物理地址、物理页号及 `Page` 描述符地址。
+- 必须保证 `npage` 与当前工程的物理页号索引约定一致，避免描述符索引越界。
+- 必须正确处理上下边界和页面对齐，禁止将不完整页面注册为空闲页面。
+- 必须确保内核镜像及描述符数组所占用的空间不与可分配区域重叠。
+- 调用 `init_memmap()` 时，传入的页面数量必须大于零，起始地址必须是合法的 `struct Page *`。
+- 必须使用现有物理内存管理器和地址转换接口，保持与工程现有代码及测试要求兼容。
+
+现在请根据以上 [PROMPT]、[RELY]、[GUARANTEE] 和 [SPECIFICATION]，直接完成 `kern/mm/pmm.c` 中 `page_init()` 的实现。
+
+## 功能模块二：物理内存分配
+
+### 任务二：实现 Best-Fit 连续物理内存分配算法
+
+负责人：2412565—张宸笛号。
+
+#### 1. 准备 [RELY] 的提示词
+
+我正在完成 uCore Lab2 的 Best-Fit 连续物理内存分配实验，需要按照老师要求的四段式提示词框架编写 Prompt：
+
+- [PROMPT]
+- [RELY]
+- [GUARANTEE]
+- [SPECIFICATION]
+
+现在请你**只帮助我准备 [RELY] 部分，不要修改任何代码文件，也不要实现 Best-Fit 算法。**
+
+请阅读以下文件：
+
+1. `kern/mm/default_pmm.c`：分析 First-Fit 的实现方式。
+2. `kern/mm/best_fit_pmm.c`：分析现有代码，重点关注 `basic_check()` 和 `best_fit_check()` 的状态依赖。
+3. `kern/mm/pmm.h`：查找 `struct pmm_manager` 和相关接口。
+4. 其他必要头文件：查找 Page 结构体、链表操作函数、页面状态宏等真实定义。
+
+请根据这些文件，生成可以直接用于 Best-Fit 实验提示词的 `[RELY]` 部分。
+
+具体要求：
+
+1. 提取与任务直接相关的宏定义、数据结构、全局变量和可调用函数。
+2. 保留与实际代码完全一致的名称、类型和函数签名。
+3. 对关键结构体给出必要的字段定义，并说明字段作用。
+4. 说明 `free_list`、`nr_free`、`property`、`page_link` 和 `PageProperty` 之间的关系。
+5. 说明 `struct pmm_manager` 的接口约定。
+6. 指出两个测试函数对模块内部状态、变量名称和行为的具体要求。
+7. 标明重要定义所在的文件路径。
+8. 只保留 Best-Fit 实现真正需要的上下文，不要复制无关代码。
+9. 不要凭经验虚构任何宏、函数或结构体成员；如果找不到定义，明确说明。
+
+请按照以下格式输出：
+
+[RELY]
+
+###### 宏定义
+
+（真实定义及来源）
+
+###### 数据结构
+
+（真实定义及来源）
+
+###### 可用函数与链表操作
+
+（真实签名及作用）
+
+###### 全局变量和状态约定
+
+（有关状态变量及其不变量）
+
+###### 测试函数依赖
+
+（basic_check 和 best_fit_check 的要求）
+
+另外，请在 [RELY] 之后单独列出建议写进 [GUARANTEE] 的接口清单，并标明哪些签名已由源码确认。
+
+**注意：本次任务仅收集与整理上下文，不得修改任何项目文件。**
+
+#### 2. 完整实现提示词
+
+##### [PROMPT]
+**任务：**
+
+参考 `kern/mm/default_pmm.c` 中已有的 First-Fit 连续物理内存分配器，实现完整的 Best-Fit 连续物理内存分配模块。
+
+需要修改以下文件：
+
+1. `kern/mm/best_fit_pmm.c`：在标有 `lab2` 和 `YOUR CODE` 的位置完成 Best-Fit 物理内存管理器，包括初始化、分配、释放、空闲页统计及管理器注册。
+2. `kern/mm/pmm.c`：修改 `init_pmm_manager()`，将当前物理内存管理器切换为 `best_fit_pmm_manager`。
+
+**操作要求：**
+
+- 必须直接修改项目中的实际文件，而不是只输出代码片段。
+- 在修改前阅读 `default_pmm.c`、`best_fit_pmm.c`、`best_fit_pmm.h`、`pmm.h` 和相关链表实现。
+- 尽可能参考 First-Fit 已有的内存管理框架，实现 Best-Fit 的选块策略。
+- 保留已有代码，严格禁止修改 `basic_check()` 和 `best_fit_check()` 两个测试函数。
+- 除完成模块及切换管理器所必需的代码外，不得修改其他无关文件和接口。
+
+**输出要求：**
+
+根据以下 `[RELY]`、`[GUARANTEE]` 和 `[SPECIFICATION]` 完成代码实现。以项目中的真实定义为准，不引入不必要的数据结构或外部依赖。
+
+完成后说明实际修改的文件、主要实现思路和验证结果。若无法运行测试，须说明原因，不得声称已经通过。
+
+##### [RELY]
+
+###### 宏定义
+
+以下名称和定义均来自现有头文件：
+
+```
+// kern/mm/memlayout.h
+#define PG_reserved                 0
+#define PG_property                 1
+#define SetPageReserved(page)       ((page)->flags |= (1UL << PG_reserved))
+#define ClearPageReserved(page)     ((page)->flags &= ~(1UL << PG_reserved))
+#define PageReserved(page)          (((page)->flags >> PG_reserved) & 1)
+#define SetPageProperty(page)       ((page)->flags |= (1UL << PG_property))
+#define ClearPageProperty(page)     ((page)->flags &= ~(1UL << PG_property))
+#define PageProperty(page)          (((page)->flags >> PG_property) & 1)
+#define le2page(le, member)         to_struct((le), struct Page, member)
+
+// kern/mm/pmm.h
+#define alloc_page()                alloc_pages(1)
+#define free_page(page)             free_pages(page, 1)
+
+// kern/mm/mmu.h
+#define PGSIZE                      4096
+```
+
+`le2page` 使用的 `to_struct(ptr, type, member)` 定义在 [libs/defs.h (line 65)](/home/iodwad/OS/lab2/libs/defs.h:65)，用于从成员指针取得所属结构体的指针。`assert(x)` 定义在 [kern/debug/assert.h (line 15)](/home/iodwad/OS/lab2/kern/debug/assert.h:15)。页面状态宏及 `le2page` 见 [kern/mm/memlayout.h (line 41)](/home/iodwad/OS/lab2/kern/mm/memlayout.h:41)；单页操作宏见 [kern/mm/pmm.h (line 38)](/home/iodwad/OS/lab2/kern/mm/pmm.h:38)。
+
+###### 数据结构
+
+```
+// libs/list.h
+struct list_entry {
+    struct list_entry *prev, *next;
+};
+typedef struct list_entry list_entry_t;
+
+// kern/mm/memlayout.h
+struct Page {
+    int ref;
+    uint64_t flags;
+    unsigned int property;
+    list_entry_t page_link;
+};
+
+typedef struct {
+    list_entry_t free_list;
+    unsigned int nr_free;
+} free_area_t;
+```
+
+一个 `struct Page` 描述一个物理页。`ref` 是引用计数，`flags` 保存页面状态；**空闲块首页**的 `property` 记录该连续块的页数，`page_link` 是将这个首页挂入空闲链表的节点。`free_area_t.free_list` 是链表头，`free_area_t.nr_free` 是空闲**页**总数。[链表定义 (line 17)](/home/iodwad/OS/lab2/libs/list.h:17) · [页面与空闲区定义 (line 29)](/home/iodwad/OS/lab2/kern/mm/memlayout.h:29)
+
+物理内存管理器的实际接口为：
+
+```
+struct pmm_manager {
+    const char *name;
+    void (*init)(void);
+    void (*init_memmap)(struct Page *base, size_t n);
+    struct Page *(*alloc_pages)(size_t n);
+    void (*free_pages)(struct Page *base, size_t n);
+    size_t (*nr_free_pages)(void);
+    void (*check)(void);
+};
+```
+
+其中 `init` 初始化管理状态；`init_memmap` 登记初始连续空闲页；`alloc_pages`、`free_pages` 分配和回收连续页；`nr_free_pages` 返回空闲页数；`check` 是管理器自检入口。[接口定义 (line 15)](/home/iodwad/OS/lab2/kern/mm/pmm.h:15)
+
+###### 可用函数与链表操作
+
+```
+// libs/list.h：以下均为 static inline 函数
+void list_init(list_entry_t *elm);
+void list_add(list_entry_t *listelm, list_entry_t *elm);
+void list_add_before(list_entry_t *listelm, list_entry_t *elm);
+void list_add_after(list_entry_t *listelm, list_entry_t *elm);
+void list_del(list_entry_t *listelm);
+bool list_empty(list_entry_t *list);
+list_entry_t *list_next(list_entry_t *listelm);
+list_entry_t *list_prev(list_entry_t *listelm);
+```
+
+`list_init` 将节点初始化为空链表头；`list_add` 把新节点放在指定节点**之后**；`list_add_before` 放在指定节点之前；`list_del` 摘除节点；`list_next`、`list_prev` 用于遍历。`list_empty` 检查链表头是否指向自身。[函数定义 (line 36)](/home/iodwad/OS/lab2/libs/list.h:36)
+
+```
+// kern/mm/pmm.h
+struct Page *alloc_pages(size_t n);
+void free_pages(struct Page *base, size_t n);
+size_t nr_free_pages(void);
+static inline int page_ref(struct Page *page);
+static inline void set_page_ref(struct Page *page, int val);
+static inline uintptr_t page2pa(struct Page *page);
+extern size_t npage;
+extern const struct pmm_manager *pmm_manager;
+```
+
+前三个函数通过当前的 `pmm_manager` 调用相应回调。测试用 `page_ref` 检查引用计数，用 `page2pa`、`npage` 和 `PGSIZE` 检查分配页的地址范围。[声明与内联函数 (line 34)](/home/iodwad/OS/lab2/kern/mm/pmm.h:34) · [转发实现 (line 42)](/home/iodwad/OS/lab2/kern/mm/pmm.c:42)
+
+###### 全局变量和状态约定
+
+[First-Fit 实现 (line 6)](/home/iodwad/OS/lab2/kern/mm/default_pmm.c:6)采用以下**文件内状态**：
+
+```
+static free_area_t free_area;
+#define free_list (free_area.free_list)
+#define nr_free (free_area.nr_free)
+```
+
+其链表按页地址排序，每个空闲块只将首页的 `page_link` 挂入 `free_list`；该首页满足 `PageProperty(page)`，`page->property` 是块长。`nr_free` 应等于所有链表节点所代表块长之和。First-Fit 从链表头起选择第一个足够大的块，必要时拆分；释放后按地址插回，并合并物理上相邻的块。[First-Fit 代码 (line 11)](/home/iodwad/OS/lab2/kern/mm/default_pmm.c:11)
+
+**当前 [best_fit_pmm.c (line 1)](/home/iodwad/OS/lab2/kern/mm/best_fit_pmm.c:1) 尚未定义 `free_area`、`free_list`、`nr_free` 或 Best-Fit 管理器实例。\**但该文件中的测试直接引用可读写的 `free_list`、`nr_free`，所以实现必须在测试函数可见的作用域内提供这两个\**准确名称**。沿用 First-Fit 的上述 `free_area_t` 写法是一种与现有类型及测试相符的方式；不能将它描述为 Best-Fit 文件中已经存在的定义。
+
+另需注意：[pmm.c (line 35)](/home/iodwad/OS/lab2/kern/mm/pmm.c:35) 当前将 `pmm_manager` 设为 `&default_pmm_manager`。这一选择会决定 `alloc_pages` 等公共函数实际调用哪个管理器。
+
+###### 测试函数依赖
+
+两个函数均已定义在 [kern/mm/best_fit_pmm.c (line 8)](/home/iodwad/OS/lab2/kern/mm/best_fit_pmm.c:8)，源码注释要求保留它们。
+
+- `basic_check(void)`：连续分配 3 个互不相同的页，要求其引用计数为 0、物理地址在 `npage * PGSIZE` 范围内。它会保存 `free_list` 和 `nr_free`，调用 `list_init(&free_list)` 将链表临时置空，再把 `nr_free` 置 0；空链表时分配必须失败。释放 3 页后，`nr_free` 必须为 3；再次分配至耗尽后必须返回 `NULL`。只释放 `p0` 时，下一次单页分配必须返回同一个 `p0`。最后它恢复保存的状态并回收测试页。[测试代码 (line 8)](/home/iodwad/OS/lab2/kern/mm/best_fit_pmm.c:8)
+- `best_fit_check(void)`：先遍历 `free_list`，要求每个节点对应的页都有 `PageProperty`，且各节点 `property` 之和等于 `nr_free_pages()`；随后调用 `basic_check()`。它分配连续 5 页后，再临时清空链表：**此时尚未把 `nr_free` 清零，就先要求 `alloc_page()` 返回 `NULL`**，因此分配不能仅依据计数判断成功。之后它在隔开的两处释放 2 页和 1 页，要求申请 4 页失败；申请 1 页时必须选中较小的、位于 `p0 + 4` 的 1 页块，体现 Best-Fit 选择；申请 2 页也必须成功。最后要求可重新得到连续 5 页、耗尽时返回 `NULL`、`nr_free == 0`，并在恢复原状态及回收后保持链表节点数和空闲页总数与测试前一致。[测试代码 (line 60)](/home/iodwad/OS/lab2/kern/mm/best_fit_pmm.c:60)
+
+##### [GUARANTEE]
+
+必须在 `kern/mm/best_fit_pmm.c` 中实现以下接口：
+
+```
+static void best_fit_init(void);
+
+static void best_fit_init_memmap(
+    struct Page *base, size_t n);
+
+static struct Page *best_fit_alloc_pages(
+    size_t n);
+
+static void best_fit_free_pages(
+    struct Page *base, size_t n);
+
+static size_t best_fit_nr_free_pages(void);
+```
+
+必须定义管理器实例：
+
+```
+const struct pmm_manager best_fit_pmm_manager;
+```
+
+其中管理器的 `check` 回调应指向已有的 `best_fit_check()`。
+
+必须在 `kern/mm/pmm.c` 中修改现有的：
+
+```
+init_pmm_manager()
+```
+
+使其选择 `best_fit_pmm_manager`，而不是 `default_pmm_manager`。
+
+允许根据需要增加模块内部的静态变量、宏定义和辅助函数，但不得修改 `struct pmm_manager` 的公开接口。
+
+必须提供测试函数可直接访问的 `free_list` 和 `nr_free`，并保证其状态符合测试约定。
+
+##### [SPECIFICATION]
+
+###### 1. best_fit_init()
+
+**Pre-Condition：**
+
+- 物理内存管理器尚未完成初始化。
+
+**Post-Condition：**
+
+- 建立初始为空的双向循环空闲链表。
+- 空闲物理页总数初始化为 0。
+- 模块进入可以登记空闲物理页的状态。
+
+**Requirements：**
+
+- 初始化后的状态必须与两个现有测试函数使用的状态约定兼容。
+
+###### 2. best_fit_init_memmap(struct Page *base, size_t n)
+
+**Pre-Condition：**
+
+- `base` 指向一段连续物理页对应的第一个 `Page` 描述符。
+- `n > 0`，表示该段物理页的数量。
+- 待初始化的物理页处于保留状态。
+- 空闲链表已完成初始化。
+
+**Post-Condition：**
+
+- 将从 `base` 开始的 `n` 个连续物理页初始化为空闲状态。
+- 清除相关页面的旧状态，并将引用计数初始化为 0。
+- 将整段连续物理页登记为一个空闲块。
+- 空闲块首页正确记录块大小及空闲块标志。
+- 空闲链表中增加代表该空闲块的节点。
+- 空闲物理页总数增加 `n`。
+- 空闲链表按物理页地址升序排列。
+
+**Case 1：空闲链表为空**
+
+直接将新空闲块登记为空闲链表的第一个有效节点。
+
+**Case 2：空闲链表不为空**
+
+根据新空闲块的起始地址，找到合适的插入位置，使插入后所有空闲块仍按地址升序排列。
+
+**Requirements：**
+
+- 每个连续空闲块只通过其首页的 `page_link` 加入链表，不能将该块的每个物理页分别加入。
+- `property` 表示空闲块包含的连续物理页数。
+- 参考现有 First-Fit 的初始空闲区登记语义，确保与其余管理函数和测试兼容。
+
+###### 3. best_fit_alloc_pages(size_t n)
+
+**Pre-Condition：**
+
+- `n > 0`，表示申请的连续物理页数量。
+- 物理内存管理器已经初始化。
+- 空闲链表中的有效节点分别代表连续空闲块，其首页记录对应块大小。
+
+**Post-Condition：**
+
+- 如果存在满足申请要求的空闲块，则从所有可用空闲块中选择大小最小的一个进行分配。
+- 成功时返回分配的连续物理页的首页地址。
+- 正确维护空闲链表、页面状态和空闲页计数。
+- 不存在满足条件的空闲块时返回 `NULL`，且不改变已有空闲内存管理状态。
+
+**Case 1：不存在足够大的连续空闲块**
+
+遍历空闲链表后，若所有空闲块的大小都小于 `n`，则分配失败，返回 `NULL`。
+
+即使空闲页总数大于等于 `n`，只要没有足够大的连续空闲块，也不能成功分配。
+
+**Case 2：存在大小恰好等于 n 的空闲块**
+
+选择该空闲块，将其从空闲链表中移除，更新相应的页面状态与空闲页计数，并返回其首页。
+
+**Case 3：最佳空闲块的大小大于 n**
+
+选择满足条件且大小最小的空闲块，从中分配连续 `n` 个物理页。
+
+将剩余物理页保留为空闲块，正确维护剩余块的首页、块大小、页面标志和链表关系。
+
+分配完成后，空闲页总数减少 `n`。
+
+**Requirements：**
+
+- 必须实现 Best-Fit，而不是 First-Fit。不能在找到第一个足够大的空闲块后直接结束搜索，除非已找到大小恰好等于 `n` 的块。
+- 空闲链表为空时必须返回 `NULL`，不能仅根据 `nr_free` 的值认定分配成功。
+- 不得分配已被占用的物理页。
+- 如果存在多个同样大小的最佳空闲块，可以选择遍历时最先遇到的块。
+- 分配成功后，空闲链表只包含剩余的空闲块，且保持地址有序。
+
+###### 4. best_fit_free_pages(struct Page *base, size_t n)
+
+**Pre-Condition：**
+
+- `base` 指向待释放连续物理页的首页。
+- `n > 0`。
+- 待释放物理页属于合法的已分配内存区域，且不存在重复释放。
+
+**Post-Condition：**
+
+- 将指定的 `n` 个连续物理页重新设置为空闲状态。
+- 正确清理相关页面状态及引用计数。
+- 将释放的内存登记到空闲链表中。
+- 根据物理地址判断相邻空闲块，并尽可能合并。
+- 保持空闲链表按照物理地址升序排列。
+- 空闲物理页总数增加 `n`，不能因为合并而重复计数。
+
+**Case 1：释放的内存与现有空闲块均不相邻**
+
+创建一个新的空闲块，并按物理地址顺序插入空闲链表。
+
+**Case 2：释放的内存与前一个空闲块相邻**
+
+将释放的内存与前一个空闲块合并，形成更大的连续空闲块。
+
+**Case 3：释放的内存与后一个空闲块相邻**
+
+将释放的内存与后一个空闲块合并，确保新空闲块的首页和块大小正确。
+
+**Case 4：释放的内存同时与前后两个空闲块相邻**
+
+将三个连续区域合并为一个空闲块，删除不再需要的链表节点，并维护合并后首页的块大小和状态标志。
+
+**Requirements：**
+
+- 只能合并物理地址实际连续的空闲块，不能因为链表节点相邻就直接合并。
+- 合并后只能保留一个代表整个空闲块的有效链表节点。
+- 不得破坏其他已分配物理页的信息。
+
+###### 5. best_fit_nr_free_pages()
+
+**Pre-Condition：**
+
+- 物理内存管理器已初始化。
+
+**Post-Condition：**
+
+- 返回当前记录的空闲物理页总数。
+
+**Requirements：**
+
+- 正常运行状态下，该值应与空闲链表中所有空闲块的 `property` 之和相等。
+- 分配与释放操作必须正确更新计数。
+- 保持与现有测试函数直接读取和修改 `nr_free` 的行为兼容。
+
+###### 6. best_fit_pmm_manager
+
+**Post-Condition：**
+
+- 定义完整的 `struct pmm_manager` 实例。
+- `name` 标识 Best-Fit 管理器。
+- `init`、`init_memmap`、`alloc_pages`、`free_pages` 和 `nr_free_pages` 分别指向对应的 Best-Fit 实现。
+- `check` 指向已有的 `best_fit_check()`。
+
+**Requirements：**
+
+- 不得修改 `basic_check()` 和 `best_fit_check()` 的实现。
+- 所有回调函数签名必须与 `struct pmm_manager` 一致。
+
+###### 7. init_pmm_manager()
+
+**Pre-Condition：**
+
+- `best_fit_pmm_manager` 已定义，并可被 `pmm.c` 正确引用。
+
+**Post-Condition：**
+
+- 全局 `pmm_manager` 指向 `best_fit_pmm_manager`。
+- 后续物理内存初始化、分配、释放及检查使用 Best-Fit 实现。
+
+**Requirements：**
+
+- 仅修改管理器选择及其必需的声明或头文件引用。
+- 不修改现有内存管理器公共接口及无关初始化流程。
+
+###### 8. 整体验证要求
+
+- 现有 `basic_check()` 和 `best_fit_check()` 必须保持原样。
+- 两个测试函数依赖的状态变量、链表结构及块属性必须兼容。
+- 分配、释放、切割与合并后，不得产生损坏的链表节点。
+- 不得出现空闲页计数错误、重复分配或错误合并。
+- 如果项目提供编译和测试命令，应执行实际验证并报告结果。
+- 最终说明相对于 First-Fit 实现所做的修改，以及 Best-Fit 算法可能的改进方向。
+
+---
+
+## 协作者原有归档：Buddy 与 SLUB
+
 负责人：2411560—朱泽帅。以下四节为实际使用的完整原始输入，未用报告核对稿替代。独立文件保留归档原字节，来源与哈希见 docs/2411560/prompt_provenance.json。
 
 ## 1. Buddy_Implementation_Prompt
