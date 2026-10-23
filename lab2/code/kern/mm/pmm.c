@@ -62,7 +62,7 @@ size_t nr_free_pages(void) {
     return pmm_manager->nr_free_pages();
 }
 
-// Detect RAM and reserve the kernel and Page array before publishing free pages.
+//lab2 function1 2412565
 static void page_init(void) {
     extern char end[];
 
