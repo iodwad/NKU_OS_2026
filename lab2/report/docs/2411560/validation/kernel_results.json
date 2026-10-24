@@ -1,0 +1,66 @@
+{
+  "build": [
+    {
+      "name": "object",
+      "exit_code": 0
+    },
+    {
+      "name": "kernel",
+      "exit_code": 0
+    }
+  ],
+  "qemu_exit_code": 124,
+  "slub": [
+    {
+      "id": "T01",
+      "status": "PASS"
+    },
+    {
+      "id": "T02",
+      "status": "PASS"
+    },
+    {
+      "id": "T03",
+      "status": "PASS"
+    },
+    {
+      "id": "T04",
+      "status": "PASS"
+    },
+    {
+      "id": "T05",
+      "status": "PASS"
+    },
+    {
+      "id": "T06",
+      "status": "PASS"
+    },
+    {
+      "id": "T07",
+      "status": "PASS"
+    }
+  ],
+  "buddy": [
+    {
+      "id": "K01",
+      "status": "PASS"
+    },
+    {
+      "id": "K02",
+      "status": "PASS"
+    },
+    {
+      "id": "K03",
+      "status": "PASS"
+    },
+    {
+      "id": "K04",
+      "status": "PASS"
+    },
+    {
+      "id": "K05",
+      "status": "PASS"
+    }
+  ],
+  "normal_completion_observed": true
+}

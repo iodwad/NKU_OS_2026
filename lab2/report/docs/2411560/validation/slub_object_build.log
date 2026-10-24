@@ -1,0 +1,4 @@
+$ make obj/kern/mm/slub.o
++ cc kern/mm/slub.c
+
+EXIT_CODE=0

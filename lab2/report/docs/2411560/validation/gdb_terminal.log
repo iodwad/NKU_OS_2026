@@ -1,0 +1,24 @@
+$ gdb-multiarch -q -batch -x /mnt/d/college_study_materials/junior_year_fall/OS/lab2/publish_work/lab2/code/evidence/slub_tests/gdb/inspect.gdb
+0x0000000000001000 in ?? ()
+Hardware assisted breakpoint 1 at 0xffffffffc0203668: file kern/mm/slub.c, line 198.
+
+Breakpoint 1, slub_free (ptr=0xffffffffc0416080) at kern/mm/slub.c:198
+198	    if (ptr == NULL) return;
+ptr = 0xffffffffc0416080
+{'object_va': '0xffffffffc0416080', 'object_pa': '0x80416080', 'slab_va': '0xffffffffc0416000', 'slab_pa': '0x80416000', 'descriptor_va': '0xffffffffc02df370', 'descriptor_index': 1046, 'slot_size': 32, 'header_bytes': 96, 'data_pattern_verified': True}
+Hardware assisted breakpoint 2 at 0xffffffffc0200118: file kern/init/init.c, line 46.
+
+Breakpoint 2, kern_init () at kern/init/init.c:46
+46	    while (1)
+pc             0xffffffffc0200118	0xffffffffc0200118 <kern_init+64>
+=> 0xffffffffc0200118 <kern_init+64>:	j	0xffffffffc0200118 <kern_init+64>
+$1 = 0
+$2 = 31723
+$3 = 0
+$4 = 0
+$5 = 88
+$6 = 262144
+$7 = 0xffffffffc0205bc0 "buddy_pmm_manager"
+[Inferior 1 (process 1) detached]
+
+EXIT_CODE=0

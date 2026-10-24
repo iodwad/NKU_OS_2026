@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "temporary_grading_copy": "/tmp/lab2_publish_grade_paths_fxn1qrb4",
+  "checks": [
+    {
+      "check": "shell_syntax",
+      "exit_code": 0
+    },
+    {
+      "check": "inject",
+      "exit_code": 0
+    },
+    {
+      "check": "injected_build",
+      "exit_code": 0
+    }
+  ],
+  "official_tests_unchanged": true,
+  "official_runtime_score_claimed": false,
+  "limitations": [
+    "Official grade.sh still uses the upstream loader boot mode; unchanged by this publication.",
+    "Official test_best_fit explicitly requires best_fit_pmm_manager, whereas this submission selects Buddy. Use a separate Best-Fit validation configuration; do not treat Buddy as a Best-Fit grading PASS."
+  ]
+}

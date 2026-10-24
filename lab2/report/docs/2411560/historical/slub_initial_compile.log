@@ -1,0 +1,20 @@
+$ make obj/kern/mm/slub.o
++ cc kern/mm/slub.c
+In file included from kern/mm/pmm.h:4,
+                 from kern/mm/slub.c:2:
+kern/mm/slub.c: In function 'slub_free':
+kern/mm/slub.c:220:12: error: 'slub' undeclared (first use in this function); did you mean 'slab'?
+  220 |     assert(slub->inuse > 0 && slub_slot_used(slab, slot));
+      |            ^~~~
+kern/debug/assert.h:17:15: note: in definition of macro 'assert'
+   17 |         if (!(x)) {                                     \
+      |               ^
+kern/mm/slub.c:220:12: note: each undeclared identifier is reported only once for each function it appears in
+  220 |     assert(slub->inuse > 0 && slub_slot_used(slab, slot));
+      |            ^~~~
+kern/debug/assert.h:17:15: note: in definition of macro 'assert'
+   17 |         if (!(x)) {                                     \
+      |               ^
+make: *** [Makefile:116: obj/kern/mm/slub.o] Error 1
+
+EXIT_CODE=2
