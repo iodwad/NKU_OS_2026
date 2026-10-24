@@ -27,7 +27,15 @@ endif
 HOSTCC		:= gcc
 HOSTCFLAGS	:= -Wall -O2
 
-GDB		:= $(GCCPREFIX)gdb
+GDB		?= $(GCCPREFIX)gdb
+HOST_GDB	?= gdb
+PYTHON		?= python3
+QEMU_DEBUG	?= $(CURDIR)/.debug/qemu-build/riscv64-softmmu/qemu-system-riscv64
+QEMU_DEBUG_DATA	?= $(CURDIR)/.debug/qemu-4.1.1/pc-bios
+GDB_PORT	?= 1234
+
+# Optional machine-local overrides; normal QEMU selection stays independent.
+-include .qemu-debug.mk
 
 CC		:= $(GCCPREFIX)gcc
 CFLAGS  := -mcmodel=medany -std=gnu99 -Wno-unused -Werror 
@@ -159,7 +167,7 @@ endif
 TARGETS: $(TARGETS)
 
 .DEFAULT_GOAL := TARGETS
-.PHONY: qemu spike test
+.PHONY: qemu spike test debug gdb debug-host debug-qemu debug-verify
 qemu: $(UCOREIMG) $(SWAPIMG) $(SFSIMG)
 	$(V)$(QEMU) \
 		-machine virt \
@@ -168,18 +176,20 @@ qemu: $(UCOREIMG) $(SWAPIMG) $(SFSIMG)
 		-device loader,file=$(UCOREIMG),addr=0x80200000
 
 debug: $(UCOREIMG) $(SWAPIMG) $(SFSIMG)
-	$(V)$(QEMU) \
-		-machine virt \
-		-nographic \
-		-bios default \
-		-device loader,file=$(UCOREIMG),addr=0x80200000\
-		-s -S
+	$(V)$(PYTHON) tools/qemu_debug.py run \
+		--qemu "$(QEMU_DEBUG)" --data "$(QEMU_DEBUG_DATA)" --port "$(GDB_PORT)"
 
-gdb:
-	riscv64-unknown-elf-gdb \
-    -ex 'file bin/kernel' \
-    -ex 'set arch riscv:rv64' \
-    -ex 'target remote localhost:1234'
+gdb: $(kernel)
+	$(V)$(PYTHON) tools/qemu_debug.py guest --gdb "$(GDB)"
+
+debug-host:
+	$(V)$(PYTHON) tools/qemu_debug.py host --gdb "$(HOST_GDB)"
+
+debug-qemu:
+	$(V)sh tools/build-qemu-debug.sh
+
+debug-verify: $(UCOREIMG)
+	$(V)$(PYTHON) tools/verify_qemu_debug.py
 
 test: $(UCOREIMG) $(SWAPIMG) $(SFSIMG)
 	$(V)$(QEMU) \
