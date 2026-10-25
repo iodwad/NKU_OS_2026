@@ -13,7 +13,7 @@ saved = None
 
 
 def register(name):
-    return int(gdb.parse_and_eval('$' + name)) & ((1 << 64) - 1)
+    return int(gdb.parse_and_eval('(unsigned long long)$' + name)) & ((1 << 64) - 1)
 
 
 class Prepare(gdb.Command):
@@ -70,13 +70,30 @@ class Restore(gdb.Command):
         inferior.write_memory(saved['root_slot'], saved['old_slot'])
         # Flush after restoring the PTE, while our scratch code is still present.
         gdb.execute('set $pc = {}'.format(CODE_PA + OFFSET + 12))
-        gdb.execute('stepi')
+        print('Root restored. Execute stepi, then sv39-probe-restore-finish.')
+
+
+class RestoreFinish(gdb.Command):
+    def __init__(self):
+        super().__init__('sv39-probe-restore-finish', gdb.COMMAND_USER)
+
+    def invoke(self, argument, from_tty):
+        global saved
+        if saved is None or register('pc') != CODE_PA + OFFSET + 16:
+            raise gdb.GdbError('Execute the restore sfence.vma before finalizing.')
+        inferior = gdb.selected_inferior()
         inferior.write_memory(CODE_PA + OFFSET, saved['memory'])
         for name, value in saved['registers'].items():
-            gdb.execute('set ${} = {}'.format(name, value))
+            gdb.execute('set ${} = (unsigned long long){:#x}'.format(name, value))
+            # GDB may retain the previous frame's PC after a Python write.
+            gdb.execute('maintenance flush register-cache')
+            gdb.invalidate_cached_frames()
+            if register(name) != value:
+                raise gdb.GdbError('Register restore mismatch: ' + name)
         saved = None
         print('Original root entry, scratch memory and registers restored at kern_init.')
 
 
 Prepare()
 Restore()
+RestoreFinish()

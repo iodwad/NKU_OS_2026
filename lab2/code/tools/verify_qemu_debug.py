@@ -22,12 +22,13 @@ VALUE = 0x1122334455667788
 
 
 class MI:
-    def __init__(self, executable, arguments, log):
+    def __init__(self, executable, arguments, log, asynchronous=True):
         self.output = queue.Queue()
         self.stops = deque()
         self.token = 0
         self.log = log.open('w')
-        self.process = subprocess.Popen([executable, '-q', '-nx', '--interpreter=mi2'] + arguments,
+        self.process = subprocess.Popen([executable, '-q', '-nx', '--interpreter=mi2'] +
+                                        (['-iex', 'set mi-async on'] if asynchronous else []) + arguments,
                                         cwd=ROOT, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                                         stderr=subprocess.STDOUT, text=True, bufsize=1)
         threading.Thread(target=self.read, daemon=True).start()
@@ -133,7 +134,7 @@ def main():
     stamp = datetime.now().strftime('%Y%m%d-%H%M%S')
     evidence = ROOT / '.debug/evidence' / ('verify-' + stamp)
     evidence.mkdir(parents=True, exist_ok=False)
-    result = {'status': 'FAIL', 'evidence': str(evidence), 'checks': {}, 'walk': []}
+    result = {'status': 'FAIL', 'evidence': str(evidence), 'checks': {}, 'walk': [], 'source_steps': []}
     host = guest = qemu = None
     qemu_log = (evidence / 'qemu.log').open('w')
     try:
@@ -177,7 +178,7 @@ def main():
         assert guest.integer('$satp') >> 60 == 8
         result['checks']['guest_gdb_kern_init'] = True
 
-        host = MI(shutil.which('gdb'), [str(qemu_binary), '-p', str(qemu.pid)], evidence / 'host-gdb.log')
+        host = MI(shutil.which('gdb'), [str(qemu_binary), '-p', str(qemu.pid)], evidence / 'host-gdb.log', asynchronous=True)
         host.console('set pagination off')
         host.console('handle SIGPIPE nostop noprint pass')
         for function in ['riscv_cpu_tlb_fill', 'get_physical_address', 'tlb_set_page']:
@@ -199,12 +200,47 @@ def main():
         for definition in definitions:
             host.console('break ' + definition)
         result['checks']['host_gdb_attach_and_breakpoints'] = True
+        # Observe the real data slow path, not the instruction-lookup helper.
+        for definition in [
+            str(source / 'accel/tcg/cputlb.c') + ':1271 if addr == 0x41234560',
+            str(source / 'accel/tcg/cputlb.c') + ':1010 if page == 0x41234000 && mmu_idx == 1',
+            str(source / 'accel/tcg/cputlb.c') + ':1338 if addr == 0x41234560',
+        ]:
+            host.console('break ' + definition)
         host.resume()
+        result['scratch_audit'] = {n: hex(guest.integer(expr)) for n, expr in [
+            ('kernel_end', '(unsigned long long)&end'), ('pages_before', '(unsigned long long)pages'),
+            ('npage_before', 'npage'), ('dtb_pa', 'boot_dtb'), ('satp', '$satp')]}
+        assert guest.integer('(unsigned long long)&end') < 0xffffffffc7ffa000
+        assert guest.integer('(unsigned long long)pages') == 0 and guest.integer('npage') == 0
+        assert not 0x87ffa000 <= guest.integer('boot_dtb') < 0x87ffe000
+        original_regs = {n: guest.integer('$' + n) for n in ['pc', 't0', 't1', 't2', 'satp']}
+        root_slot = ((original_regs['satp'] & ((1 << 44)-1)) << 12) + 0xffffffff40000000 + 8
+        for name, start, size in [('scratch', 0xffffffffc7ffa000, 16384), ('root', root_slot, 8)]:
+            guest.console('dump binary memory {} {} {}'.format(evidence / (name+'-before.bin'), hex(start), hex(start+size)))
         guest.console('sv39-probe-prepare')
+        guest.console('x/4i 0xffffffffc7ffa000')
+        result['instruction_words'] = [hex(guest.integer('*(unsigned int*)'+hex(0xffffffffc7ffa000+i*4))) for i in range(4)]
+        assert result['instruction_words'] == ['0x12000073', '0x33283', '0x33383', '0x12000073']
         # Flush old translations, then execute a load through the new mapping.
         guest.step()
         guest.stopped()
         guest.step()
+        stop = host.stopped()
+        assert 'load_helper' in stop, stop
+        result['first_lookup'] = {n: host.integer(n) for n in ['addr', 'mmu_idx', 'index', 'tlb_addr', 'code_read']}
+        result['first_lookup']['tag_matches'] = (result['first_lookup']['tlb_addr'] & 0xfffffffffffff800) == (TRACE_VA & ~4095)
+        assert not result['first_lookup']['tag_matches']
+        host.step(next_line=True)
+        result['source_steps'].append(host.stopped())
+        host.resume()
+        stop = host.stopped()
+        assert 'victim_tlb_hit' in stop, stop
+        result['victim_miss'] = {n: host.integer(n) for n in ['mmu_idx', 'index', 'vidx', 'page']}
+        host.command('-exec-finish')
+        result['victim_return'] = host.stopped()
+        assert 'return-value="false"' in result['victim_return'] or 'return-value="0"' in result['victim_return']
+        host.resume()
         stop = host.stopped()
         assert 'riscv_cpu_tlb_fill' in stop, stop
         host.console('info args')
@@ -218,12 +254,40 @@ def main():
         result['satp'] = hex(host.integer('env->satp'))
         result['root_pa'] = hex((int(result['satp'], 16) & ((1 << 44) - 1)) << 12)
         result['checks']['get_physical_address_hit'] = True
+        result['sv39_context'] = {n:host.integer(expr) for n,expr in [('priv','env->priv'),('satp','env->satp'),('access_type','access_type'),('mmu_idx','mmu_idx')]}
+        assert result['sv39_context']['priv'] == 1
+        host.console('set $case_out_pa = physical')
+        host.console('set $case_out_prot = prot')
         for expected in range(3):
             host.resume()
             stop = host.stopped()
-            item = {name: host.integer(name) for name in ['i', 'ptshift', 'idx', 'pte_addr', 'pte']}
+            host.step(next_line=True)  # execute the ppn assignment before observing it
+            result['source_steps'].append(host.stopped())
+            item = {name: host.integer(name) for name in ['i', 'levels', 'ptidxbits', 'ptesize', 'ptshift', 'idx', 'base', 'pte_addr', 'pte', 'ppn']}
             assert item['i'] == expected, (stop, item)
+            item['flags'] = {n: bool(item['pte'] & (1 << bit)) for n, bit in [('V',0),('R',1),('W',2),('X',3),('U',4),('A',6),('D',7)]}
+            item['leaf'] = bool(item['pte'] & 14)
+            host.console('info locals')
+            if expected < 2:
+                for unused in range(3):
+                    host.step(next_line=True)
+                    result['source_steps'].append(host.stopped())
+                item['next_base_observed'] = host.integer('base')
+                assert item['next_base_observed'] == item['ppn'] << 12
+            else:
+                for unused in range(24):
+                    host.step(next_line=True)
+                    stopped = host.stopped()
+                    result['source_steps'].append(stopped)
+                    if 'line="337"' in stopped:
+                        break
+                else:
+                    raise RuntimeError('Leaf never reached computed physical output')
+                result['physical_output_observed'] = host.integer('*physical')
             result['walk'].append(item)
+        host.command('-exec-finish')
+        result['translate_return_stop'] = host.stopped()
+        result['translate_output'] = {'pa': host.integer('*$case_out_pa'), 'prot': host.integer('*$case_out_prot')}
         host.resume()
         stop = host.stopped()
         assert 'tlb_set_page' in stop, stop
@@ -239,10 +303,24 @@ def main():
         host.stopped()
         result['tlb_entry'] = {name: host.integer('te->' + name) for name in ['addr_read', 'addr_write', 'addr_code', 'addend']}
         host.console('print *te')
+        host.console('set $data_te = te')
+        host.resume()
+        stop = host.stopped()
+        assert 'load_helper' in stop, stop
+        host.step(next_line=True)
+        result['source_steps'].append(host.stopped())
+        result['host_ram_read'] = {'haddr': host.integer('(uintptr_t)haddr'), 'value': host.integer('*(uint64_t*)haddr')}
+        assert result['host_ram_read']['value'] == VALUE
+        host.console('disable 6 7 8')
         host.resume()
         guest.stopped()
         assert guest.integer('$t0') == VALUE
         result['checks']['first_load_value'] = True
+        host.interrupt()
+        result['before_second'] = {n: host.integer('$data_te->'+n) for n in ['addr_read','addr_write','addr_code','addend']}
+        result['before_second']['tag_matches'] = (result['before_second']['addr_read'] & 0xfffffffffffff800) == (TRACE_VA & ~4095)
+        assert result['before_second']['tag_matches']
+        host.resume()
         guest.step()
         guest.stopped(timeout=20)
         assert guest.integer('$t2') == VALUE
@@ -252,9 +330,76 @@ def main():
         result['va'] = hex(TRACE_VA)
         result['pa'] = hex(result['tlb_set_page']['paddr'] | (TRACE_VA & 4095))
         result['loaded_value'] = hex(VALUE)
+        result['second_loaded_value'] = hex(guest.integer('$t2'))
+        host.interrupt()
+        result['after_second'] = {n: host.integer('$data_te->'+n) for n in ['addr_read','addr_write','addr_code','addend']}
+        result['sv39_breakpoints'] = host.command('-break-list')
+        # Same privilege and access width, same physical bytes, now Bare.
+        host.console('disable breakpoints')
+        for definition in [
+            '{} if address == 0x87ffb560 && access_type == 0 && mmu_idx == 1'.format(fill_line),
+            '{} if addr == 0x87ffb560 && access_type == 0 && mmu_idx == 1'.format(physical_line),
+            '{} if addr == 0x87ffb560 && mmu_idx == 1'.format(pte_line),
+            '{} if vaddr == 0x87ffb000 && mmu_idx == 1'.format(set_page_line),
+        ]:
+            host.console('break '+definition)
+        host.resume()
+        guest.console('set $pc = (unsigned long long)0x87ffa000')
+        guest.console('set $t1 = (unsigned long long)0x87ffb560')
+        guest.console('set $satp = (unsigned long long)0')
+        guest.console('maintenance flush register-cache')
+        assert guest.integer('$satp') == 0
+        guest.step(); guest.stopped()
+        guest.step()
+        stop = host.stopped()
+        assert 'riscv_cpu_tlb_fill' in stop, stop
+        host.resume()
+        stop = host.stopped()
+        assert 'get_physical_address' in stop, stop
+        result['bare'] = {'priv':host.integer('env->priv'), 'satp':host.integer('env->satp'), 'mmu_idx':host.integer('mmu_idx'), 'addr':host.integer('addr'), 'steps':[]}
+        assert result['bare']['priv'] == 1 and result['bare']['satp'] == 0
+        for unused in range(20):
+            host.step(next_line=True)
+            stopped = host.stopped(); result['bare']['steps'].append(stopped)
+            if 'line="199"' in stopped:
+                break
+        else:
+            raise RuntimeError('Bare path did not reach direct return')
+        result['bare']['physical_return'] = host.integer('*physical')
+        assert result['bare']['physical_return'] == 0x87ffb560
+        host.command('-exec-finish'); result['bare']['return_stop'] = host.stopped()
+        host.resume(); stopped = host.stopped()
+        assert 'tlb_set_page' in stopped, stopped
+        result['bare']['tlb_set_page'] = {n:host.integer(n) for n in ['vaddr','paddr','prot','mmu_idx','size']}
+        host.console('disable 9 10 11 12'); host.resume()
+        guest.stopped()
+        result['bare']['t0'] = hex(guest.integer('$t0'))
+        assert guest.integer('$t0') == VALUE
+        guest.step(); guest.stopped()
+        result['bare']['t2'] = hex(guest.integer('$t2'))
+        assert guest.integer('$t2') == VALUE
+        host.interrupt()
+        result['bare']['breakpoints'] = host.command('-break-list')
+        host.console('disable breakpoints'); host.resume()
+        guest.console('set $satp = (unsigned long long)'+result['satp'])
+        guest.console('maintenance flush register-cache')
+        assert guest.integer('$satp') == original_regs['satp']
         guest.console('sv39-probe-restore', timeout=90)
+        guest.step()
+        guest.stopped()
+        guest.console('sv39-probe-restore-finish')
         assert guest.integer('$pc') == int(result['kernel_pc'], 16)
         result['checks']['probe_restored'] = True
+        result['restored_registers'] = {n: hex(guest.integer('$'+n)) for n in original_regs}
+        assert all(guest.integer('$'+n) == value for n,value in original_regs.items())
+        result['restored_memory'] = {}
+        for name, start, size in [('scratch', 0xffffffffc7ffa000, 16384), ('root', root_slot, 8)]:
+            guest.console('dump binary memory {} {} {}'.format(evidence / (name+'-after.bin'),hex(start),hex(start+size)))
+            before=(evidence/(name+'-before.bin')).read_bytes();after=(evidence/(name+'-after.bin')).read_bytes()
+            assert before == after
+            result['restored_memory'][name]={'bytes':size,'before_sha256':hashlib.sha256(before).hexdigest(),'after_sha256':hashlib.sha256(after).hexdigest()}
+        result['checks']['bare_s_mode_load'] = True
+        result['checks']['scratch_and_root_byte_identical'] = True
         host.interrupt()
         host.console('disable breakpoints')
         host.command('-target-detach')
@@ -274,6 +419,10 @@ def main():
         else:
             raise TimeoutError('Original kernel checks did not finish in 150 seconds')
         guest.interrupt()
+        result['kernel_final'] = {n: guest.integer(n) for n in ['is_panic','live_objects','slab_count','free_count']}
+        assert all(result['kernel_final'][n] == 0 for n in ['is_panic','live_objects','slab_count'])
+        restored = re.findall(r'(?:all 5 live checks|all 7 checks) passed; restored (\d+) free pages', text)
+        assert len(restored) == 2 and all(int(n) == result['kernel_final']['free_count'] for n in restored)
         guest.command('-target-detach')
         result['status'] = 'PASS'
     except Exception as error:
@@ -290,6 +439,12 @@ def main():
             except subprocess.TimeoutExpired:
                 qemu.kill()
                 qemu.wait()
+        if qemu:
+            result['cleanup'] = {'qemu_pid':qemu.pid, 'exit_code':qemu.poll(),
+                                 'pid_released':not Path('/proc/'+str(qemu.pid)).exists()}
+            listeners = subprocess.check_output(['ss','-H','-ltn'],text=True)
+            result['cleanup']['port_released'] = not any(line.split()[3].endswith(':'+str(port)) for line in listeners.splitlines())
+        result['finished_at'] = datetime.now().astimezone().isoformat()
         qemu_log.close()
         (evidence / 'result.json').write_text(json.dumps(result, indent=2) + '\n')
         (ROOT / '.debug/evidence/latest-result.json').write_text(json.dumps(result, indent=2) + '\n')

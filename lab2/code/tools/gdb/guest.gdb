@@ -16,4 +16,4 @@ end
 printf "\nGuest debugger ready. Resume host GDB before every guest command.\n"
 info registers pc satp
 x/4i $pc
-printf "Optional controlled test: sv39-probe-prepare; stepi three times; sv39-probe-restore\n"
+printf "Optional controlled test: sv39-probe-prepare; stepi three times; sv39-probe-restore; stepi; sv39-probe-restore-finish\n"
