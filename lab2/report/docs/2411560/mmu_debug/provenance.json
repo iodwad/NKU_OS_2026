@@ -1,0 +1,52 @@
+{
+  "repository": "https://github.com/iodwad/NKU_OS_2026",
+  "tools_base_commit": "c93ff75e2a5b8f0fe52c89a3c2ca2ac5ae55e816",
+  "guest_base_commit": "b639987b1dd80ab93ea5b54e4cc193505ef27f01",
+  "test_code": "/home/andy/os_lab2_mmu_acceptance_20261025_214753/repro/code",
+  "original_log_directory": "/home/andy/os_lab2_mmu_acceptance_20261025_214753/repro/code/.debug/evidence/verify-20261025-220646",
+  "versions": {
+    "gdb": "GNU gdb (Ubuntu 12.1-0ubuntu1~22.04.2) 12.1",
+    "/home/andy/opt/riscv/bin/riscv64-unknown-elf-gdb": "GNU gdb (Ubuntu 12.1-0ubuntu1~22.04.2) 12.1",
+    "riscv64-unknown-elf-gcc": "riscv64-unknown-elf-gcc () 10.2.0",
+    "qemu-system-riscv64": "QEMU emulator version 6.2.0 (Debian 1:6.2+dfsg-2ubuntu6.31)"
+  },
+  "qemu_and_system_qemu_unchanged": true,
+  "protected_qemu_files": {
+    "/home/andy/os_lab2_qemu_debug/build/riscv64-softmmu/qemu-system-riscv64": "5f07938e5a26e638a0eab6c4ab7f5aa6b5938c7d6cf32ac3b00ccbff773ca99a",
+    "/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c": "ec1d32c8d143b4520d712cfdc9c4c07e97f67be0f59397dc1fb2da8b79cb15be",
+    "/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c": "09b6e4d97009e1530ff0ad931304731781a7e4b3430e9250a5a7a6eeb0fef754",
+    "/usr/bin/qemu-system-riscv64": "922c9a910cba802d48b2cbbf6fd63bd55a03d10bac76b30b3955e8b100791c77"
+  },
+  "preexisting_session_pids_unchanged": {
+    "25564": true,
+    "25601": true,
+    "25629": true
+  },
+  "source_root": "/home/andy/os_lab2_qemu_debug/qemu-4.1.1",
+  "kernel_sha256": {
+    "bin/kernel": "27f7d146ec03bb2fd8d7234e011b95bb95d70c64771ebf0f270df662cdc31bec",
+    "bin/ucore.img": "0fc65045757b1a5530024454c5a4fbd92933f770702fd880455febaf45d76e78",
+    "kern/init/init.c": "e6781ee2e67d91e0b2423734c5ab20850bdb94e47fab9a228ef650cee2918cea",
+    "kern/init/entry.S": "0f32d455dd8dcaa99987eb2eafd64df5e7535e14477ed2aece8e599e3b911111",
+    "kern/mm/pmm.c": "d55aa9bd1d67cfa370d257e9d90fda7e0302bfd3168d290e6684a19f361086a6"
+  },
+  "raw_log_sha256": {
+    "result.json": "9e49783d392cf36f4c2f86269fc18945e9a2e836cc5bc12887b9398b99e92522",
+    "host-gdb.log": "cb6d83f55f4cc65f45b8692f9fe57d09cba5d94d857da238ac5cec088165eaf3",
+    "guest-gdb.log": "0203c5b0e6e61f6b0e937d9063f27168b0d1d832068cdcb6f450844ec8605df3",
+    "qemu.log": "18e182466e28d3952d7a23e1384184a8152cf28a8979b71b4347cddf8d8397ff"
+  },
+  "historical_source": "/home/andy/os_lab2_qemu_debug/evidence/manual_final_20261024_012133",
+  "historical_hashes": {
+    "guest_gdb.log": "83cc2a331141e3dab31a1c53f20e372f595ee704c504a4274784ce739e33a85d",
+    "host_gdb.log": "cb1b4fc915a25ab479d8f4c1a23760b071f5b80a2c29a6207ec3341c79366c35",
+    "qemu_boot.log": "e4b8209f7f828bb4f8d20dff714f3e45096abd8a9285dab29e42efffc4c1ef8d",
+    "results.json": "42cd9cd63f8939ad1ff761c45c23af74c62c21ed8345ef27f067a3b2f6838302"
+  },
+  "production_algorithms_modified": false,
+  "debug_tools_sha256": {
+    "tools/verify_qemu_debug.py": "70b091fe8bd763c6e073cb9a6528a4ec635867402c933cb4e76053dee4c8e8dd",
+    "tools/gdb/sv39_probe.py": "fc45d50e8ee25117f749412f06025dc487328ebe8c65c93aad53da1c36ebf627",
+    "tools/gdb/guest.gdb": "ba8760089a9477d05a09903ecb9f4aa4e0e48d17d1f3175f06d3f2b81c0c077e"
+  }
+}

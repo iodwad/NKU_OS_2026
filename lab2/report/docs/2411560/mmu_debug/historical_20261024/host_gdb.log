@@ -1,0 +1,645 @@
+$ /home/andy/os_lab2_qemu_debug/scripts/02_host_gdb.sh --mi
+>>> 1-interpreter-exec console "set pagination off"
+SESSION=/home/andy/os_lab2_qemu_debug/run/session_20261024_012137_393
+=thread-group-added,id="i1"
+=cmd-param-changed,param="mi-async",value="on"
+~"Reading symbols from /home/andy/os_lab2_qemu_debug/build/riscv64-softmmu/qemu-system-riscv64...\n"
+(gdb) 
+=cmd-param-changed,param="pagination",value="off"
+1^done
+(gdb) 
+>>> 2-interpreter-exec console "set print pretty on"
+=cmd-param-changed,param="print pretty",value="on"
+2^done
+(gdb) 
+>>> 3-interpreter-exec console "set disable-randomization off"
+=cmd-param-changed,param="disable-randomization",value="off"
+3^done
+(gdb) 
+>>> 4-interpreter-exec console "source /home/andy/os_lab2_qemu_debug/scripts/tlb_prepare_m.gdb"
+=cmd-param-changed,param="confirm",value="off"
+~"Breakpoint 1 at 0x3cc7ca: file /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c, line 438.\n"
+=breakpoint-created,bkpt={number="1",type="breakpoint",disp="keep",enabled="y",addr="0x00000000003cc7ca",func="riscv_cpu_tlb_fill",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="438",thread-groups=["i1"],cond="address == 0x1000 && access_type == 2",times="0",original-location="riscv_cpu_tlb_fill"}
+~"Breakpoint 2 at 0x3cbbb5: file /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c, line 158.\n"
+=breakpoint-created,bkpt={number="2",type="breakpoint",disp="keep",enabled="y",addr="0x00000000003cbbb5",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="158",thread-groups=["i1"],cond="addr == 0x1000 && access_type == 2",times="0",original-location="get_physical_address"}
+~"Num     Type           Disp Enb Address            What\n"
+~"1       breakpoint     keep y   0x00000000003cc7ca in riscv_cpu_tlb_fill at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:438\n"
+~"\tstop only if address == 0x1000 && access_type == 2\n"
+~"2       breakpoint     keep y   0x00000000003cbbb5 in get_physical_address at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:158\n"
+~"\tstop only if addr == 0x1000 && access_type == 2\n"
+4^done
+(gdb) 
+>>> 5-exec-run
+=thread-group-started,id="i1",pid="432"
+=thread-created,id="1",group-id="i1"
+=breakpoint-modified,bkpt={number="1",type="breakpoint",disp="keep",enabled="y",addr="0x00005d477a1c37ca",func="riscv_cpu_tlb_fill",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="438",thread-groups=["i1"],cond="address == 0x1000 && access_type == 2",times="0",original-location="riscv_cpu_tlb_fill"}
+=breakpoint-modified,bkpt={number="2",type="breakpoint",disp="keep",enabled="y",addr="0x00005d477a1c2bb5",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="158",thread-groups=["i1"],cond="addr == 0x1000 && access_type == 2",times="0",original-location="get_physical_address"}
+=library-loaded,id="/lib64/ld-linux-x86-64.so.2",target-name="/lib64/ld-linux-x86-64.so.2",host-name="/lib64/ld-linux-x86-64.so.2",symbols-loaded="0",thread-group="i1",ranges=[{from="0x00007ce6ea354090",to="0x00007ce6ea37d315"}]
+5^running
+*running,thread-id="all"
+(gdb) 
+=library-loaded,id="/lib/x86_64-linux-gnu/libncursesw.so.6",target-name="/lib/x86_64-linux-gnu/libncursesw.so.6",host-name="/lib/x86_64-linux-gnu/libncursesw.so.6",symbols-loaded="0",thread-group="i1",ranges=[{from="0x00007ce6ea315090",to="0x00007ce6ea33c5ea"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/libtinfo.so.6",target-name="/lib/x86_64-linux-gnu/libtinfo.so.6",host-name="/lib/x86_64-linux-gnu/libtinfo.so.6",symbols-loaded="0",thread-group="i1",ranges=[{from="0x00007ce6ea2e8780",to="0x00007ce6ea2f81ab"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/libz.so.1",target-name="/lib/x86_64-linux-gnu/libz.so.1",host-name="/lib/x86_64-linux-gnu/libz.so.1",symbols-loaded="0",thread-group="i1",ranges=[{from="0x00007ce6ea2c0280",to="0x00007ce6ea2d0c14"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/libpixman-1.so.0",target-name="/lib/x86_64-linux-gnu/libpixman-1.so.0",host-name="/lib/x86_64-linux-gnu/libpixman-1.so.0",symbols-loaded="0",thread-group="i1",ranges=[{from="0x00007ce6ea21d300",to="0x00007ce6ea2a24bf"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/libglib-2.0.so.0",target-name="/lib/x86_64-linux-gnu/libglib-2.0.so.0",host-name="/lib/x86_64-linux-gnu/libglib-2.0.so.0",symbols-loaded="0",thread-group="i1",ranges=[{from="0x00007ce6ea0f6b20",to="0x00007ce6ea1842c2"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/libm.so.6",target-name="/lib/x86_64-linux-gnu/libm.so.6",host-name="/lib/x86_64-linux-gnu/libm.so.6",symbols-loaded="0",thread-group="i1",ranges=[{from="0x00007ce6e9ffd3a0",to="0x00007ce6ea0788c8"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/libgcc_s.so.1",target-name="/lib/x86_64-linux-gnu/libgcc_s.so.1",host-name="/lib/x86_64-linux-gnu/libgcc_s.so.1",symbols-loaded="0",thread-group="i1",ranges=[{from="0x00007ce6e9fd2660",to="0x00007ce6e9fe8805"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/libc.so.6",target-name="/lib/x86_64-linux-gnu/libc.so.6",host-name="/lib/x86_64-linux-gnu/libc.so.6",symbols-loaded="0",thread-group="i1",ranges=[{from="0x00007ce6e9c28700",to="0x00007ce6e9dba9fd"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/libpcre.so.3",target-name="/lib/x86_64-linux-gnu/libpcre.so.3",host-name="/lib/x86_64-linux-gnu/libpcre.so.3",symbols-loaded="0",thread-group="i1",ranges=[{from="0x00007ce6e9f5b2a0",to="0x00007ce6e9faf5b0"}]
+~"[Thread debugging using libthread_db enabled]\n"
+~"Using host libthread_db library \"/lib/x86_64-linux-gnu/libthread_db.so.1\".\n"
+=thread-created,id="2",group-id="i1"
+~"[New Thread 0x7ce6e9bff640 (LWP 435)]\n"
+*running,thread-id="2"
+=thread-created,id="3",group-id="i1"
+~"[New Thread 0x7ce6e93fe640 (LWP 436)]\n"
+*running,thread-id="3"
+=breakpoint-modified,bkpt={number="1",type="breakpoint",disp="keep",enabled="y",addr="0x00005d477a1c37ca",func="riscv_cpu_tlb_fill",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="438",thread-groups=["i1"],cond="address == 0x1000 && access_type == 2",times="1",original-location="riscv_cpu_tlb_fill"}
+~"[Switching to Thread 0x7ce6e93fe640 (LWP 436)]\n"
+~"\n"
+~"Thread 3 \"qemu-system-ris\" hit Breakpoint 1, riscv_cpu_tlb_fill (cs=0x5d47aa8d47d0, address=4096, size=0, access_type=MMU_INST_FETCH, mmu_idx=3, probe=false, retaddr=0) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:438\n"
+~"438\t{\n"
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="1",frame={addr="0x00005d477a1c37ca",func="riscv_cpu_tlb_fill",args=[{name="cs",value="0x5d47aa8d47d0"},{name="address",value="4096"},{name="size",value="0"},{name="access_type",value="MMU_INST_FETCH"},{name="mmu_idx",value="3"},{name="probe",value="false"},{name="retaddr",value="0"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="438",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="11"
+>>> 6-exec-continue
+6^running
+*running,thread-id="all"
+(gdb) 
+=breakpoint-modified,bkpt={number="2",type="breakpoint",disp="keep",enabled="y",addr="0x00005d477a1c2bb5",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="158",thread-groups=["i1"],cond="addr == 0x1000 && access_type == 2",times="1",original-location="get_physical_address"}
+~"\n"
+~"Thread 3 \"qemu-system-ris\" hit Breakpoint 2, get_physical_address (env=0x5d47aa8dd1e0, physical=0x7ce6e93fd6b0, prot=0x7ce6e93fd6a4, addr=4096, access_type=2, mmu_idx=3) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:158\n"
+~"158\t{\n"
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="2",frame={addr="0x00005d477a1c2bb5",func="get_physical_address",args=[{name="env",value="0x5d47aa8dd1e0"},{name="physical",value="0x7ce6e93fd6b0"},{name="prot",value="0x7ce6e93fd6a4"},{name="addr",value="4096"},{name="access_type",value="2"},{name="mmu_idx",value="3"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="158",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="11"
+>>> 7-data-evaluate-expression "addr"
+7^done,value="4096"
+(gdb) 
+>>> 8-data-evaluate-expression "access_type"
+8^done,value="2"
+(gdb) 
+>>> 9-data-evaluate-expression "mmu_idx"
+9^done,value="3"
+(gdb) 
+>>> 10-data-evaluate-expression "env->priv"
+10^done,value="3"
+(gdb) 
+>>> 11-data-evaluate-expression "env->satp"
+11^done,value="0"
+(gdb) 
+>>> 12-data-evaluate-expression "env->mstatus"
+12^done,value="0"
+(gdb) 
+>>> 13-interpreter-exec console "tbreak /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:174"
+~"Temporary breakpoint 3 at 0x5d477a1c2c5c: file /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c, line 174.\n"
+=breakpoint-created,bkpt={number="3",type="breakpoint",disp="del",enabled="y",addr="0x00005d477a1c2c5c",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="174",thread-groups=["i1"],times="0",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:174"}
+13^done
+(gdb) 
+>>> 14-exec-continue
+14^running
+*running,thread-id="all"
+(gdb) 
+=breakpoint-modified,bkpt={number="3",type="breakpoint",disp="del",enabled="y",addr="0x00005d477a1c2c5c",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="174",thread-groups=["i1"],times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:174"}
+~"\n"
+~"Thread 3 \"qemu-system-ris\" hit Temporary breakpoint 3, get_physical_address (env=0x5d47aa8dd1e0, physical=0x7ce6e93fd6b0, prot=0x7ce6e93fd6a4, addr=4096, access_type=2, mmu_idx=3) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:174\n"
+~"174\t        return TRANSLATE_SUCCESS;\n"
+*stopped,reason="breakpoint-hit",disp="del",bkptno="3",frame={addr="0x00005d477a1c2c5c",func="get_physical_address",args=[{name="env",value="0x5d47aa8dd1e0"},{name="physical",value="0x7ce6e93fd6b0"},{name="prot",value="0x7ce6e93fd6a4"},{name="addr",value="4096"},{name="access_type",value="2"},{name="mmu_idx",value="3"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="174",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="11"
+=breakpoint-deleted,id="3"
+>>> 15-data-evaluate-expression "mode"
+15^done,value="3"
+(gdb) 
+>>> 16-data-evaluate-expression "*physical"
+16^done,value="4096"
+(gdb) 
+>>> 17-data-evaluate-expression "*prot"
+17^done,value="7"
+(gdb) 
+>>> 18-interpreter-exec console "source /home/andy/os_lab2_qemu_debug/scripts/tlb_prepare_sv39.gdb"
+=breakpoint-modified,bkpt={number="1",type="breakpoint",disp="keep",enabled="n",addr="0x00005d477a1c37ca",func="riscv_cpu_tlb_fill",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="438",thread-groups=["i1"],cond="address == 0x1000 && access_type == 2",times="1",original-location="riscv_cpu_tlb_fill"}
+=breakpoint-modified,bkpt={number="2",type="breakpoint",disp="keep",enabled="n",addr="0x00005d477a1c2bb5",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="158",thread-groups=["i1"],cond="addr == 0x1000 && access_type == 2",times="1",original-location="get_physical_address"}
+~"Breakpoint 4 at 0x5d477a10a141: file /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c, line 1030.\n"
+=breakpoint-created,bkpt={number="4",type="breakpoint",disp="keep",enabled="y",addr="0x00005d477a10a141",func="get_page_addr_code",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1030",thread-groups=["i1"],cond="addr == 0xffffffffc02000d8",times="0",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1030"}
+~"Num     Type           Disp Enb Address            What\n"
+~"1       breakpoint     keep n   0x00005d477a1c37ca in riscv_cpu_tlb_fill at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:438\n"
+~"\tstop only if address == 0x1000 && access_type == 2\n"
+~"\tbreakpoint already hit 1 time\n"
+~"2       breakpoint     keep n   0x00005d477a1c2bb5 in get_physical_address at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:158\n"
+~"\tstop only if addr == 0x1000 && access_type == 2\n"
+~"\tbreakpoint already hit 1 time\n"
+~"4       breakpoint     keep y   0x00005d477a10a141 in get_page_addr_code at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1030\n"
+~"\tstop only if addr == 0xffffffffc02000d8\n"
+18^done
+(gdb) 
+>>> 19-exec-continue
+19^running
+*running,thread-id="all"
+(gdb) 
+=breakpoint-modified,bkpt={number="4",type="breakpoint",disp="keep",enabled="y",addr="0x00005d477a10a141",func="get_page_addr_code",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1030",thread-groups=["i1"],cond="addr == 0xffffffffc02000d8",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1030"}
+~"\n"
+~"Thread 3 \"qemu-system-ris\" hit Breakpoint 4, get_page_addr_code (env=0x5d47aa8dd1e0, addr=18446744072637907160) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1030\n"
+~"1030\t    if (unlikely(!tlb_hit(entry->addr_code, addr))) {\n"
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="4",frame={addr="0x00005d477a10a141",func="get_page_addr_code",args=[{name="env",value="0x5d47aa8dd1e0"},{name="addr",value="18446744072637907160"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1030",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="11"
+>>> 20-interpreter-exec console "source /home/andy/os_lab2_qemu_debug/scripts/tlb_inspect_lookup.gdb"
+~"env = 0x5d47aa8dd1e0\n"
+~"addr = 18446744072637907160\n"
+~"$1 = 0xffffffffc02000d8\n"
+~"$2 = 0x800000000008020a\n"
+~"$3 = 1\n"
+~"$4 = 1\n"
+~"$5 = 0\n"
+~"$6 = 0xffffffffffffffff\n"
+~"$7 = 0xffffffffc0200000\n"
+~"$8 = 0\n"
+~"#0  get_page_addr_code (env=0x5d47aa8dd1e0, addr=18446744072637907160) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1030\n"
+~"#1  0x00005d477a12ec91 in tb_htable_lookup (cpu=0x5d47aa8d47d0, pc=18446744072637907160, cs_base=0, flags=24577, cf_mask=4278714368) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cpu-exec.c:339\n"
+~"#2  0x00005d477a127c45 in tb_lookup__cpu_state (cpu=0x5d47aa8d47d0, pc=0x7ce6e93fd370, cs_base=0x7ce6e93fd368, flags=0x7ce6e93fd364, cf_mask=4278714368) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/include/exec/tb-lookup.h:43\n"
+~"#3  0x00005d477a127ffe in helper_lookup_tb_ptr (env=0x5d47aa8dd1e0) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/tcg-runtime.c:154\n"
+~"#4  0x00007ce6e2050df7 in code_gen_buffer ()\n"
+~"#5  0x00005d477a12e73b in cpu_tb_exec (cpu=0x5d47aa8d47d0, itb=0x7ce6e2050d00 <code_gen_buffer+330963>) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cpu-exec.c:173\n"
+~"#6  0x00005d477a12f581 in cpu_loop_exec_tb (cpu=0x5d47aa8d47d0, tb=0x7ce6e2050d00 <code_gen_buffer+330963>, last_tb=0x7ce6e93fd918, tb_exit=0x7ce6e93fd910) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cpu-exec.c:621\n"
+~"#7  0x00005d477a12f8b6 in cpu_exec (cpu=0x5d47aa8d47d0) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cpu-exec.c:732\n"
+~"#8  0x00005d477a0e1f16 in tcg_cpu_exec (cpu=0x5d47aa8d47d0) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/cpus.c:1435\n"
+~"#9  0x00005d477a0e27cf in qemu_tcg_cpu_thread_fn (arg=0x5d47aa8d47d0) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/cpus.c:1743\n"
+~"#10 0x00005d477a566bd3 in qemu_thread_start (args=0x5d47aa8eae70) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/util/qemu-thread-posix.c:502\n"
+~"#11 0x00007ce6e9c94a83 in ?? () from /lib/x86_64-linux-gnu/libc.so.6\n"
+~"#12 0x00007ce6e9d268e0 in ?? () from /lib/x86_64-linux-gnu/libc.so.6\n"
+20^done
+(gdb) 
+>>> 21-data-evaluate-expression "(entry->addr_code & 0xfffffffffffff800ULL) == (addr & 0xfffffffffffff000ULL)"
+21^done,value="0"
+(gdb) 
+>>> 22-data-evaluate-expression "addr"
+22^done,value="18446744072637907160"
+(gdb) 
+>>> 23-data-evaluate-expression "env->satp"
+23^done,value="9223372036855300618"
+(gdb) 
+>>> 24-data-evaluate-expression "env->priv"
+24^done,value="1"
+(gdb) 
+>>> 25-data-evaluate-expression "mmu_idx"
+25^done,value="1"
+(gdb) 
+>>> 26-data-evaluate-expression "index"
+26^done,value="0"
+(gdb) 
+>>> 27-data-evaluate-expression "entry->addr_code"
+27^done,value="18446744073709551615"
+(gdb) 
+>>> 28-interpreter-exec console "bt"
+~"#0  get_page_addr_code (env=0x5d47aa8dd1e0, addr=18446744072637907160) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1030\n"
+~"#1  0x00005d477a12ec91 in tb_htable_lookup (cpu=0x5d47aa8d47d0, pc=18446744072637907160, cs_base=0, flags=24577, cf_mask=4278714368) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cpu-exec.c:339\n"
+~"#2  0x00005d477a127c45 in tb_lookup__cpu_state (cpu=0x5d47aa8d47d0, pc=0x7ce6e93fd370, cs_base=0x7ce6e93fd368, flags=0x7ce6e93fd364, cf_mask=4278714368) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/include/exec/tb-lookup.h:43\n"
+~"#3  0x00005d477a127ffe in helper_lookup_tb_ptr (env=0x5d47aa8dd1e0) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/tcg-runtime.c:154\n"
+~"#4  0x00007ce6e2050df7 in code_gen_buffer ()\n"
+~"#5  0x00005d477a12e73b in cpu_tb_exec (cpu=0x5d47aa8d47d0, itb=0x7ce6e2050d00 <code_gen_buffer+330963>) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cpu-exec.c:173\n"
+~"#6  0x00005d477a12f581 in cpu_loop_exec_tb (cpu=0x5d47aa8d47d0, tb=0x7ce6e2050d00 <code_gen_buffer+330963>, last_tb=0x7ce6e93fd918, tb_exit=0x7ce6e93fd910) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cpu-exec.c:621\n"
+~"#7  0x00005d477a12f8b6 in cpu_exec (cpu=0x5d47aa8d47d0) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cpu-exec.c:732\n"
+~"#8  0x00005d477a0e1f16 in tcg_cpu_exec (cpu=0x5d47aa8d47d0) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/cpus.c:1435\n"
+~"#9  0x00005d477a0e27cf in qemu_tcg_cpu_thread_fn (arg=0x5d47aa8d47d0) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/cpus.c:1743\n"
+~"#10 0x00005d477a566bd3 in qemu_thread_start (args=0x5d47aa8eae70) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/util/qemu-thread-posix.c:502\n"
+~"#11 0x00007ce6e9c94a83 in ?? () from /lib/x86_64-linux-gnu/libc.so.6\n"
+~"#12 0x00007ce6e9d268e0 in ?? () from /lib/x86_64-linux-gnu/libc.so.6\n"
+28^done
+(gdb) 
+>>> 29-interpreter-exec console "list"
+~"1025\t    uintptr_t mmu_idx = cpu_mmu_index(env, true);\n"
+~"1026\t    uintptr_t index = tlb_index(env, mmu_idx, addr);\n"
+~"1027\t    CPUTLBEntry *entry = tlb_entry(env, mmu_idx, addr);\n"
+~"1028\t    void *p;\n"
+~"1029\t\n"
+~"1030\t    if (unlikely(!tlb_hit(entry->addr_code, addr))) {\n"
+~"1031\t        if (!VICTIM_TLB_HIT(addr_code, addr)) {\n"
+~"1032\t            tlb_fill(env_cpu(env), addr, 0, MMU_INST_FETCH, mmu_idx, 0);\n"
+~"1033\t            index = tlb_index(env, mmu_idx, addr);\n"
+~"1034\t            entry = tlb_entry(env, mmu_idx, addr);\n"
+29^done
+(gdb) 
+>>> 30-interpreter-exec console "source /home/andy/os_lab2_qemu_debug/scripts/tlb_trace_sv39.gdb"
+=breakpoint-modified,bkpt={number="1",type="breakpoint",disp="keep",enabled="n",addr="0x00005d477a1c37ca",func="riscv_cpu_tlb_fill",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="438",thread-groups=["i1"],cond="address == 0x1000 && access_type == 2",times="1",original-location="riscv_cpu_tlb_fill"}
+=breakpoint-modified,bkpt={number="2",type="breakpoint",disp="keep",enabled="n",addr="0x00005d477a1c2bb5",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="158",thread-groups=["i1"],cond="addr == 0x1000 && access_type == 2",times="1",original-location="get_physical_address"}
+=breakpoint-modified,bkpt={number="4",type="breakpoint",disp="keep",enabled="n",addr="0x00005d477a10a141",func="get_page_addr_code",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1030",thread-groups=["i1"],cond="addr == 0xffffffffc02000d8",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1030"}
+~"Breakpoint 5 at 0x5d477a1c37ca: file /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c, line 438.\n"
+=breakpoint-created,bkpt={number="5",type="breakpoint",disp="keep",enabled="y",addr="0x00005d477a1c37ca",func="riscv_cpu_tlb_fill",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="438",thread-groups=["i1"],cond="address == 0xffffffffc02000d8 && access_type == 2",times="0",original-location="riscv_cpu_tlb_fill"}
+~"Breakpoint 6 at 0x5d477a1c2bb5: file /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c, line 158.\n"
+=breakpoint-created,bkpt={number="6",type="breakpoint",disp="keep",enabled="y",addr="0x00005d477a1c2bb5",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="158",thread-groups=["i1"],cond="addr == 0xffffffffc02000d8 && access_type == 2",times="0",original-location="get_physical_address"}
+~"Num     Type           Disp Enb Address            What\n"
+~"1       breakpoint     keep n   0x00005d477a1c37ca in riscv_cpu_tlb_fill at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:438\n"
+~"\tstop only if address == 0x1000 && access_type == 2\n"
+~"\tbreakpoint already hit 1 time\n"
+~"2       breakpoint     keep n   0x00005d477a1c2bb5 in get_physical_address at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:158\n"
+~"\tstop only if addr == 0x1000 && access_type == 2\n"
+~"\tbreakpoint already hit 1 time\n"
+~"4       breakpoint     keep n   0x00005d477a10a141 in get_page_addr_code at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1030\n"
+~"\tstop only if addr == 0xffffffffc02000d8\n"
+~"\tbreakpoint already hit 1 time\n"
+~"5       breakpoint     keep y   0x00005d477a1c37ca in riscv_cpu_tlb_fill at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:438\n"
+~"\tstop only if address == 0xffffffffc02000d8 && access_type == 2\n"
+~"6       breakpoint     keep y   0x00005d477a1c2bb5 in get_physical_address at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:158\n"
+~"\tstop only if addr == 0xffffffffc02000d8 && access_type == 2\n"
+30^done
+(gdb) 
+>>> 31-exec-continue
+31^running
+*running,thread-id="all"
+(gdb) 
+=breakpoint-modified,bkpt={number="5",type="breakpoint",disp="keep",enabled="y",addr="0x00005d477a1c37ca",func="riscv_cpu_tlb_fill",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="438",thread-groups=["i1"],cond="address == 0xffffffffc02000d8 && access_type == 2",times="1",original-location="riscv_cpu_tlb_fill"}
+~"\n"
+~"Thread 3 \"qemu-system-ris\" hit Breakpoint 5, riscv_cpu_tlb_fill (cs=0x5d47aa8d47d0, address=18446744072637907160, size=0, access_type=MMU_INST_FETCH, mmu_idx=1, probe=false, retaddr=0) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:438\n"
+~"438\t{\n"
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="5",frame={addr="0x00005d477a1c37ca",func="riscv_cpu_tlb_fill",args=[{name="cs",value="0x5d47aa8d47d0"},{name="address",value="18446744072637907160"},{name="size",value="0"},{name="access_type",value="MMU_INST_FETCH"},{name="mmu_idx",value="1"},{name="probe",value="false"},{name="retaddr",value="0"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="438",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="11"
+>>> 32-exec-continue
+32^running
+*running,thread-id="all"
+(gdb) 
+=breakpoint-modified,bkpt={number="6",type="breakpoint",disp="keep",enabled="y",addr="0x00005d477a1c2bb5",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="158",thread-groups=["i1"],cond="addr == 0xffffffffc02000d8 && access_type == 2",times="1",original-location="get_physical_address"}
+~"\n"
+~"Thread 3 \"qemu-system-ris\" hit Breakpoint 6, get_physical_address (env=0x5d47aa8dd1e0, physical=0x7ce6e93fd180, prot=0x7ce6e93fd174, addr=18446744072637907160, access_type=2, mmu_idx=1) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:158\n"
+~"158\t{\n"
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="6",frame={addr="0x00005d477a1c2bb5",func="get_physical_address",args=[{name="env",value="0x5d47aa8dd1e0"},{name="physical",value="0x7ce6e93fd180"},{name="prot",value="0x7ce6e93fd174"},{name="addr",value="18446744072637907160"},{name="access_type",value="2"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="158",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="11"
+>>> 33-data-evaluate-expression "addr"
+33^done,value="18446744072637907160"
+(gdb) 
+>>> 34-data-evaluate-expression "access_type"
+34^done,value="2"
+(gdb) 
+>>> 35-data-evaluate-expression "mmu_idx"
+35^done,value="1"
+(gdb) 
+>>> 36-data-evaluate-expression "env->priv"
+36^done,value="1"
+(gdb) 
+>>> 37-data-evaluate-expression "env->satp"
+37^done,value="9223372036855300618"
+(gdb) 
+>>> 38-data-evaluate-expression "env->mstatus"
+38^done,value="9223372036854800384"
+(gdb) 
+>>> 39-interpreter-exec console "bt"
+~"#0  get_physical_address (env=0x5d47aa8dd1e0, physical=0x7ce6e93fd180, prot=0x7ce6e93fd174, addr=18446744072637907160, access_type=2, mmu_idx=1) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:158\n"
+~"#1  0x00005d477a1c3891 in riscv_cpu_tlb_fill (cs=0x5d47aa8d47d0, address=18446744072637907160, size=0, access_type=MMU_INST_FETCH, mmu_idx=1, probe=false, retaddr=0) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:451\n"
+~"#2  0x00005d477a109b0f in tlb_fill (cpu=0x5d47aa8d47d0, addr=18446744072637907160, size=0, access_type=MMU_INST_FETCH, mmu_idx=1, retaddr=0) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:878\n"
+~"#3  0x00005d477a10a1cb in get_page_addr_code (env=0x5d47aa8dd1e0, addr=18446744072637907160) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1032\n"
+~"#4  0x00005d477a12ec91 in tb_htable_lookup (cpu=0x5d47aa8d47d0, pc=18446744072637907160, cs_base=0, flags=24577, cf_mask=4278714368) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cpu-exec.c:339\n"
+~"#5  0x00005d477a127c45 in tb_lookup__cpu_state (cpu=0x5d47aa8d47d0, pc=0x7ce6e93fd370, cs_base=0x7ce6e93fd368, flags=0x7ce6e93fd364, cf_mask=4278714368) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/include/exec/tb-lookup.h:43\n"
+~"#6  0x00005d477a127ffe in helper_lookup_tb_ptr (env=0x5d47aa8dd1e0) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/tcg-runtime.c:154\n"
+~"#7  0x00007ce6e2050df7 in code_gen_buffer ()\n"
+~"#8  0x00005d477a12e73b in cpu_tb_exec (cpu=0x5d47aa8d47d0, itb=0x7ce6e2050d00 <code_gen_buffer+330963>) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cpu-exec.c:173\n"
+~"#9  0x00005d477a12f581 in cpu_loop_exec_tb (cpu=0x5d47aa8d47d0, tb=0x7ce6e2050d00 <code_gen_buffer+330963>, last_tb=0x7ce6e93fd918, tb_exit=0x7ce6e93fd910) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cpu-exec.c:621\n"
+~"#10 0x00005d477a12f8b6 in cpu_exec (cpu=0x5d47aa8d47d0) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cpu-exec.c:732\n"
+~"#11 0x00005d477a0e1f16 in tcg_cpu_exec (cpu=0x5d47aa8d47d0) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/cpus.c:1435\n"
+~"#12 0x00005d477a0e27cf in qemu_tcg_cpu_thread_fn (arg=0x5d47aa8d47d0) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/cpus.c:1743\n"
+~"#13 0x00005d477a566bd3 in qemu_thread_start (args=0x5d47aa8eae70) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/util/qemu-thread-posix.c:502\n"
+~"#14 0x00007ce6e9c94a83 in ?? () from /lib/x86_64-linux-gnu/libc.so.6\n"
+~"#15 0x00007ce6e9d268e0 in ?? () from /lib/x86_64-linux-gnu/libc.so.6\n"
+39^done
+(gdb) 
+>>> 40-interpreter-exec console "tbreak /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:237"
+~"Temporary breakpoint 7 at 0x5d477a1c3000: file /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c, line 237.\n"
+=breakpoint-created,bkpt={number="7",type="breakpoint",disp="del",enabled="y",addr="0x00005d477a1c3000",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="237",thread-groups=["i1"],times="0",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:237"}
+40^done
+(gdb) 
+>>> 41-exec-continue
+41^running
+*running,thread-id="all"
+(gdb) 
+=breakpoint-modified,bkpt={number="7",type="breakpoint",disp="del",enabled="y",addr="0x00005d477a1c3000",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="237",thread-groups=["i1"],times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:237"}
+~"\n"
+~"Thread 3 \"qemu-system-ris\" hit Temporary breakpoint 7, get_physical_address (env=0x5d47aa8dd1e0, physical=0x7ce6e93fd180, prot=0x7ce6e93fd174, addr=18446744072637907160, access_type=2, mmu_idx=1) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:237\n"
+~"237\t    for (i = 0; i < levels; i++, ptshift -= ptidxbits) {\n"
+*stopped,reason="breakpoint-hit",disp="del",bkptno="7",frame={addr="0x00005d477a1c3000",func="get_physical_address",args=[{name="env",value="0x5d47aa8dd1e0"},{name="physical",value="0x7ce6e93fd180"},{name="prot",value="0x7ce6e93fd174"},{name="addr",value="18446744072637907160"},{name="access_type",value="2"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="237",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="11"
+=breakpoint-deleted,id="7"
+>>> 42-data-evaluate-expression "base"
+42^done,value="2149621760"
+(gdb) 
+>>> 43-data-evaluate-expression "levels"
+43^done,value="3"
+(gdb) 
+>>> 44-data-evaluate-expression "ptidxbits"
+44^done,value="9"
+(gdb) 
+>>> 45-data-evaluate-expression "ptesize"
+45^done,value="8"
+(gdb) 
+>>> 46-data-evaluate-expression "ptshift"
+46^done,value="18"
+(gdb) 
+>>> 47-data-evaluate-expression "mode"
+47^done,value="1"
+(gdb) 
+>>> 48-data-evaluate-expression "vm"
+48^done,value="8"
+(gdb) 
+>>> 49-interpreter-exec console "tbreak /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:256"
+~"Temporary breakpoint 8 at 0x5d477a1c30d2: file /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c, line 256.\n"
+=breakpoint-created,bkpt={number="8",type="breakpoint",disp="del",enabled="y",addr="0x00005d477a1c30d2",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="256",thread-groups=["i1"],times="0",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:256"}
+49^done
+(gdb) 
+>>> 50-exec-continue
+50^running
+*running,thread-id="all"
+(gdb) 
+=breakpoint-modified,bkpt={number="8",type="breakpoint",disp="del",enabled="y",addr="0x00005d477a1c30d2",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="256",thread-groups=["i1"],times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:256"}
+~"\n"
+~"Thread 3 \"qemu-system-ris\" hit Temporary breakpoint 8, get_physical_address (env=0x5d47aa8dd1e0, physical=0x7ce6e93fd180, prot=0x7ce6e93fd174, addr=18446744072637907160, access_type=2, mmu_idx=1) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:256\n"
+~"256\t        if (!(pte & PTE_V)) {\n"
+*stopped,reason="breakpoint-hit",disp="del",bkptno="8",frame={addr="0x00005d477a1c30d2",func="get_physical_address",args=[{name="env",value="0x5d47aa8dd1e0"},{name="physical",value="0x7ce6e93fd180"},{name="prot",value="0x7ce6e93fd174"},{name="addr",value="18446744072637907160"},{name="access_type",value="2"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="256",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="11"
+=breakpoint-deleted,id="8"
+>>> 51-data-evaluate-expression "addr"
+51^done,value="18446744072637907160"
+(gdb) 
+>>> 52-data-evaluate-expression "i"
+52^done,value="0"
+(gdb) 
+>>> 53-data-evaluate-expression "base"
+53^done,value="2149621760"
+(gdb) 
+>>> 54-data-evaluate-expression "levels"
+54^done,value="3"
+(gdb) 
+>>> 55-data-evaluate-expression "ptidxbits"
+55^done,value="9"
+(gdb) 
+>>> 56-data-evaluate-expression "ptshift"
+56^done,value="18"
+(gdb) 
+>>> 57-data-evaluate-expression "idx"
+57^done,value="511"
+(gdb) 
+>>> 58-data-evaluate-expression "pte_addr"
+58^done,value="2149625848"
+(gdb) 
+>>> 59-data-evaluate-expression "pte"
+59^done,value="536871119"
+(gdb) 
+>>> 60-data-evaluate-expression "ppn"
+60^done,value="524288"
+(gdb) 
+>>> 61-interpreter-exec console "source /home/andy/os_lab2_qemu_debug/scripts/tlb_inspect_leaf.gdb"
+~"env = 0x5d47aa8dd1e0\n"
+~"physical = 0x7ce6e93fd180\n"
+~"prot = 0x7ce6e93fd174\n"
+~"addr = 18446744072637907160\n"
+~"access_type = 2\n"
+~"mmu_idx = 1\n"
+~"idx = 511\n"
+~"pte_addr = 2149625848\n"
+~"pte = 536871119\n"
+~"ppn = 524288\n"
+~"mode = 1\n"
+~"base = 2149621760\n"
+~"levels = 3\n"
+~"ptidxbits = 9\n"
+~"ptesize = 8\n"
+~"vm = 8\n"
+~"sum = 0\n"
+~"mxr = 0\n"
+~"__func__ = \"get_physical_address\"\n"
+~"cs = 0x5d47aa8d47d0\n"
+~"va_bits = 39\n"
+~"mask = 67108863\n"
+~"masked_msbs = 67108863\n"
+~"ptshift = 18\n"
+~"i = 0\n"
+~"$9 = 0xffffffffc02000d8\n"
+~"$10 = 0x8020a000\n"
+~"$11 = 3\n"
+~"$12 = 9\n"
+~"$13 = 18\n"
+~"$14 = 0x1ff\n"
+~"$15 = 0x8020aff8\n"
+~"$16 = 0x200000cf\n"
+~"$17 = 0x80000\n"
+~"$18 = 0x8020a000\n"
+~"$19 = 0x1ff\n"
+~"$20 = 0x1\n"
+~"$21 = 0x0\n"
+~"$22 = 0x80200000\n"
+~"$23 = 0x802000d8\n"
+61^done
+(gdb) 
+>>> 62-interpreter-exec console "list"
+~"251\t#elif defined(TARGET_RISCV64)\n"
+~"252\t        target_ulong pte = ldq_phys(cs->as, pte_addr);\n"
+~"253\t#endif\n"
+~"254\t        target_ulong ppn = pte >> PTE_PPN_SHIFT;\n"
+~"255\t\n"
+~"256\t        if (!(pte & PTE_V)) {\n"
+~"257\t            /* Invalid PTE */\n"
+~"258\t            return TRANSLATE_FAIL;\n"
+~"259\t        } else if (!(pte & (PTE_R | PTE_W | PTE_X))) {\n"
+~"260\t            /* Inner PTE, continue walking */\n"
+62^done
+(gdb) 
+>>> 63-interpreter-exec console "p/x ((env->mstatus >> 17) & 1)"
+~"$24 = 0x0\n"
+63^done
+(gdb) 
+>>> 64-interpreter-exec console "p ((env->mstatus >> 11) & 3)"
+~"$25 = 0\n"
+64^done
+(gdb) 
+>>> 65-exec-finish
+65^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="function-finished",frame={addr="0x00005d477a1c3891",func="riscv_cpu_tlb_fill",args=[{name="cs",value="0x5d47aa8d47d0"},{name="address",value="18446744072637907160"},{name="size",value="0"},{name="access_type",value="MMU_INST_FETCH"},{name="mmu_idx",value="1"},{name="probe",value="false"},{name="retaddr",value="0"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="451",arch="i386:x86-64"},gdb-result-var="$26",return-value="0",thread-id="3",stopped-threads="all",core="11"
+>>> 66-data-evaluate-expression "*$out_pa"
+66^done,value="2149580800"
+(gdb) 
+>>> 67-data-evaluate-expression "*$out_prot"
+67^done,value="7"
+(gdb) 
+>>> 68-data-evaluate-expression "address"
+68^done,value="18446744072637907160"
+(gdb) 
+>>> 69-data-evaluate-expression "pa"
+69^done,value="2149580800"
+(gdb) 
+>>> 70-data-evaluate-expression "prot"
+70^done,value="7"
+(gdb) 
+>>> 71-interpreter-exec console "tbreak /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:472"
+~"Temporary breakpoint 9 at 0x5d477a1c3980: file /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c, line 472.\n"
+=breakpoint-created,bkpt={number="9",type="breakpoint",disp="del",enabled="y",addr="0x00005d477a1c3980",func="riscv_cpu_tlb_fill",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="472",thread-groups=["i1"],times="0",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:472"}
+71^done
+(gdb) 
+>>> 72-exec-continue
+72^running
+*running,thread-id="all"
+(gdb) 
+=breakpoint-modified,bkpt={number="9",type="breakpoint",disp="del",enabled="y",addr="0x00005d477a1c3980",func="riscv_cpu_tlb_fill",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="472",thread-groups=["i1"],times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:472"}
+~"\n"
+~"Thread 3 \"qemu-system-ris\" hit Temporary breakpoint 9, riscv_cpu_tlb_fill (cs=0x5d47aa8d47d0, address=18446744072637907160, size=0, access_type=MMU_INST_FETCH, mmu_idx=1, probe=false, retaddr=0) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:472\n"
+~"472\t        tlb_set_page(cs, address & TARGET_PAGE_MASK, pa & TARGET_PAGE_MASK,\n"
+*stopped,reason="breakpoint-hit",disp="del",bkptno="9",frame={addr="0x00005d477a1c3980",func="riscv_cpu_tlb_fill",args=[{name="cs",value="0x5d47aa8d47d0"},{name="address",value="18446744072637907160"},{name="size",value="0"},{name="access_type",value="MMU_INST_FETCH"},{name="mmu_idx",value="1"},{name="probe",value="false"},{name="retaddr",value="0"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="472",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="11"
+=breakpoint-deleted,id="9"
+>>> 73-data-evaluate-expression "address"
+73^done,value="18446744072637907160"
+(gdb) 
+>>> 74-data-evaluate-expression "pa"
+74^done,value="2149580800"
+(gdb) 
+>>> 75-data-evaluate-expression "prot"
+75^done,value="7"
+(gdb) 
+>>> 76-data-evaluate-expression "mmu_idx"
+76^done,value="1"
+(gdb) 
+>>> 77-data-evaluate-expression "ret"
+77^done,value="0"
+(gdb) 
+>>> 78-interpreter-exec console "disable breakpoints"
+=breakpoint-modified,bkpt={number="1",type="breakpoint",disp="keep",enabled="n",addr="0x00005d477a1c37ca",func="riscv_cpu_tlb_fill",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="438",thread-groups=["i1"],cond="address == 0x1000 && access_type == 2",times="1",original-location="riscv_cpu_tlb_fill"}
+=breakpoint-modified,bkpt={number="2",type="breakpoint",disp="keep",enabled="n",addr="0x00005d477a1c2bb5",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="158",thread-groups=["i1"],cond="addr == 0x1000 && access_type == 2",times="1",original-location="get_physical_address"}
+=breakpoint-modified,bkpt={number="4",type="breakpoint",disp="keep",enabled="n",addr="0x00005d477a10a141",func="get_page_addr_code",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1030",thread-groups=["i1"],cond="addr == 0xffffffffc02000d8",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1030"}
+=breakpoint-modified,bkpt={number="5",type="breakpoint",disp="keep",enabled="n",addr="0x00005d477a1c37ca",func="riscv_cpu_tlb_fill",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="438",thread-groups=["i1"],cond="address == 0xffffffffc02000d8 && access_type == 2",times="1",original-location="riscv_cpu_tlb_fill"}
+=breakpoint-modified,bkpt={number="6",type="breakpoint",disp="keep",enabled="n",addr="0x00005d477a1c2bb5",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="158",thread-groups=["i1"],cond="addr == 0xffffffffc02000d8 && access_type == 2",times="1",original-location="get_physical_address"}
+78^done
+(gdb) 
+>>> 79-exec-continue
+79^running
+*running,thread-id="all"
+(gdb) 
+>>> 80-exec-interrupt
+80^done
+(gdb) 
+~"\nThread "
+~"1 \"qemu-system-ris\" received signal SIGINT, Interrupt.\n"
+~"[Switching to Thread 0x7ce6e9f54b00 (LWP 432)]\n"
+~"0x00007ce6e9d18e1e in ppoll () from /lib/x86_64-linux-gnu/libc.so.6\n"
+*stopped,reason="signal-received",signal-name="SIGINT",signal-meaning="Interrupt",frame={addr="0x00007ce6e9d18e1e",func="ppoll",args=[],from="/lib/x86_64-linux-gnu/libc.so.6",arch="i386:x86-64"},thread-id="1",stopped-threads="all",core="26"
+>>> 81-interpreter-exec console "source /home/andy/os_lab2_qemu_debug/scripts/tlb_repeat.gdb"
+=breakpoint-modified,bkpt={number="1",type="breakpoint",disp="keep",enabled="n",addr="0x00005d477a1c37ca",func="riscv_cpu_tlb_fill",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="438",thread-groups=["i1"],cond="address == 0x1000 && access_type == 2",times="1",original-location="riscv_cpu_tlb_fill"}
+=breakpoint-modified,bkpt={number="2",type="breakpoint",disp="keep",enabled="n",addr="0x00005d477a1c2bb5",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="158",thread-groups=["i1"],cond="addr == 0x1000 && access_type == 2",times="1",original-location="get_physical_address"}
+=breakpoint-modified,bkpt={number="4",type="breakpoint",disp="keep",enabled="n",addr="0x00005d477a10a141",func="get_page_addr_code",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1030",thread-groups=["i1"],cond="addr == 0xffffffffc02000d8",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1030"}
+=breakpoint-modified,bkpt={number="5",type="breakpoint",disp="keep",enabled="n",addr="0x00005d477a1c37ca",func="riscv_cpu_tlb_fill",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="438",thread-groups=["i1"],cond="address == 0xffffffffc02000d8 && access_type == 2",times="1",original-location="riscv_cpu_tlb_fill"}
+=breakpoint-modified,bkpt={number="6",type="breakpoint",disp="keep",enabled="n",addr="0x00005d477a1c2bb5",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="158",thread-groups=["i1"],cond="addr == 0xffffffffc02000d8 && access_type == 2",times="1",original-location="get_physical_address"}
+~"Breakpoint 10 at 0x5d477a10a141: file /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c, line 1030.\n"
+=breakpoint-created,bkpt={number="10",type="breakpoint",disp="keep",enabled="y",addr="0x00005d477a10a141",func="get_page_addr_code",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1030",thread-groups=["i1"],cond="addr == 0xffffffffc02000d8",times="0",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1030"}
+~"Num     Type           Disp Enb Address            What\n"
+~"1       breakpoint     keep n   0x00005d477a1c37ca in riscv_cpu_tlb_fill at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:438\n"
+~"\tstop only if address == 0x1000 && access_type == 2\n"
+~"\tbreakpoint already hit 1 time\n"
+~"2       breakpoint     keep n   0x00005d477a1c2bb5 in get_physical_address at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:158\n"
+~"\tstop only if addr == 0x1000 && access_type == 2\n"
+~"\tbreakpoint already hit 1 time\n"
+~"4       breakpoint     keep n   0x00005d477a10a141 in get_page_addr_code at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1030\n"
+~"\tstop only if addr == 0xffffffffc02000d8\n"
+~"\tbreakpoint already hit 1 time\n"
+~"5       breakpoint     keep n   0x00005d477a1c37ca in riscv_cpu_tlb_fill at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:438\n"
+~"\tstop only if address == 0xffffffffc02000d8 && access_type == 2\n"
+~"\tbreakpoint already hit 1 time\n"
+~"6       breakpoint     keep n   0x00005d477a1c2bb5 in get_physical_address at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:158\n"
+~"\tstop only if addr == 0xffffffffc02000d8 && access_type == 2\n"
+~"\tbreakpoint already hit 1 time\n"
+~"10      breakpoint     keep y   0x00005d477a10a141 in get_page_addr_code at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1030\n"
+~"\tstop only if addr == 0xffffffffc02000d8\n"
+81^done
+(gdb) 
+>>> 82-exec-continue
+82^running
+*running,thread-id="all"
+(gdb) 
+=breakpoint-modified,bkpt={number="10",type="breakpoint",disp="keep",enabled="y",addr="0x00005d477a10a141",func="get_page_addr_code",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1030",thread-groups=["i1"],cond="addr == 0xffffffffc02000d8",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1030"}
+~"[Switching to Thread 0x7ce6e93fe640 (LWP 436)]\n"
+~"\n"
+~"Thread 3 \"qemu-system-ris\" hit Breakpoint 10, get_page_addr_code (env=0x5d47aa8dd1e0, addr=18446744072637907160) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1030\n"
+~"1030\t    if (unlikely(!tlb_hit(entry->addr_code, addr))) {\n"
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="10",frame={addr="0x00005d477a10a141",func="get_page_addr_code",args=[{name="env",value="0x5d47aa8dd1e0"},{name="addr",value="18446744072637907160"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1030",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="11"
+>>> 83-data-evaluate-expression "addr"
+83^done,value="18446744072637907160"
+(gdb) 
+>>> 84-data-evaluate-expression "env->satp"
+84^done,value="9223372036855300618"
+(gdb) 
+>>> 85-data-evaluate-expression "env->priv"
+85^done,value="1"
+(gdb) 
+>>> 86-data-evaluate-expression "mmu_idx"
+86^done,value="1"
+(gdb) 
+>>> 87-data-evaluate-expression "index"
+87^done,value="0"
+(gdb) 
+>>> 88-data-evaluate-expression "entry->addr_code"
+88^done,value="18446744072637906944"
+(gdb) 
+>>> 89-interpreter-exec console "source /home/andy/os_lab2_qemu_debug/scripts/tlb_inspect_lookup.gdb"
+~"env = 0x5d47aa8dd1e0\n"
+~"addr = 18446744072637907160\n"
+~"$27 = 0xffffffffc02000d8\n"
+~"$28 = 0x800000000008020a\n"
+~"$29 = 1\n"
+~"$30 = 1\n"
+~"$31 = 0\n"
+~"$32 = 0xffffffffc0200000\n"
+~"$33 = 0xffffffffc0200000\n"
+~"$34 = 1\n"
+~"#0  get_page_addr_code (env=0x5d47aa8dd1e0, addr=18446744072637907160) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1030\n"
+~"#1  0x00005d477a12ec91 in tb_htable_lookup (cpu=0x5d47aa8d47d0, pc=18446744072637907160, cs_base=0, flags=24577, cf_mask=4278714368) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cpu-exec.c:339\n"
+~"#2  0x00005d477a12e1ca in tb_lookup__cpu_state (cpu=0x5d47aa8d47d0, pc=0x7ce6e93fd8b8, cs_base=0x7ce6e93fd8b0, flags=0x7ce6e93fd8ac, cf_mask=4278714368) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/include/exec/tb-lookup.h:43\n"
+~"#3  0x00005d477a12ef64 in tb_find (cpu=0x5d47aa8d47d0, last_tb=0x0, tb_exit=0, cf_mask=524288) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cpu-exec.c:406\n"
+~"#4  0x00005d477a12f89a in cpu_exec (cpu=0x5d47aa8d47d0) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cpu-exec.c:731\n"
+~"#5  0x00005d477a0e1f16 in tcg_cpu_exec (cpu=0x5d47aa8d47d0) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/cpus.c:1435\n"
+~"#6  0x00005d477a0e27cf in qemu_tcg_cpu_thread_fn (arg=0x5d47aa8d47d0) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/cpus.c:1743\n"
+~"#7  0x00005d477a566bd3 in qemu_thread_start (args=0x5d47aa8eae70) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/util/qemu-thread-posix.c:502\n"
+~"#8  0x00007ce6e9c94a83 in ?? () from /lib/x86_64-linux-gnu/libc.so.6\n"
+~"#9  0x00007ce6e9d268e0 in ?? () from /lib/x86_64-linux-gnu/libc.so.6\n"
+89^done
+(gdb) 
+>>> 90-data-evaluate-expression "(entry->addr_code & 0xfffffffffffff800ULL) == (addr & 0xfffffffffffff000ULL)"
+90^done,value="1"
+(gdb) 
+>>> 91-interpreter-exec console "bt"
+~"#0  get_page_addr_code (env=0x5d47aa8dd1e0, addr=18446744072637907160) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1030\n"
+~"#1  0x00005d477a12ec91 in tb_htable_lookup (cpu=0x5d47aa8d47d0, pc=18446744072637907160, cs_base=0, flags=24577, cf_mask=4278714368) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cpu-exec.c:339\n"
+~"#2  0x00005d477a12e1ca in tb_lookup__cpu_state (cpu=0x5d47aa8d47d0, pc=0x7ce6e93fd8b8, cs_base=0x7ce6e93fd8b0, flags=0x7ce6e93fd8ac, cf_mask=4278714368) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/include/exec/tb-lookup.h:43\n"
+~"#3  0x00005d477a12ef64 in tb_find (cpu=0x5d47aa8d47d0, last_tb=0x0, tb_exit=0, cf_mask=524288) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cpu-exec.c:406\n"
+~"#4  0x00005d477a12f89a in cpu_exec (cpu=0x5d47aa8d47d0) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cpu-exec.c:731\n"
+~"#5  0x00005d477a0e1f16 in tcg_cpu_exec (cpu=0x5d47aa8d47d0) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/cpus.c:1435\n"
+~"#6  0x00005d477a0e27cf in qemu_tcg_cpu_thread_fn (arg=0x5d47aa8d47d0) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/cpus.c:1743\n"
+~"#7  0x00005d477a566bd3 in qemu_thread_start (args=0x5d47aa8eae70) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/util/qemu-thread-posix.c:502\n"
+~"#8  0x00007ce6e9c94a83 in ?? () from /lib/x86_64-linux-gnu/libc.so.6\n"
+~"#9  0x00007ce6e9d268e0 in ?? () from /lib/x86_64-linux-gnu/libc.so.6\n"
+91^done
+(gdb) 
+>>> 92-exec-next
+92^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x00005d477a10a244",func="get_page_addr_code",args=[{name="env",value="0x5d47aa8dd1e0"},{name="addr",value="18446744072637907160"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1039",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="11"
+>>> 93-interpreter-exec console "list"
+~"1034\t            entry = tlb_entry(env, mmu_idx, addr);\n"
+~"1035\t        }\n"
+~"1036\t        assert(tlb_hit(entry->addr_code, addr));\n"
+~"1037\t    }\n"
+~"1038\t\n"
+~"1039\t    if (unlikely(entry->addr_code & (TLB_RECHECK | TLB_MMIO))) {\n"
+~"1040\t        /*\n"
+~"1041\t         * Return -1 if we can't translate and execute from an entire\n"
+~"1042\t         * page of RAM here, which will cause us to execute by loading\n"
+~"1043\t         * and translating one insn at a time, without caching:\n"
+93^done
+(gdb) 
+>>> 94-interpreter-exec console "disable breakpoints"
+=breakpoint-modified,bkpt={number="1",type="breakpoint",disp="keep",enabled="n",addr="0x00005d477a1c37ca",func="riscv_cpu_tlb_fill",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="438",thread-groups=["i1"],cond="address == 0x1000 && access_type == 2",times="1",original-location="riscv_cpu_tlb_fill"}
+=breakpoint-modified,bkpt={number="2",type="breakpoint",disp="keep",enabled="n",addr="0x00005d477a1c2bb5",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="158",thread-groups=["i1"],cond="addr == 0x1000 && access_type == 2",times="1",original-location="get_physical_address"}
+=breakpoint-modified,bkpt={number="4",type="breakpoint",disp="keep",enabled="n",addr="0x00005d477a10a141",func="get_page_addr_code",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1030",thread-groups=["i1"],cond="addr == 0xffffffffc02000d8",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1030"}
+=breakpoint-modified,bkpt={number="5",type="breakpoint",disp="keep",enabled="n",addr="0x00005d477a1c37ca",func="riscv_cpu_tlb_fill",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="438",thread-groups=["i1"],cond="address == 0xffffffffc02000d8 && access_type == 2",times="1",original-location="riscv_cpu_tlb_fill"}
+=breakpoint-modified,bkpt={number="6",type="breakpoint",disp="keep",enabled="n",addr="0x00005d477a1c2bb5",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="158",thread-groups=["i1"],cond="addr == 0xffffffffc02000d8 && access_type == 2",times="1",original-location="get_physical_address"}
+=breakpoint-modified,bkpt={number="10",type="breakpoint",disp="keep",enabled="n",addr="0x00005d477a10a141",func="get_page_addr_code",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1030",thread-groups=["i1"],cond="addr == 0xffffffffc02000d8",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1030"}
+94^done
+(gdb) 
+>>> 95-exec-continue
+95^running
+*running,thread-id="all"
+(gdb) 
+~"[Thread 0x7ce6e93fe640 (LWP 436) exited]\n"
+=thread-exited,id="3",group-id="i1"
+~"[Thread 0x7ce6e9bff640 (LWP 435) exited]\n"
+=thread-exited,id="2",group-id="i1"
+~"[Inferior 1 (process 432) exited normally]\n"
+=thread-exited,id="1",group-id="i1"
+=thread-group-exited,id="i1",exit-code="0"
+*stopped,reason="exited-normally"
+>>> 96-gdb-exit
+96^exit

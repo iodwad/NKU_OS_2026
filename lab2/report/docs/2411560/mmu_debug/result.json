@@ -1,0 +1,273 @@
+{
+  "status": "PASS",
+  "evidence": "/home/andy/os_lab2_mmu_acceptance_20261025_214753/repro/code/.debug/evidence/verify-20261025-220646",
+  "checks": {
+    "qemu_4_1_1": true,
+    "qemu_debug_symbols": true,
+    "guest_gdb_kern_init": true,
+    "host_gdb_attach_and_breakpoints": true,
+    "riscv_cpu_tlb_fill_hit": true,
+    "get_physical_address_hit": true,
+    "tlb_set_page_hit": true,
+    "first_load_value": true,
+    "second_load_without_refill": true,
+    "probe_restored": true,
+    "bare_s_mode_load": true,
+    "scratch_and_root_byte_identical": true,
+    "original_buddy_5_and_slub_7": true
+  },
+  "walk": [
+    {
+      "i": 0,
+      "levels": 3,
+      "ptidxbits": 9,
+      "ptesize": 8,
+      "ptshift": 18,
+      "idx": 1,
+      "base": 2149621760,
+      "pte_addr": 2149621768,
+      "pte": 570421249,
+      "ppn": 557052,
+      "flags": {
+        "V": true,
+        "R": false,
+        "W": false,
+        "X": false,
+        "U": false,
+        "A": false,
+        "D": false
+      },
+      "leaf": false,
+      "next_base_observed": 2281684992
+    },
+    {
+      "i": 1,
+      "levels": 3,
+      "ptidxbits": 9,
+      "ptesize": 8,
+      "ptshift": 9,
+      "idx": 9,
+      "base": 2281684992,
+      "pte_addr": 2281685064,
+      "pte": 570422273,
+      "ppn": 557053,
+      "flags": {
+        "V": true,
+        "R": false,
+        "W": false,
+        "X": false,
+        "U": false,
+        "A": false,
+        "D": false
+      },
+      "leaf": false,
+      "next_base_observed": 2281689088
+    },
+    {
+      "i": 2,
+      "levels": 3,
+      "ptidxbits": 9,
+      "ptesize": 8,
+      "ptshift": 0,
+      "idx": 52,
+      "base": 2281689088,
+      "pte_addr": 2281689504,
+      "pte": 570420423,
+      "ppn": 557051,
+      "flags": {
+        "V": true,
+        "R": true,
+        "W": true,
+        "X": false,
+        "U": false,
+        "A": true,
+        "D": true
+      },
+      "leaf": true
+    }
+  ],
+  "source_steps": [
+    "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d284dad\",func=\"load_helper\",args=[{name=\"full_load\",value=\"0x634c0d284bf2 <helper_le_ldq_mmu>\"},{name=\"code_read\",value=\"false\"},{name=\"big_endian\",value=\"false\"},{name=\"size\",value=\"8\"},{name=\"retaddr\",value=\"127938086822204\"},{name=\"oi\",value=\"49\"},{name=\"addr\",value=\"1092830560\"},{name=\"env\",value=\"0x634c288a6ca0\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1272\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+    "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d33b0d2\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x634c288a6ca0\"},{name=\"physical\",value=\"0x745be3ffe230\"},{name=\"prot\",value=\"0x745be3ffe224\"},{name=\"addr\",value=\"1092830560\"},{name=\"access_type\",value=\"0\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"256\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+    "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d33b0e8\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x634c288a6ca0\"},{name=\"physical\",value=\"0x745be3ffe230\"},{name=\"prot\",value=\"0x745be3ffe224\"},{name=\"addr\",value=\"1092830560\"},{name=\"access_type\",value=\"0\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"259\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+    "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d33b0f4\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x634c288a6ca0\"},{name=\"physical\",value=\"0x745be3ffe230\"},{name=\"prot\",value=\"0x745be3ffe224\"},{name=\"addr\",value=\"1092830560\"},{name=\"access_type\",value=\"0\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"261\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+    "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d33b3e5\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x634c288a6ca0\"},{name=\"physical\",value=\"0x745be3ffe230\"},{name=\"prot\",value=\"0x745be3ffe224\"},{name=\"addr\",value=\"1092830560\"},{name=\"access_type\",value=\"0\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"237\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+    "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d33b0d2\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x634c288a6ca0\"},{name=\"physical\",value=\"0x745be3ffe230\"},{name=\"prot\",value=\"0x745be3ffe224\"},{name=\"addr\",value=\"1092830560\"},{name=\"access_type\",value=\"0\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"256\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+    "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d33b0e8\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x634c288a6ca0\"},{name=\"physical\",value=\"0x745be3ffe230\"},{name=\"prot\",value=\"0x745be3ffe224\"},{name=\"addr\",value=\"1092830560\"},{name=\"access_type\",value=\"0\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"259\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+    "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d33b0f4\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x634c288a6ca0\"},{name=\"physical\",value=\"0x745be3ffe230\"},{name=\"prot\",value=\"0x745be3ffe224\"},{name=\"addr\",value=\"1092830560\"},{name=\"access_type\",value=\"0\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"261\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+    "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d33b3e5\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x634c288a6ca0\"},{name=\"physical\",value=\"0x745be3ffe230\"},{name=\"prot\",value=\"0x745be3ffe224\"},{name=\"addr\",value=\"1092830560\"},{name=\"access_type\",value=\"0\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"237\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+    "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d33b0d2\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x634c288a6ca0\"},{name=\"physical\",value=\"0x745be3ffe230\"},{name=\"prot\",value=\"0x745be3ffe224\"},{name=\"addr\",value=\"1092830560\"},{name=\"access_type\",value=\"0\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"256\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+    "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d33b0e8\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x634c288a6ca0\"},{name=\"physical\",value=\"0x745be3ffe230\"},{name=\"prot\",value=\"0x745be3ffe224\"},{name=\"addr\",value=\"1092830560\"},{name=\"access_type\",value=\"0\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"259\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+    "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d33b105\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x634c288a6ca0\"},{name=\"physical\",value=\"0x745be3ffe230\"},{name=\"prot\",value=\"0x745be3ffe224\"},{name=\"addr\",value=\"1092830560\"},{name=\"access_type\",value=\"0\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"262\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+    "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d33b11c\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x634c288a6ca0\"},{name=\"physical\",value=\"0x745be3ffe230\"},{name=\"prot\",value=\"0x745be3ffe224\"},{name=\"addr\",value=\"1092830560\"},{name=\"access_type\",value=\"0\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"265\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+    "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d33b133\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x634c288a6ca0\"},{name=\"physical\",value=\"0x745be3ffe230\"},{name=\"prot\",value=\"0x745be3ffe224\"},{name=\"addr\",value=\"1092830560\"},{name=\"access_type\",value=\"0\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"268\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+    "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d33b164\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x634c288a6ca0\"},{name=\"physical\",value=\"0x745be3ffe230\"},{name=\"prot\",value=\"0x745be3ffe224\"},{name=\"addr\",value=\"1092830560\"},{name=\"access_type\",value=\"0\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"273\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+    "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d33b183\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x634c288a6ca0\"},{name=\"physical\",value=\"0x745be3ffe230\"},{name=\"prot\",value=\"0x745be3ffe224\"},{name=\"addr\",value=\"1092830560\"},{name=\"access_type\",value=\"0\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"276\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+    "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d33b1ae\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x634c288a6ca0\"},{name=\"physical\",value=\"0x745be3ffe230\"},{name=\"prot\",value=\"0x745be3ffe224\"},{name=\"addr\",value=\"1092830560\"},{name=\"access_type\",value=\"0\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"279\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+    "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d33b1e2\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x634c288a6ca0\"},{name=\"physical\",value=\"0x745be3ffe230\"},{name=\"prot\",value=\"0x745be3ffe224\"},{name=\"addr\",value=\"1092830560\"},{name=\"access_type\",value=\"0\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"283\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+    "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d33b201\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x634c288a6ca0\"},{name=\"physical\",value=\"0x745be3ffe230\"},{name=\"prot\",value=\"0x745be3ffe224\"},{name=\"addr\",value=\"1092830560\"},{name=\"access_type\",value=\"0\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"286\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+    "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d33b220\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x634c288a6ca0\"},{name=\"physical\",value=\"0x745be3ffe230\"},{name=\"prot\",value=\"0x745be3ffe224\"},{name=\"addr\",value=\"1092830560\"},{name=\"access_type\",value=\"0\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"292\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+    "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d33b235\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x634c288a6ca0\"},{name=\"physical\",value=\"0x745be3ffe230\"},{name=\"prot\",value=\"0x745be3ffe224\"},{name=\"addr\",value=\"1092830560\"},{name=\"access_type\",value=\"0\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"291\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+    "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d33b241\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x634c288a6ca0\"},{name=\"physical\",value=\"0x745be3ffe230\"},{name=\"prot\",value=\"0x745be3ffe224\"},{name=\"addr\",value=\"1092830560\"},{name=\"access_type\",value=\"0\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"295\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+    "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d33b30a\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x634c288a6ca0\"},{name=\"physical\",value=\"0x745be3ffe230\"},{name=\"prot\",value=\"0x745be3ffe224\"},{name=\"addr\",value=\"1092830560\"},{name=\"access_type\",value=\"0\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"333\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+    "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d33b319\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x634c288a6ca0\"},{name=\"physical\",value=\"0x745be3ffe230\"},{name=\"prot\",value=\"0x745be3ffe224\"},{name=\"addr\",value=\"1092830560\"},{name=\"access_type\",value=\"0\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"334\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+    "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d33b349\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x634c288a6ca0\"},{name=\"physical\",value=\"0x745be3ffe230\"},{name=\"prot\",value=\"0x745be3ffe224\"},{name=\"addr\",value=\"1092830560\"},{name=\"access_type\",value=\"0\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"337\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+    "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d28518d\",func=\"load_helper\",args=[{name=\"full_load\",value=\"0x634c0d284bf2 <helper_le_ldq_mmu>\"},{name=\"code_read\",value=\"false\"},{name=\"big_endian\",value=\"false\"},{name=\"size\",value=\"8\"},{name=\"retaddr\",value=\"127938086822204\"},{name=\"oi\",value=\"49\"},{name=\"addr\",value=\"1092830560\"},{name=\"env\",value=\"0x634c288a6ca0\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1339\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\""
+  ],
+  "qemu_version": "QEMU emulator version 4.1.1",
+  "sha256": {
+    "bin/kernel": "27f7d146ec03bb2fd8d7234e011b95bb95d70c64771ebf0f270df662cdc31bec",
+    "bin/ucore.img": "0fc65045757b1a5530024454c5a4fbd92933f770702fd880455febaf45d76e78",
+    "kern/init/init.c": "e6781ee2e67d91e0b2423734c5ab20850bdb94e47fab9a228ef650cee2918cea",
+    "kern/init/entry.S": "0f32d455dd8dcaa99987eb2eafd64df5e7535e14477ed2aece8e599e3b911111",
+    "kern/mm/pmm.c": "d55aa9bd1d67cfa370d257e9d90fda7e0302bfd3168d290e6684a19f361086a6"
+  },
+  "kernel_pc": "0xffffffffc02000d8",
+  "satp": "0x800000000008020a",
+  "scratch_audit": {
+    "kernel_end": "0xffffffffc02d498c",
+    "pages_before": "0x0",
+    "npage_before": "0x0",
+    "dtb_pa": "0x82200000",
+    "satp": "0x800000000008020a"
+  },
+  "instruction_words": [
+    "0x12000073",
+    "0x33283",
+    "0x33383",
+    "0x12000073"
+  ],
+  "first_lookup": {
+    "addr": 1092830560,
+    "mmu_idx": 1,
+    "index": 52,
+    "tlb_addr": 18446744073709551615,
+    "code_read": 0,
+    "tag_matches": false
+  },
+  "victim_miss": {
+    "mmu_idx": 1,
+    "index": 52,
+    "vidx": 8,
+    "page": 1092829184
+  },
+  "victim_return": "*stopped,reason=\"function-finished\",frame={addr=\"0x0000634c0d284ddb\",func=\"load_helper\",args=[{name=\"full_load\",value=\"0x634c0d284bf2 <helper_le_ldq_mmu>\"},{name=\"code_read\",value=\"false\"},{name=\"big_endian\",value=\"false\"},{name=\"size\",value=\"8\"},{name=\"retaddr\",value=\"127938086822204\"},{name=\"oi\",value=\"49\"},{name=\"addr\",value=\"1092830560\"},{name=\"env\",value=\"0x634c288a6ca0\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1272\",arch=\"i386:x86-64\"},gdb-result-var=\"$1\",return-value=\"false\",thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+  "fill": {
+    "address": "0x41234560",
+    "size": "0x8",
+    "access_type": "0x0",
+    "mmu_idx": "0x1"
+  },
+  "root_pa": "0x8020a000",
+  "sv39_context": {
+    "priv": 1,
+    "satp": 9223372036855300618,
+    "access_type": 0,
+    "mmu_idx": 1
+  },
+  "physical_output_observed": 2281680896,
+  "translate_return_stop": "*stopped,reason=\"function-finished\",frame={addr=\"0x0000634c0d33b891\",func=\"riscv_cpu_tlb_fill\",args=[{name=\"cs\",value=\"0x634c2889e290\"},{name=\"address\",value=\"1092830560\"},{name=\"size\",value=\"8\"},{name=\"access_type\",value=\"MMU_DATA_LOAD\"},{name=\"mmu_idx\",value=\"1\"},{name=\"probe\",value=\"false\"},{name=\"retaddr\",value=\"127938086822204\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"451\",arch=\"i386:x86-64\"},gdb-result-var=\"$2\",return-value=\"0\",thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+  "translate_output": {
+    "pa": 2281680896,
+    "prot": 3
+  },
+  "tlb_set_page": {
+    "vaddr": 1092829184,
+    "paddr": 2281680896,
+    "prot": 3,
+    "mmu_idx": 1,
+    "size": 4096
+  },
+  "tlb_entry": {
+    "addr_read": 1092829184,
+    "addr_write": 1092829184,
+    "addr_code": 18446744073709551615,
+    "addend": 127936786886656
+  },
+  "host_ram_read": {
+    "haddr": 127937879717216,
+    "value": 1234605616436508552
+  },
+  "before_second": {
+    "addr_read": 1092829184,
+    "addr_write": 1092829184,
+    "addr_code": 18446744073709551615,
+    "addend": 127936786886656,
+    "tag_matches": true
+  },
+  "va": "0x41234560",
+  "pa": "0x87ffb560",
+  "loaded_value": "0x1122334455667788",
+  "second_loaded_value": "0x1122334455667788",
+  "after_second": {
+    "addr_read": 1092829184,
+    "addr_write": 1092829184,
+    "addr_code": 18446744073709551615,
+    "addend": 127936786886656
+  },
+  "sv39_breakpoints": "145^done,BreakpointTable={nr_rows=\"8\",nr_cols=\"6\",hdr=[{width=\"7\",alignment=\"-1\",col_name=\"number\",colhdr=\"Num\"},{width=\"14\",alignment=\"-1\",col_name=\"type\",colhdr=\"Type\"},{width=\"4\",alignment=\"-1\",col_name=\"disp\",colhdr=\"Disp\"},{width=\"3\",alignment=\"-1\",col_name=\"enabled\",colhdr=\"Enb\"},{width=\"18\",alignment=\"-1\",col_name=\"addr\",colhdr=\"Address\"},{width=\"40\",alignment=\"2\",col_name=\"what\",colhdr=\"What\"}],body=[bkpt={number=\"1\",type=\"breakpoint\",disp=\"keep\",enabled=\"y\",addr=\"0x0000634c0d33b86c\",func=\"riscv_cpu_tlb_fill\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"451\",thread-groups=[\"i1\"],cond=\"address == 1092830560 && mmu_idx == 1\",times=\"1\",original-location=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:451\"},bkpt={number=\"2\",type=\"breakpoint\",disp=\"keep\",enabled=\"y\",addr=\"0x0000634c0d33abc4\",func=\"get_physical_address\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"163\",thread-groups=[\"i1\"],cond=\"addr == 1092830560 && mmu_idx == 1\",times=\"1\",original-location=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:163\"},bkpt={number=\"3\",type=\"breakpoint\",disp=\"keep\",enabled=\"y\",addr=\"0x0000634c0d33b0c6\",func=\"get_physical_address\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"254\",thread-groups=[\"i1\"],cond=\"addr == 1092830560 && mmu_idx == 1\",times=\"3\",original-location=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:254\"},bkpt={number=\"4\",type=\"breakpoint\",disp=\"keep\",enabled=\"y\",addr=\"0x0000634c0d281a04\",func=\"tlb_set_page\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"847\",thread-groups=[\"i1\"],cond=\"vaddr == 1092829184 && mmu_idx == 1\",times=\"1\",original-location=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:847\"},bkpt={number=\"5\",type=\"breakpoint\",disp=\"keep\",enabled=\"y\",addr=\"0x0000634c0d281993\",func=\"tlb_set_page_with_attrs\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"835\",thread-groups=[\"i1\"],cond=\"vaddr == 1092829184 && mmu_idx == 1\",times=\"1\",original-location=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:835\"},bkpt={number=\"6\",type=\"breakpoint\",disp=\"keep\",enabled=\"n\",addr=\"<MULTIPLE>\",cond=\"addr == 0x41234560\",times=\"1\",original-location=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1271\"},{number=\"6.1\",enabled=\"y\",addr=\"0x0000634c0d282af0\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1271\",thread-groups=[\"i1\"]},{number=\"6.2\",enabled=\"y\",addr=\"0x0000634c0d2831dc\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1271\",thread-groups=[\"i1\"]},{number=\"6.3\",enabled=\"y\",addr=\"0x0000634c0d2838c8\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1271\",thread-groups=[\"i1\"]},{number=\"6.4\",enabled=\"y\",addr=\"0x0000634c0d283fb4\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1271\",thread-groups=[\"i1\"]},{number=\"6.5\",enabled=\"y\",addr=\"0x0000634c0d2846a0\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1271\",thread-groups=[\"i1\"]},{number=\"6.6\",enabled=\"y\",addr=\"0x0000634c0d284d8c\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1271\",thread-groups=[\"i1\"]},{number=\"6.7\",enabled=\"y\",addr=\"0x0000634c0d285444\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1271\",thread-groups=[\"i1\"]},{number=\"6.8\",enabled=\"y\",addr=\"0x0000634c0d29c907\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1271\",thread-groups=[\"i1\"]},{number=\"6.9\",enabled=\"y\",addr=\"0x0000634c0d29cff3\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1271\",thread-groups=[\"i1\"]},{number=\"6.10\",enabled=\"y\",addr=\"0x0000634c0d29d6df\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1271\",thread-groups=[\"i1\"]},{number=\"6.11\",enabled=\"y\",addr=\"0x0000634c0d29ddcb\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1271\",thread-groups=[\"i1\"]},{number=\"6.12\",enabled=\"y\",addr=\"0x0000634c0d29e4b7\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1271\",thread-groups=[\"i1\"]},{number=\"6.13\",enabled=\"y\",addr=\"0x0000634c0d29eba3\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1271\",thread-groups=[\"i1\"]},{number=\"6.14\",enabled=\"y\",addr=\"0x0000634c0d29f25b\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1271\",thread-groups=[\"i1\"]},bkpt={number=\"7\",type=\"breakpoint\",disp=\"keep\",enabled=\"n\",addr=\"0x0000634c0d2820c4\",func=\"victim_tlb_hit\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1010\",thread-groups=[\"i1\"],cond=\"page == 0x41234000 && mmu_idx == 1\",times=\"1\",original-location=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1010\"},bkpt={number=\"8\",type=\"breakpoint\",disp=\"keep\",enabled=\"n\",addr=\"<MULTIPLE>\",cond=\"addr == 0x41234560\",times=\"1\",original-location=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1338\"},{number=\"8.1\",enabled=\"y\",addr=\"0x0000634c0d282edb\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1338\",thread-groups=[\"i1\"]},{number=\"8.2\",enabled=\"y\",addr=\"0x0000634c0d2835c7\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1338\",thread-groups=[\"i1\"]},{number=\"8.3\",enabled=\"y\",addr=\"0x0000634c0d283cb3\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1338\",thread-groups=[\"i1\"]},{number=\"8.4\",enabled=\"y\",addr=\"0x0000634c0d28439f\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1338\",thread-groups=[\"i1\"]},{number=\"8.5\",enabled=\"y\",addr=\"0x0000634c0d284a8b\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1338\",thread-groups=[\"i1\"]},{number=\"8.6\",enabled=\"y\",addr=\"0x0000634c0d285177\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1338\",thread-groups=[\"i1\"]},{number=\"8.7\",enabled=\"y\",addr=\"0x0000634c0d28582f\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1338\",thread-groups=[\"i1\"]},{number=\"8.8\",enabled=\"y\",addr=\"0x0000634c0d29ccf2\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1338\",thread-groups=[\"i1\"]},{number=\"8.9\",enabled=\"y\",addr=\"0x0000634c0d29d3de\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1338\",thread-groups=[\"i1\"]},{number=\"8.10\",enabled=\"y\",addr=\"0x0000634c0d29daca\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1338\",thread-groups=[\"i1\"]},{number=\"8.11\",enabled=\"y\",addr=\"0x0000634c0d29e1b6\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1338\",thread-groups=[\"i1\"]},{number=\"8.12\",enabled=\"y\",addr=\"0x0000634c0d29e8a2\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1338\",thread-groups=[\"i1\"]},{number=\"8.13\",enabled=\"y\",addr=\"0x0000634c0d29ef8e\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1338\",thread-groups=[\"i1\"]},{number=\"8.14\",enabled=\"y\",addr=\"0x0000634c0d29f646\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1338\",thread-groups=[\"i1\"]}]}",
+  "bare": {
+    "priv": 1,
+    "satp": 0,
+    "mmu_idx": 1,
+    "addr": 2281682272,
+    "steps": [
+      "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d33abd0\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x634c288a6ca0\"},{name=\"physical\",value=\"0x745be3ffe230\"},{name=\"prot\",value=\"0x745be3ffe224\"},{name=\"addr\",value=\"2281682272\"},{name=\"access_type\",value=\"0\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"165\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+      "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d33ac1a\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x634c288a6ca0\"},{name=\"physical\",value=\"0x745be3ffe230\"},{name=\"prot\",value=\"0x745be3ffe224\"},{name=\"addr\",value=\"2281682272\"},{name=\"access_type\",value=\"0\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"171\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+      "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d33ac66\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x634c288a6ca0\"},{name=\"physical\",value=\"0x745be3ffe230\"},{name=\"prot\",value=\"0x745be3ffe224\"},{name=\"addr\",value=\"2281682272\"},{name=\"access_type\",value=\"0\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"177\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+      "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d33ac73\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x634c288a6ca0\"},{name=\"physical\",value=\"0x745be3ffe230\"},{name=\"prot\",value=\"0x745be3ffe224\"},{name=\"addr\",value=\"2281682272\"},{name=\"access_type\",value=\"0\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"181\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+      "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d33ac90\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x634c288a6ca0\"},{name=\"physical\",value=\"0x745be3ffe230\"},{name=\"prot\",value=\"0x745be3ffe224\"},{name=\"addr\",value=\"2281682272\"},{name=\"access_type\",value=\"0\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"183\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+      "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d33acaa\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x634c288a6ca0\"},{name=\"physical\",value=\"0x745be3ffe230\"},{name=\"prot\",value=\"0x745be3ffe224\"},{name=\"addr\",value=\"2281682272\"},{name=\"access_type\",value=\"0\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"184\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+      "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d33acd0\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x634c288a6ca0\"},{name=\"physical\",value=\"0x745be3ffe230\"},{name=\"prot\",value=\"0x745be3ffe224\"},{name=\"addr\",value=\"2281682272\"},{name=\"access_type\",value=\"0\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"185\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+      "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d33aced\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x634c288a6ca0\"},{name=\"physical\",value=\"0x745be3ffe230\"},{name=\"prot\",value=\"0x745be3ffe224\"},{name=\"addr\",value=\"2281682272\"},{name=\"access_type\",value=\"0\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"186\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+      "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d33ad05\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x634c288a6ca0\"},{name=\"physical\",value=\"0x745be3ffe230\"},{name=\"prot\",value=\"0x745be3ffe224\"},{name=\"addr\",value=\"2281682272\"},{name=\"access_type\",value=\"0\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"187\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+      "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d33adc5\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x634c288a6ca0\"},{name=\"physical\",value=\"0x745be3ffe230\"},{name=\"prot\",value=\"0x745be3ffe224\"},{name=\"addr\",value=\"2281682272\"},{name=\"access_type\",value=\"0\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"197\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+      "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d33add6\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x634c288a6ca0\"},{name=\"physical\",value=\"0x745be3ffe230\"},{name=\"prot\",value=\"0x745be3ffe224\"},{name=\"addr\",value=\"2281682272\"},{name=\"access_type\",value=\"0\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"198\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+      "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x0000634c0d33ade3\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x634c288a6ca0\"},{name=\"physical\",value=\"0x745be3ffe230\"},{name=\"prot\",value=\"0x745be3ffe224\"},{name=\"addr\",value=\"2281682272\"},{name=\"access_type\",value=\"0\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"199\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"20\""
+    ],
+    "physical_return": 2281682272,
+    "return_stop": "*stopped,reason=\"function-finished\",frame={addr=\"0x0000634c0d33b891\",func=\"riscv_cpu_tlb_fill\",args=[{name=\"cs\",value=\"0x634c2889e290\"},{name=\"address\",value=\"2281682272\"},{name=\"size\",value=\"8\"},{name=\"access_type\",value=\"MMU_DATA_LOAD\"},{name=\"mmu_idx\",value=\"1\"},{name=\"probe\",value=\"false\"},{name=\"retaddr\",value=\"127938086822204\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"451\",arch=\"i386:x86-64\"},gdb-result-var=\"$5\",return-value=\"0\",thread-id=\"3\",stopped-threads=\"all\",core=\"20\"",
+    "tlb_set_page": {
+      "vaddr": 2281680896,
+      "paddr": 2281680896,
+      "prot": 7,
+      "mmu_idx": 1,
+      "size": 4096
+    },
+    "t0": "0x1122334455667788",
+    "t2": "0x1122334455667788",
+    "breakpoints": "180^done,BreakpointTable={nr_rows=\"12\",nr_cols=\"6\",hdr=[{width=\"7\",alignment=\"-1\",col_name=\"number\",colhdr=\"Num\"},{width=\"14\",alignment=\"-1\",col_name=\"type\",colhdr=\"Type\"},{width=\"4\",alignment=\"-1\",col_name=\"disp\",colhdr=\"Disp\"},{width=\"3\",alignment=\"-1\",col_name=\"enabled\",colhdr=\"Enb\"},{width=\"18\",alignment=\"-1\",col_name=\"addr\",colhdr=\"Address\"},{width=\"40\",alignment=\"2\",col_name=\"what\",colhdr=\"What\"}],body=[bkpt={number=\"1\",type=\"breakpoint\",disp=\"keep\",enabled=\"n\",addr=\"0x0000634c0d33b86c\",func=\"riscv_cpu_tlb_fill\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"451\",thread-groups=[\"i1\"],cond=\"address == 1092830560 && mmu_idx == 1\",times=\"1\",original-location=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:451\"},bkpt={number=\"2\",type=\"breakpoint\",disp=\"keep\",enabled=\"n\",addr=\"0x0000634c0d33abc4\",func=\"get_physical_address\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"163\",thread-groups=[\"i1\"],cond=\"addr == 1092830560 && mmu_idx == 1\",times=\"1\",original-location=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:163\"},bkpt={number=\"3\",type=\"breakpoint\",disp=\"keep\",enabled=\"n\",addr=\"0x0000634c0d33b0c6\",func=\"get_physical_address\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"254\",thread-groups=[\"i1\"],cond=\"addr == 1092830560 && mmu_idx == 1\",times=\"3\",original-location=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:254\"},bkpt={number=\"4\",type=\"breakpoint\",disp=\"keep\",enabled=\"n\",addr=\"0x0000634c0d281a04\",func=\"tlb_set_page\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"847\",thread-groups=[\"i1\"],cond=\"vaddr == 1092829184 && mmu_idx == 1\",times=\"1\",original-location=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:847\"},bkpt={number=\"5\",type=\"breakpoint\",disp=\"keep\",enabled=\"n\",addr=\"0x0000634c0d281993\",func=\"tlb_set_page_with_attrs\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"835\",thread-groups=[\"i1\"],cond=\"vaddr == 1092829184 && mmu_idx == 1\",times=\"1\",original-location=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:835\"},bkpt={number=\"6\",type=\"breakpoint\",disp=\"keep\",enabled=\"n\",addr=\"<MULTIPLE>\",cond=\"addr == 0x41234560\",times=\"1\",original-location=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1271\"},{number=\"6.1\",enabled=\"y\",addr=\"0x0000634c0d282af0\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1271\",thread-groups=[\"i1\"]},{number=\"6.2\",enabled=\"y\",addr=\"0x0000634c0d2831dc\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1271\",thread-groups=[\"i1\"]},{number=\"6.3\",enabled=\"y\",addr=\"0x0000634c0d2838c8\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1271\",thread-groups=[\"i1\"]},{number=\"6.4\",enabled=\"y\",addr=\"0x0000634c0d283fb4\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1271\",thread-groups=[\"i1\"]},{number=\"6.5\",enabled=\"y\",addr=\"0x0000634c0d2846a0\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1271\",thread-groups=[\"i1\"]},{number=\"6.6\",enabled=\"y\",addr=\"0x0000634c0d284d8c\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1271\",thread-groups=[\"i1\"]},{number=\"6.7\",enabled=\"y\",addr=\"0x0000634c0d285444\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1271\",thread-groups=[\"i1\"]},{number=\"6.8\",enabled=\"y\",addr=\"0x0000634c0d29c907\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1271\",thread-groups=[\"i1\"]},{number=\"6.9\",enabled=\"y\",addr=\"0x0000634c0d29cff3\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1271\",thread-groups=[\"i1\"]},{number=\"6.10\",enabled=\"y\",addr=\"0x0000634c0d29d6df\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1271\",thread-groups=[\"i1\"]},{number=\"6.11\",enabled=\"y\",addr=\"0x0000634c0d29ddcb\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1271\",thread-groups=[\"i1\"]},{number=\"6.12\",enabled=\"y\",addr=\"0x0000634c0d29e4b7\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1271\",thread-groups=[\"i1\"]},{number=\"6.13\",enabled=\"y\",addr=\"0x0000634c0d29eba3\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1271\",thread-groups=[\"i1\"]},{number=\"6.14\",enabled=\"y\",addr=\"0x0000634c0d29f25b\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1271\",thread-groups=[\"i1\"]},bkpt={number=\"7\",type=\"breakpoint\",disp=\"keep\",enabled=\"n\",addr=\"0x0000634c0d2820c4\",func=\"victim_tlb_hit\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1010\",thread-groups=[\"i1\"],cond=\"page == 0x41234000 && mmu_idx == 1\",times=\"1\",original-location=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1010\"},bkpt={number=\"8\",type=\"breakpoint\",disp=\"keep\",enabled=\"n\",addr=\"<MULTIPLE>\",cond=\"addr == 0x41234560\",times=\"1\",original-location=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1338\"},{number=\"8.1\",enabled=\"y\",addr=\"0x0000634c0d282edb\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1338\",thread-groups=[\"i1\"]},{number=\"8.2\",enabled=\"y\",addr=\"0x0000634c0d2835c7\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1338\",thread-groups=[\"i1\"]},{number=\"8.3\",enabled=\"y\",addr=\"0x0000634c0d283cb3\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1338\",thread-groups=[\"i1\"]},{number=\"8.4\",enabled=\"y\",addr=\"0x0000634c0d28439f\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1338\",thread-groups=[\"i1\"]},{number=\"8.5\",enabled=\"y\",addr=\"0x0000634c0d284a8b\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1338\",thread-groups=[\"i1\"]},{number=\"8.6\",enabled=\"y\",addr=\"0x0000634c0d285177\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1338\",thread-groups=[\"i1\"]},{number=\"8.7\",enabled=\"y\",addr=\"0x0000634c0d28582f\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1338\",thread-groups=[\"i1\"]},{number=\"8.8\",enabled=\"y\",addr=\"0x0000634c0d29ccf2\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1338\",thread-groups=[\"i1\"]},{number=\"8.9\",enabled=\"y\",addr=\"0x0000634c0d29d3de\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1338\",thread-groups=[\"i1\"]},{number=\"8.10\",enabled=\"y\",addr=\"0x0000634c0d29daca\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1338\",thread-groups=[\"i1\"]},{number=\"8.11\",enabled=\"y\",addr=\"0x0000634c0d29e1b6\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1338\",thread-groups=[\"i1\"]},{number=\"8.12\",enabled=\"y\",addr=\"0x0000634c0d29e8a2\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1338\",thread-groups=[\"i1\"]},{number=\"8.13\",enabled=\"y\",addr=\"0x0000634c0d29ef8e\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1338\",thread-groups=[\"i1\"]},{number=\"8.14\",enabled=\"y\",addr=\"0x0000634c0d29f646\",func=\"load_helper\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1338\",thread-groups=[\"i1\"]},bkpt={number=\"9\",type=\"breakpoint\",disp=\"keep\",enabled=\"n\",addr=\"0x0000634c0d33b86c\",func=\"riscv_cpu_tlb_fill\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"451\",thread-groups=[\"i1\"],cond=\"address == 0x87ffb560 && access_type == 0 && mmu_idx == 1\",times=\"1\",original-location=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:451\"},bkpt={number=\"10\",type=\"breakpoint\",disp=\"keep\",enabled=\"n\",addr=\"0x0000634c0d33abc4\",func=\"get_physical_address\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"163\",thread-groups=[\"i1\"],cond=\"addr == 0x87ffb560 && access_type == 0 && mmu_idx == 1\",times=\"1\",original-location=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:163\"},bkpt={number=\"11\",type=\"breakpoint\",disp=\"keep\",enabled=\"n\",addr=\"0x0000634c0d33b0c6\",func=\"get_physical_address\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"254\",thread-groups=[\"i1\"],cond=\"addr == 0x87ffb560 && mmu_idx == 1\",times=\"0\",original-location=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:254\"},bkpt={number=\"12\",type=\"breakpoint\",disp=\"keep\",enabled=\"n\",addr=\"0x0000634c0d281a04\",func=\"tlb_set_page\",file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"847\",thread-groups=[\"i1\"],cond=\"vaddr == 0x87ffb000 && mmu_idx == 1\",times=\"1\",original-location=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:847\"}]}"
+  },
+  "restored_registers": {
+    "pc": "0xffffffffc02000d8",
+    "t0": "0xffffffffc02000d8",
+    "t1": "0x8000000000000000",
+    "t2": "0x1",
+    "satp": "0x800000000008020a"
+  },
+  "restored_memory": {
+    "scratch": {
+      "bytes": 16384,
+      "before_sha256": "4fe7b59af6de3b665b67788cc2f99892ab827efae3a467342b3bb4e3bc8e5bfe",
+      "after_sha256": "4fe7b59af6de3b665b67788cc2f99892ab827efae3a467342b3bb4e3bc8e5bfe"
+    },
+    "root": {
+      "bytes": 8,
+      "before_sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+      "after_sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc"
+    }
+  },
+  "kernel_final": {
+    "is_panic": 0,
+    "live_objects": 0,
+    "slab_count": 0,
+    "free_count": 31723
+  },
+  "cleanup": {
+    "qemu_pid": 30085,
+    "exit_code": 0,
+    "pid_released": true,
+    "port_released": true
+  },
+  "finished_at": "2026-10-25T22:06:49.806754+08:00"
+}

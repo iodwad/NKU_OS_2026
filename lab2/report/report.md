@@ -958,107 +958,192 @@ Requirements：Host 测试应运行实际生产源码并启用适用的 sanitize
 
 ---
 
-### 4.6 分支任务：使用 GDB 观察地址转换与 TLB 行为
+### 4.6 分支任务：使用 GDB 调试页表查询与 TLB 行为
 
 **负责人：2411560—朱泽帅**
 
 **负责人：2412565—张宸笛号**
 
-#### 4.6.1 任务要求与相关原理
+#### 4.6.1 任务要求与调试环境
 
-本节对应指导书的[“分支任务：gdb 调试页表查询过程”](http://oslab.mobisys.top/lab2026/_book/lab2/lab2_4_qemu_mmu_debug.html)。任务要求同时调试 uCore 与运行它的 QEMU，找到地址翻译和 TLB 查询的关键源码，通过一次实际访问解释虚拟地址如何转换为物理地址，并比较启用分页与未启用分页时的行为。
+本节对应指导书的[“分支任务：gdb 调试页表查询过程”](http://oslab.mobisys.top/lab2026/_book/lab2/lab2_4_qemu_mmu_debug.html)。按照课程要求，先定位 QEMU 中地址翻译和 TLB 的关键源码，再用两套 GDB 观察真实访存，解释页表循环、缓存查询及分页开关的差别。
 
-CPU 访问虚拟地址时，先查询 TLB 中缓存的转换。未命中时，Sv39 根据 `satp` 中的根页表物理页号及虚拟地址索引读取 PTE，检查有效位、叶子标志和访问权限；转换成功后组合物理地址并填充 TLB。无效项或权限不符会导致异常，而不是把所有未命中都当成缺页。Sv39 最多使用三级页表，遇到合法的大页叶子项时可以提前结束查表。
+本轮补充实验日期为 **2026-10-25**，使用 Ubuntu 22.04 WSL、已有的 QEMU 4.1.1 Debug、Host GDB 12.1 和 Guest gdb-multiarch 12.1。Host 调试 x86_64 QEMU 的 C 源码，Guest 以 `riscv:rv64` 调试 uCore；系统 QEMU 6.2.0 未替换。2026-10-24 的根级 1 GiB 取指案例保留为历史对照，与本次新运行分开归档。
 
-QEMU 用软件实现这些硬件功能。本次取指案例对应的主要路径是：
+当前分支默认选择 Best-Fit；为验证原来的 Buddy/SLUB 联合配置，本轮将仓库历史提交 `b639987` 的 Guest 源码解包到一次性目录，使用当前调试工具重新编译。没有修改生产分支的管理器选择，也没有覆盖队友的源码。完整环境、路径和 SHA-256 见[证据索引](./docs/2411560/mmu_debug/README.md)及[来源记录](./docs/2411560/mmu_debug/provenance.json)。
 
-```text
-get_page_addr_code()：比较取指软件 TLB 标签
-  └─ 主表与 victim TLB 均未命中时进入填充路径
-       → riscv_cpu_tlb_fill()
-       → get_physical_address()：检查模式、遍历页表与权限
-       → tlb_set_page()：缓存转换结果
-```
+现有 [qemu_debug.py](../code/tools/qemu_debug.py)、[guest.gdb](../code/tools/gdb/guest.gdb)、[host.gdb](../code/tools/gdb/host.gdb)、[sv39_probe.py](../code/tools/gdb/sv39_probe.py) 和 [verify_qemu_debug.py](../code/tools/verify_qemu_debug.py) 是本轮的基础，没有重新实现 QEMU 或内核 MMU。正常手工入口依次为 `make debug`、`make gdb`、`make debug-host`；自动验收使用独立副本中的 `make debug-verify`，不与同副本的手工会话混跑。
 
-#### 4.6.2 调试环境与操作过程
-
-使用 Ubuntu 22.04 WSL 中独立构建的 QEMU 4.1.1 Debug，保留源码调试符号，没有替换系统 QEMU 6.2.0。Host GDB 调试宿主机上的 QEMU C 源码；Guest GDB 使用 RISC-V 架构和内核 ELF 符号，连接 QEMU 的 GDB stub，查看 uCore 的 PC、`satp` 和指令。两者控制的对象不同，Host 暂停整个模拟器时，Guest 和 QEMU 控制台也会暂时等待。
-
-当前仓库已经提供以下工具，构建入口位于 [Makefile](../code/Makefile)：
-
-| 工具 | 使用方式与作用 |
-|---|---|
-| [qemu_debug.py](../code/tools/qemu_debug.py) | `make debug` 启动独立调试版 QEMU，以 `-S` 暂停 Guest，并记录当前会话；`make gdb` 连接 Guest，`make debug-host` 附加 Host。 |
-| [guest.gdb](../code/tools/gdb/guest.gdb) | 到达 `kern_init` 后读取寄存器并加载 Sv39 探针命令。 |
-| [host.gdb](../code/tools/gdb/host.gdb) | 设置地址翻译与 TLB 填充的条件断点，处理 SIGPIPE；易被调试器读内存触发的断点先禁用。 |
-| [sv39_probe.py](../code/tools/gdb/sv39_probe.py) | 在 PMM 初始化前保存临时内存与寄存器，提供 `sv39-probe-prepare`、`sv39-probe-restore`，用于构造并恢复三级页表数据访存案例。 |
-| [verify_qemu_debug.py](../code/tools/verify_qemu_debug.py) | `make debug-verify` 驱动两个 GDB，计划检查三级 PTE、TLB 填充、重复加载及探针恢复，并写入 `.debug/evidence/`。 |
-
-仓库工具的操作顺序是先 `make debug`，再用 `make gdb` 停在 `kern_init`，随后 `make debug-host` 附加 QEMU；在 Guest 发出下一条命令前，应先让 Host `continue`。上述三级探针和自动验证器已有实现，但本次没有找到其运行归档，以下观察采用独立调试工程中已经保存的启动取指案例。
-
-该案例实际使用的三个终端入口如下，均在 WSL Shell 中执行。终端一由 Host GDB 启动 QEMU，终端二连接已有控制台，终端三启动 Guest GDB，不重复创建模拟器。
+本机可从仓库根目录直接复现：
 
 ```bash
-# 终端一：Host GDB
-cd /home/andy/os_lab2_qemu_debug
-./scripts/02_host_gdb.sh
-
-# 终端二：QEMU 控制台
-cd /home/andy/os_lab2_qemu_debug
-./scripts/01_start_qemu.sh --console
-
-# 终端三：Guest GDB
-cd /home/andy/os_lab2_qemu_debug
-./scripts/03_guest_gdb.sh
+bash lab2/report/docs/2411560/mmu_debug/reproduce.sh
 ```
 
-Guest 设置 `kern_init` 硬件断点，Host 根据目标地址过滤取指停点。历史案例的关键条件断点为：
+该脚本在新临时目录中重建上述 Buddy 配置并链接已有 Debug QEMU，不修改当前源码。Host 暂停时 Guest 会等待，应先继续 Host；GDB 命令要在对应调试器中执行，不能粘贴到 Shell。原有手动双 GDB 会话未被本次实验操作。
 
-```gdb
-# 在 Host GDB 中设置；这些命令不能在 Shell 中执行
-break /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1030 if addr == 0xffffffffc02000d8
-break riscv_cpu_tlb_fill if address == 0xffffffffc02000d8 && access_type == 2
-break get_physical_address if addr == 0xffffffffc02000d8 && access_type == 2
+#### 4.6.2 QEMU 地址翻译的关键源码与调用路径
+
+以下行号对应本机实际使用的 QEMU 4.1.1 源码。取指与数据访问最终共用 RISC-V 翻译函数，但到达它之前的路径不同。
+
+```text
+取指：get_page_addr_code() [cputlb.c:1023]
+  → tlb_hit(addr_code)；主表miss后查询victim
+  → 两处均miss才tlb_fill()
+  → riscv_cpu_tlb_fill() → get_physical_address()
+  → tlb_set_page() → tlb_set_page_with_attrs()
+
+数据：TCG生成的标签比较/快速加载（生成器源码静态分析）
+  → 不匹配进入helper_le_ldq_mmu / load_helper() [cputlb.c:1248]
+  → tlb_hit(addr_read) → victim_tlb_hit()
+  → 两处均miss才tlb_fill() [cputlb.c:868]
+  → riscv_cpu_tlb_fill() [cpu_helper.c:435]
+  → get_physical_address() [cpu_helper.c:155]
+  → tlb_set_page() [cputlb.c:843]
+  → 返回load_helper，以addr+addend得到宿主指针并读取数据
 ```
 
-连接阶段先禁用可能拦住 GDB 服务的翻译断点，连接完成后再按查询、填充和翻译阶段启用相应断点。Guest 执行 `continue` 或 `stepi` 驱动内核；Host 命中后查看 `info args`、`info locals`，并用 `next`、`finish` 观察分支与返回结果，再继续 Host，让 Guest 响应。
+本轮第一次数据加载实际停在 `load_helper()`，其 `code_read=false`、`size=8`。随后在 `victim_tlb_hit()` 中观察到扫描 8 项后返回 `false`，才进入架构翻译。不能把 `get_page_addr_code()` 直接写成数据加载的入口。
 
-#### 4.6.3 观察结果与分析
+`tcg/i386/tcg-target.inc.c:1699` 的 `tcg_out_tlb_load()` 生成索引计算、标签比较和跳向慢路径的宿主机器码；`tcg_out_qemu_ld_direct()` 生成命中后的实际加载。这些生成器属于源码分析，不是本轮每次加载都命中的 C 函数。完整调用关系、生成阶段与执行阶段的区别见[源码路径分析](./docs/2411560/mmu_debug/source_trace.md)。
 
-本次整理核对了本地独立工程的 `evidence/manual_final_20261024_012133/results.json`、`host_gdb.log` 和 `guest_gdb.log`，以及 `manual_sv39_20261024_011840/` 中的启动记录；根目录为 `/home/andy/os_lab2_qemu_debug`。这些是已执行的历史证据，本次没有重跑调试，也没有把它们写成仓库三级探针的运行结果。原始日志保留在本地，未随本次报告提交新增到仓库。
+#### 4.6.3 Sv39 页表遍历过程及关键分支
 
-Guest 在 S-mode 进入 `kern_init` 时，记录到以下数据：
+`get_physical_address()` 首先根据特权级和 `satp.MODE` 决定是否分页。Sv39 从 SATP 得到根表的 **Guest 物理基址**，设置 `levels=3`、`ptidxbits=9`、`ptesize=8`。每次循环的核心语句为：
 
-| 观察项 | 实际值 |
-|---|---|
-| 目标取指虚拟地址 | `0xffffffffc02000d8` |
-| `satp` | `0x800000000008020a` |
-| 根页表物理地址 | `0x8020a000` |
-| 根级索引 | `511` |
-| PTE 物理地址 | `0x8020aff8` |
-| PTE | `0x200000cf` |
-| 翻译函数返回的 4 KiB 物理页基址 | `0x80200000` |
-| 加入页内偏移后的字节物理地址 | `0x802000d8` |
+```c
+idx = (addr >> (PGSHIFT + ptshift)) & ((1 << ptidxbits) - 1);
+pte_addr = base + idx * ptesize;
+pte = ldq_phys(cs->as, pte_addr);
+ppn = pte >> PTE_PPN_SHIFT;
+```
 
-`satp` 最高四位为 8，表示 Sv39；低 44 位给出根 PPN，左移 12 位得到 `0x8020a000`。虚拟地址的第 38～30 位取出索引 511，每项 8 字节，因此 PTE 地址为 `0x8020a000 + 511 × 8 = 0x8020aff8`。读到的 PTE 中 V、R、W、X、A、D 为 1，U 为 0，对当前 S-mode 取指是有效叶子项。
+其中 `base` 是当前页表的物理起点，`idx` 分别取 VA 的 `[38:30]`、`[29:21]`、`[20:12]`。一项 PTE 为 8 字节，因此 `base + idx*8` 仍是 Guest 物理地址。`ldq_phys()` 通过 QEMU 的物理 AddressSpace 读取 PTE，不会再次将它作为 Guest 虚拟地址走同一页表；普通 Guest `ld` 则先经过 TCG 与 MMU。
 
-这里使用的是 **1 GiB 大页映射**：根级已经遇到叶子，实际只读取一个 PTE，没有继续访问另外两级。PTE 给出的物理大页基址为 `0x80000000`，加上大页内偏移 `0x2000d8` 得到 `0x802000d8`。QEMU 翻译函数返回的 `0x80200000` 是按 4 KiB 对齐的物理页基址，还需补上 `0xd8` 才是这条指令的字节地址。
+| 源码位置及关键语句 | 作用解释 | 本轮执行情况 |
+|---|---|---|
+| cpu_helper.c:171、196–199，`mode == PRV_M` 或 Bare 直接返回 | M-mode 与 Bare 是不同直通分支 | M-mode 为历史取指；本轮实际触发 S-mode Bare 返回 |
+| :184–191，`levels=3; ptidxbits=9; ptesize=8` | 根据 MODE=8 选择 Sv39 与根表 | 实际执行，根PA为0x8020a000 |
+| :224–228，检查 `masked_msbs` | 检查高位是否为 bit38 的符号扩展 | 合法地址通过；非canonical失败未单独触发 |
+| :237–242，计算 `idx` 和 `pte_addr` | 每层取9位索引，按项大小定位 | 实测索引1、9、52 |
+| :252–254，`ldq_phys()`、`pte >> 10` | 从物理内存读出64位PTE并提取PPN | 在赋值后逐项记录；未单步进入物理读取API内部 |
+| :256，`!(pte & PTE_V)` | 无效项返回翻译失败 | 本次V均为1；无效项失败未单独触发 |
+| :259–261，非叶子时 `base=ppn<<12` | 下一张表的位置由当前PTE给出 | 前两级实际执行并读取更新后的base |
+| :262–288，保留编码、U/S、SUM及R/W/X检查 | 判断当前访问是否有权限 | 本次S-mode读通过；权限失败仅源码分析 |
+| :276，检查低PPN位 | 大页要求物理起点满足对应大小对齐 | 本次4KiB叶子通过；错位错误未单独触发 |
+| :291–329，比较 `updated_pte` | 必要时更新A/D，RAM下原子写回或重试 | 本次A/D预置为1，跳过写回；CAS等分支未触发 |
+| :333–349，计算 `*physical` 并返回成功 | 组合PPN与大页低位，生成权限 | 实测页基址0x87ffb000、返回0、prot=3 |
+| cpu_helper.c:472；cputlb.c:804–835，写入TLB | 保存访问标签、宿主addend及iotlb | 实际命中并next越过缓存项复制 |
+| cpu_helper.c:355–380、478–479，`raise_mmu_exception()` | 按访问类型、分页和PMP结果选择异常并退出CPU执行循环 | 源码分析，未单独触发异常 |
 
-首次进入 `get_page_addr_code()` 第 1030 行时，`entry->addr_code=0xffffffffffffffff`，标签匹配为 0，随后实际进入 `riscv_cpu_tlb_fill()` 与 `get_physical_address()`。翻译返回 0、权限值 `prot=7`，再由 `tlb_set_page()` 缓存结果。重复取指时，标签变为 `0xffffffffc0200000`，匹配为 1；Host 执行 `next` 从第 1030 行到第 1039 行，跳过填充分支。判断命中的依据是标签比较和执行路径，而不只是第二次没有碰到填充断点。
+对于非叶子，V=1 且 R/W/X 全为0，PPN 指向下一级页表；因此左移12位就得到新的 `base`，循环继续且 `ptshift` 减9。根级遇到合法叶子可只查一次，中间级叶子查两次，末级4KiB叶子查三次。本次实际覆盖根级1GiB历史叶子与末级4KiB新叶子，未单独构造2MiB叶子。
 
-对照记录中，初始 M-mode 取指地址为 `0x1000`，`satp=0`，翻译直接返回物理地址 `0x1000`，未进入页表循环。QEMU 软件 TLB 是宿主程序维护的地址缓存，其功能用于模拟 Guest 的转换过程，不能把这些 C 结构和调试步数当成真实 CPU 的 TLB 组织与访问时延。
+本轮在第254行停住后先 `next` 到256行再读取 PPN，避免把尚未赋值的局部变量当成结果。每层的 `base/idx/pte_addr/pte/ppn`、单步顺序和十个读取问题的详细回答见[三级遍历记录](./docs/2411560/mmu_debug/translation_walk.md)。
 
-#### 4.6.4 任务总结
+#### 4.6.4 实际访存指令的 VA→PA 单步调试
 
-双 GDB 把“内核发出访问”和“模拟器完成转换”联系了起来。条件断点减少了启动访问和调试器读内存的干扰；Host 停住时先继续 Host，可以避免把 Guest 等待误判为连接失败。历史验证还出现过断点编号递增而驱动仍固定等待旧编号的超时，修正的是验证器匹配方式，没有修改 QEMU 或内核的地址翻译算法。AI 主要协助源码定位、条件选择、两个调试器的操作协调和日志核对。
+**A．2026-10-25 新增的三级数据加载。** 在 `kern_init` 首次入口、PMM 尚未初始化时，复用现有探针临时建立4KiB映射。实际核对的指令字为 `0x12000073`、`0x00033283`、`0x00033383`、`0x12000073`，对应：
 
-本节已观察启动取指的根级大页翻译、软件 TLB 未命中与重复命中，以及 M-mode 直通对照。历史运行随后完成 Buddy 5/5、SLUB 7/7 检查，恢复 31723 个空闲页。完整三级非叶子数据访存探针仍需补充实际运行证据，多种读写权限与异常分支也没有在该取指案例中逐一触发。
+```asm
+sfence.vma
+ld t0, 0(t1)
+ld t2, 0(t1)
+sfence.vma
+```
+
+`t1=0x41234560`，目标字节 PA 为 `0x87ffb560`，预置数据为 `0x1122334455667788`。Scratch 区为 PA `[0x87ffa000,0x87ffe000)`，四页分别放指令、数据、中间表和末级表。核对时内核末端为 `0xffffffffc02d498c`，`pages=NULL`、`npage=0`，DTB 在 `0x82200000`；临时区域在128MiB RAM内，不覆盖固件、内核、页表、DTB或描述符数组，且没有已登记活动分配。
+
+Host GDB 真实读取的三级结果如下，三次均有 `levels=3`、`ptesize=8`：
+
+| 层级 | i / ptshift | VPN索引 | 页表基址（PA） | PTE地址（PA） | PTE值 | 分支结果 |
+|---|---|---|---|---|---|---|
+| 根级 | 0 / 18 | 1 | 0x8020a000 | 0x8020a008 | 0x21fff001 | 非叶子，转至0x87ffc000 |
+| 中间级 | 1 / 9 | 9 | 0x87ffc000 | 0x87ffc048 | 0x21fff401 | 非叶子，转至0x87ffd000 |
+| 末级 | 2 / 0 | 52 | 0x87ffd000 | 0x87ffd1a0 | 0x21ffecc7 | 4KiB叶子，PPN=0x87ffb |
+
+前两项只有 V=1；最后一项 V/R/W/A/D=1，X/U=0，适合本次 S-mode 读取。Host 对前两级实际执行 `next`，观察到 `256→259→261→237` 和更新后的基址；末级继续单步经过权限、A/D比较与物理页基址计算，再 `finish` 得到成功返回。完整停点保存于 [Host 日志](./docs/2411560/mmu_debug/host-gdb.log)，不是用理论表格替代运行。
+
+独立计算得到：
+
+```text
+root = (satp & ((1<<44)-1)) << 12 = 0x8020a000
+VPN2=1，VPN1=9，VPN0=52，页内偏移=0x560
+PTE地址：0x8020a000+1*8，0x87ffc000+9*8，0x87ffd000+52*8
+叶子PPN = 0x21ffecc7 >> 10 = 0x87ffb
+PA = (0x87ffb << 12) + 0x560 = 0x87ffb560
+```
+
+`get_physical_address()` 返回4KiB物理页基址 `0x87ffb000`、`prot=3`；`tlb_set_page()` 收到相同页基址。Guest 执行两条 `ld` 后，**t0 与 t2 均为 `0x1122334455667788`**。计算、函数输出、填充实参与寄存器读值相互一致，见[独立计算结果](./docs/2411560/mmu_debug/independent_calculation.json)及[Guest 日志](./docs/2411560/mmu_debug/guest-gdb.log)。
+
+**B．保留的2026-10-24根级大页取指案例。** 该记录来自已有独立调试工程，未混写成本轮新运行。Guest 在 S-mode 进入 `kern_init` 时，VA=`0xffffffffc02000d8`，`satp=0x800000000008020a`，根PA=`0x8020a000`。根级索引511，PTE地址=`0x8020aff8`，PTE=`0x200000cf`，V/R/W/X/A/D为1、U为0。
+
+这里是合法的 **1 GiB 大页映射**，根级即为叶子，实际只读取一个PTE。物理大页基址 `0x80000000` 加大页内偏移 `0x2000d8` 得到字节PA=`0x802000d8`；QEMU返回的4KiB页基址是 `0x80200000`，需另加 `0xd8`。Sv39支持三级，并不表示每次都访问三个PTE。原始值和停点已随本次报告归档到[历史结果](./docs/2411560/mmu_debug/historical_20261024/results.json)及[历史Host日志](./docs/2411560/mmu_debug/historical_20261024/host_gdb.log)。
+
+#### 4.6.5 QEMU 软件 TLB 的查询、未命中与填充
+
+`tlb_index()` 用虚拟页号和当前表的掩码选槽，不能仅靠索引确认命中，因为不同页可能落入同一槽。`tlb_hit()` 继续比较虚拟页标签与无效位；`addr_read`、`addr_write`、`addr_code` 分别表示读、写、执行的缓存许可和特殊访问状态。主表miss后还要查询victim缓存，命中可以交换回主表，因此主表miss不一定需要查页表。
+
+本轮数据加载的证据如下，填充断点在第二次读取时保持启用：
+
+| 检查项 | 第一次 `ld t0,0(t1)` | 第二次 `ld t2,0(t1)` |
+|---|---|---|
+| 主表标签 | 0xffffffffffffffff，比较不匹配 | 指令执行前后均为0x41234000，与目标页匹配 |
+| victim查询 | 实际扫描8项，返回false | 未逐指令跟踪该分支 |
+| 架构填充累计计数 | 1 | 仍为1 |
+| 地址翻译累计计数 | 1，PTE停点3次 | 仍为1 |
+| `tlb_set_page`累计计数 | 1 | 仍为1 |
+| Guest读值 | 0x1122334455667788 | 0x1122334455667788 |
+
+首次真实路径从 `load_helper:1271` 进入victim查询、翻译与填充。随后在 `tlb_set_page_with_attrs:835` 前后检查缓存项：`addr_read=addr_write=0x41234000`，`addr_code` 为全1，因为该叶子不可执行。返回慢路径后还观察了 `haddr=addr+entry->addend`，从该宿主地址读出的8字节与Guest结果一致。
+
+第二次的准确结论是**标签匹配且没有重新fill**，不是只凭一个断点未命中就宣布主表命中。本轮没有逐条单步TCG生成的命中机器码。历史取指则有直接分支证据：`get_page_addr_code:1030` 的匹配值由0变1，重复访问时 `next` 到1039行，跳过填充分支。计数及范围见[断点计数](./docs/2411560/mmu_debug/breakpoint_counts.json)与[TLB对比](./docs/2411560/mmu_debug/tlb_comparison.md)。
+
+填充不只是存一个物理地址：`tlb_set_page()` 进入 `tlb_set_page_with_attrs()`，先把Guest PA解析到MemoryRegion，再按权限生成三类标签，并保存iotlb和addend，最后复制到缓存项。这些字段同时处理许可、RAM/设备及宿主地址访问。
+
+#### 4.6.6 分页开启与关闭时的对比
+
+为减少特权级差异，本轮在同一个一次性Guest中补做 **S-mode Bare** 数据读取。保持S-mode、8字节 `ld` 和同一物理目标，将 `satp` 设为0，在物理scratch地址执行指令，使用直通地址 `0x87ffb560`。切换前后执行SFENCE，并在恢复后继续原内核。
+
+| 项目 | Sv39 | S-mode Bare |
+|---|---|---|
+| 特权级 / mmu_idx | 1 / 1 | 1 / 1 |
+| satp | 0x800000000008020a | 0 |
+| 访问地址 | VA 0x41234560 | 直通地址0x87ffb560 |
+| 翻译流程 | 实际读取三级PTE | next经过197–199行直接返回，PTE停点计数为0 |
+| 函数输出 | 页基址0x87ffb000 | 完整addr=0x87ffb560 |
+| TLB填充 | VA页0x41234000→PA页0x87ffb000，prot=3 | 地址页0x87ffb000→同名PA页，prot=7 |
+| 两次Guest加载值 | 均为0x1122334455667788 | 均为0x1122334455667788 |
+
+两组是同访问类型、同宽度、同特权级、同物理数据的对照，地址数值并不相同。Bare组为安全完成后续恢复，在第一次填充后禁用了该组观察断点，不据此宣称其第二次没有fill。**没有Guest页表遍历，QEMU仍需要软件TLB**：它还要把Guest物理地址关联到宿主RAM或设备区域，本次Bare填充已实际命中。
+
+原来的M-mode对照继续保留：取指地址 `0x1000`、`satp=0`、priv=3，返回物理地址 `0x1000`，未进入页表循环。源码171行的M-mode直通与196–199行的Bare返回是不同条件，不能把M-mode和S-mode的差异全部归因于SATP开关。
+
+#### 4.6.7 QEMU 软件 TLB 与真实 CPU TLB 的区别
+
+| 比较内容 | QEMU 4.1.1软件TLB | 真实CPU硬件TLB |
+|---|---|---|
+| 共同功能 | 缓存转换和许可，失效后补充转换 | 同样用于减少地址翻译开销 |
+| 实现位置 | 宿主进程的C结构及TCG生成代码 | 处理器MMU中的硬件结构 |
+| 缓存表示 | 访问标签、MMU上下文、addend、iotlb和victim缓存 | 物理页号、权限、ASID等，组织方式由处理器实现 |
+| 权限检查 | 翻译产生prot，再分别编码读/写/执行状态 | 硬件按架构规则检查，可能与查询并行 |
+| 地址终点 | Guest PA仍需解析为宿主RAM/设备访问 | 物理地址送往真实缓存、内存或设备系统 |
+| 失效与时间 | Guest失效指令触发软件处理，受TCG、宿主调度及GDB影响 | 由处理器执行失效，开销依具体微架构而异 |
+
+`Guest VA`、`Guest PA`、宿主虚拟指针和 `ram_addr_t` 不能混用。本轮 `haddr` 是实际宿主指针，随ASLR变化；`ram_addr_t` 是QEMU内部RAM块管理地址/偏移，并非Guest PA的别名。软件TLB不等于真实CPU缓存结构，GDB单步数和QEMU函数调用次数也不能用来估计硬件TLB延迟。
+
+#### 4.6.8 实验结果与总结
+
+本次新实验完成三级4KiB数据页翻译、两次真实加载、主表/victim未命中后的翻译与填充，以及S-mode Bare对照。临时16KiB内存、根表项逐字节恢复，PC/t0/t1/t2/SATP核对一致；随后 **Buddy 5/5、SLUB 7/7 通过**，`is_panic=0`、活动对象和Slab均为0、`free_count=31723`。本次QEMU及其端口已经释放，原有手动会话不受影响。完整验收见[result.json](./docs/2411560/mmu_debug/result.json)、[QEMU日志](./docs/2411560/mmu_debug/qemu.log)和[逐项检查](./docs/2411560/mmu_debug/acceptance.json)。
+
+实际遇到并修正的是调试工具问题：MI未启用异步导致运行中命令等待；Python内部单步与恢复寄存器的时序不可靠；GDB恢复后需刷新寄存器/帧缓存再核对；采集PPN需先执行其赋值。修正限于调试脚本，没有改QEMU翻译或内存分配算法。AI协助定位停点、协调两个调试器、检查变量与整理日志，结论以实际输出为准。首次失败结果和各次记录见[尝试索引](./docs/2411560/mmu_debug/attempts.json)。
+
+权限失败、无效PTE、大页错位、A/D原子写回和victim命中交换均只完成源码分析；第二次数据加载的JIT命中跳转也未逐指令单步。这些范围在证据中明确标注，不与已经执行的成功路径混算。
 
 ---
 
 ## 五、测试与验证
 
-本节分别记录本人实际运行的原生测试结果和协作者已归档的专项验证。初始化与 Best-Fit 实现完成后，本人运行了工程自带的原生测试并通过，过程中没有遇到 Bug。个人测试结论依据本人实验经历，本次整理可查阅的归档中没有当时的具体命令、逐项输出或截图；协作者的专项结果则有下列日志与截图支持。本次报告整理未重新运行内核测试。地址转换与 TLB 的历史观察见 4.6，与分配器测试分别记录。
+本节分别记录本人实际运行的原生测试结果和协作者已归档的专项验证。初始化与 Best-Fit 实现完成后，本人运行了工程自带的原生测试并通过，过程中没有遇到 Bug。个人测试结论依据本人实验经历，本次整理可查阅的归档中没有当时的具体命令、逐项输出或截图；协作者的专项结果则有下列日志与截图支持。上述Host结果保留原有归档；本次新增的双GDB补充实验及恢复后的内核回归见4.6和5.6，与初始化、Best-Fit的个人原生测试分别记录。
 
 ### 5.1 物理内存初始化验证
 
@@ -1095,6 +1180,10 @@ Guest 在 S-mode 进入 `kern_init` 时，记录到以下数据：
 ![图3 Buddy 与 SLUB 在 QEMU 中的联合验证：5/5 与 7/7 通过](./images/qemu_buddy_slub.png)
 
 *图3 Buddy System 与 SLUB Challenge 的 QEMU 内核验证结果。*
+
+### 5.6 QEMU MMU、三级Sv39与TLB补充验证
+
+2026-10-25在一次性Buddy配置副本中执行修正后的 `make debug-verify`，并从Git历史干净重建后复现通过。`ld t0,0(t1)`与`ld t2,0(t1)`实际读取VA `0x41234560`，三级索引1/9/52，最终字节PA `0x87ffb560`，两次结果均为 `0x1122334455667788`。首次主表和victim miss后完成翻译与填充；第二次标签匹配，填充累计仍为1。S-mode Bare对照、内存及寄存器恢复也通过，随后Buddy 5/5、SLUB 7/7、31723空闲页恢复，未观察到panic。原始数据见[本轮验证记录](./docs/2411560/mmu_debug/result.json)。Host 43/43、73/73属于前述历史专项结果，本次没有重跑这些Host测试。
 
 ## 六、实验总结与收获
 

@@ -1,0 +1,68 @@
+{
+  "status": "FAIL",
+  "evidence": "/home/andy/os_lab2_mmu_acceptance_20261025_214753/code/.debug/evidence/verify-20261025-214848",
+  "checks": {
+    "qemu_4_1_1": true,
+    "qemu_debug_symbols": true,
+    "guest_gdb_kern_init": true,
+    "host_gdb_attach_and_breakpoints": true,
+    "riscv_cpu_tlb_fill_hit": true,
+    "get_physical_address_hit": true,
+    "tlb_set_page_hit": true,
+    "first_load_value": true
+  },
+  "walk": [
+    {
+      "i": 0,
+      "ptshift": 18,
+      "idx": 1,
+      "pte_addr": 2149621768,
+      "pte": 570421249
+    },
+    {
+      "i": 1,
+      "ptshift": 9,
+      "idx": 9,
+      "pte_addr": 2281685064,
+      "pte": 570422273
+    },
+    {
+      "i": 2,
+      "ptshift": 0,
+      "idx": 52,
+      "pte_addr": 2281689504,
+      "pte": 570420423
+    }
+  ],
+  "qemu_version": "QEMU emulator version 4.1.1",
+  "sha256": {
+    "bin/kernel": "880d49f85049a5f937f590d202355b03109dea5790263349bc929965ee28609e",
+    "bin/ucore.img": "0fc65045757b1a5530024454c5a4fbd92933f770702fd880455febaf45d76e78",
+    "kern/init/init.c": "e6781ee2e67d91e0b2423734c5ab20850bdb94e47fab9a228ef650cee2918cea",
+    "kern/init/entry.S": "0f32d455dd8dcaa99987eb2eafd64df5e7535e14477ed2aece8e599e3b911111",
+    "kern/mm/pmm.c": "d55aa9bd1d67cfa370d257e9d90fda7e0302bfd3168d290e6684a19f361086a6"
+  },
+  "kernel_pc": "0xffffffffc02000d8",
+  "satp": "0x800000000008020a",
+  "fill": {
+    "address": "0x41234560",
+    "size": "0x8",
+    "access_type": "0x0",
+    "mmu_idx": "0x1"
+  },
+  "root_pa": "0x8020a000",
+  "tlb_set_page": {
+    "vaddr": 1092829184,
+    "paddr": 2281680896,
+    "prot": 3,
+    "mmu_idx": 1,
+    "size": 4096
+  },
+  "tlb_entry": {
+    "addr_read": 1092829184,
+    "addr_write": 1092829184,
+    "addr_code": 18446744073709551615,
+    "addend": 126314966970368
+  },
+  "error": "Empty: "
+}

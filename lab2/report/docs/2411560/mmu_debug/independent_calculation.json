@@ -1,0 +1,16 @@
+{
+  "computed_indices": [
+    1,
+    9,
+    52
+  ],
+  "root": "0x8020a000",
+  "leaf_ppn": "0x87ffb",
+  "offset": "0x560",
+  "computed_pa": "0x87ffb560",
+  "get_physical_address_page_base": "0x87ffb000",
+  "tlb_set_page_page_base": "0x87ffb000",
+  "guest_t0": "0x1122334455667788",
+  "guest_t2": "0x1122334455667788",
+  "all_cross_checks_passed": true
+}
