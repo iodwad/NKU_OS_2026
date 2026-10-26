@@ -1,0 +1,301 @@
+COMMAND -interpreter-exec console "set pagination off"
+=thread-group-added,id="i1"
+=cmd-param-changed,param="mi-async",value="on"
+~"Reading symbols from /home/andy/os_lab2_mmu_acceptance_20261025_214753/repro/code/bin/kernel...\n"
+(gdb) 
+=cmd-param-changed,param="pagination",value="off"
+1^done
+(gdb) 
+COMMAND -interpreter-exec console "set architecture riscv:rv64"
+~"The target architecture is set to \"riscv:rv64\".\n"
+=cmd-param-changed,param="architecture",value="riscv:rv64"
+2^done
+(gdb) 
+COMMAND -interpreter-exec console "set remotetimeout 120"
+=cmd-param-changed,param="remotetimeout",value="120"
+3^done
+(gdb) 
+COMMAND -target-select remote 127.0.0.1:36253
+=thread-group-started,id="i1",pid="1"
+=thread-created,id="1",group-id="i1"
+~"0x0000000000001000 in ?? ()\n"
+*stopped,frame={addr="0x0000000000001000",func="??",args=[],arch="riscv:rv64"},thread-id="1",stopped-threads="all"
+4^connected
+(gdb) 
+COMMAND -interpreter-exec console "source /home/andy/os_lab2_mmu_acceptance_20261025_214753/repro/code/tools/gdb/guest.gdb"
+=cmd-param-changed,param="print pretty",value="on"
+~"Hardware assisted breakpoint 1 at 0xffffffffc02000d8: file kern/init/init.c, line 31.\n"
+=breakpoint-created,bkpt={number="1",type="hw breakpoint",disp="del",enabled="y",addr="0xffffffffc02000d8",func="kern_init",file="kern/init/init.c",fullname="/home/andy/os_lab2_mmu_acceptance_20261025_214753/repro/code/kern/init/init.c",line="31",thread-groups=["i1"],times="0",original-location="kern_init"}
+5^running
+*running,thread-id="all"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)($pc)"
+=breakpoint-modified,bkpt={number="1",type="hw breakpoint",disp="del",enabled="y",addr="0xffffffffc02000d8",func="kern_init",file="kern/init/init.c",fullname="/home/andy/os_lab2_mmu_acceptance_20261025_214753/repro/code/kern/init/init.c",line="31",thread-groups=["i1"],times="1",original-location="kern_init"}
+~"\n"
+~"Temporary breakpoint 1, kern_init () at kern/init/init.c:31\n"
+~"31\t    memset(edata, 0, end - edata);\n"
+*stopped,reason="breakpoint-hit",disp="del",bkptno="1",frame={addr="0xffffffffc02000d8",func="kern_init",args=[],file="kern/init/init.c",fullname="/home/andy/os_lab2_mmu_acceptance_20261025_214753/repro/code/kern/init/init.c",line="31",arch="riscv:rv64"},thread-id="1",stopped-threads="all"
+=breakpoint-deleted,id="1"
+~"\nGuest debugger ready. Resume host GDB before every guest command.\n"
+~"pc             0xffffffffc02000d8\t0xffffffffc02000d8 <kern_init>\n"
+~"satp           0x800000000008020a\t-9223372036854250998\n"
+~"=> 0xffffffffc02000d8 <kern_init>:\tauipc\ta0,0xb\n"
+~"   0xffffffffc02000dc <kern_init+4>:\taddi\ta0,a0,-192\n"
+~"   0xffffffffc02000e0 <kern_init+8>:\tauipc\ta2,0xd5\n"
+~"   0xffffffffc02000e4 <kern_init+12>:\taddi\ta2,a2,-1876\n"
+~"Optional controlled test: sv39-probe-prepare; stepi three times; sv39-probe-restore; stepi; sv39-probe-restore-finish\n"
+(gdb) 
+6^done,value="18446744072637907160"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)($pc)"
+7^done,value="18446744072637907160"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)((unsigned long long)kern_init)"
+8^done,value="18446744072637907160"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)($satp)"
+9^done,value="9223372036855300618"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)($satp)"
+10^done,value="9223372036855300618"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)((unsigned long long)&end)"
+11^done,value="18446744072638777740"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)((unsigned long long)pages)"
+12^done,value="0"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(npage)"
+13^done,value="0"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(boot_dtb)"
+14^done,value="2183135232"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)($satp)"
+15^done,value="9223372036855300618"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)((unsigned long long)&end)"
+16^done,value="18446744072638777740"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)((unsigned long long)pages)"
+17^done,value="0"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(npage)"
+18^done,value="0"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(boot_dtb)"
+19^done,value="2183135232"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)($pc)"
+20^done,value="18446744072637907160"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)($t0)"
+21^done,value="18446744072637907160"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)($t1)"
+22^done,value="9223372036854775808"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)($t2)"
+23^done,value="1"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)($satp)"
+24^done,value="9223372036855300618"
+(gdb) 
+COMMAND -interpreter-exec console "dump binary memory /home/andy/os_lab2_mmu_acceptance_20261025_214753/repro/code/.debug/evidence/verify-20261025-220646/scratch-before.bin 0xffffffffc7ffa000 0xffffffffc7ffe000"
+25^done
+(gdb) 
+COMMAND -interpreter-exec console "dump binary memory /home/andy/os_lab2_mmu_acceptance_20261025_214753/repro/code/.debug/evidence/verify-20261025-220646/root-before.bin 0xffffffffc020a008 0xffffffffc020a010"
+26^done
+(gdb) 
+COMMAND -interpreter-exec console "sv39-probe-prepare"
+=memory-changed,thread-group="i1",addr="0xffffffffc7ffa000",len="0x10"
+=memory-changed,thread-group="i1",addr="0xffffffffc7ffb560",len="0x8"
+=memory-changed,thread-group="i1",addr="0xffffffffc7ffc000",len="0x1000"
+=memory-changed,thread-group="i1",addr="0xffffffffc7ffd000",len="0x1000"
+=memory-changed,thread-group="i1",addr="0xffffffffc020a008",len="0x8"
+~"Probe ready: VA=0x41234560, PA=0x87ffb560, SATP=0x800000000008020a\n"
+~"Steps: sfence.vma; ld t0,0(t1) [miss]; ld t2,0(t1) [hit].\n"
+~"Return to the host debugger and continue it before guest stepi.\n"
+27^done
+(gdb) 
+COMMAND -interpreter-exec console "x/4i 0xffffffffc7ffa000"
+~"=> 0xffffffffc7ffa000:\tsfence.vma\n"
+~"   0xffffffffc7ffa004:\tld\tt0,0(t1)\n"
+~"   0xffffffffc7ffa008:\tld\tt2,0(t1)\n"
+~"   0xffffffffc7ffa00c:\tsfence.vma\n"
+28^done
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(*(unsigned int*)0xffffffffc7ffa000)"
+29^done,value="301990003"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(*(unsigned int*)0xffffffffc7ffa004)"
+30^done,value="209539"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(*(unsigned int*)0xffffffffc7ffa008)"
+31^done,value="209795"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(*(unsigned int*)0xffffffffc7ffa00c)"
+32^done,value="301990003"
+(gdb) 
+COMMAND -exec-step-instruction
+33^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0xffffffffc7ffa004",func="??",args=[],arch="riscv:rv64"},thread-id="1",stopped-threads="all"
+COMMAND -exec-step-instruction
+34^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0xffffffffc7ffa008",func="??",args=[],arch="riscv:rv64"},thread-id="1",stopped-threads="all"
+COMMAND -data-evaluate-expression "(unsigned long long)($t0)"
+35^done,value="1234605616436508552"
+(gdb) 
+COMMAND -exec-step-instruction
+36^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0xffffffffc7ffa00c",func="??",args=[],arch="riscv:rv64"},thread-id="1",stopped-threads="all"
+COMMAND -data-evaluate-expression "(unsigned long long)($t2)"
+37^done,value="1234605616436508552"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)($t2)"
+38^done,value="1234605616436508552"
+(gdb) 
+COMMAND -interpreter-exec console "set $pc = (unsigned long long)0x87ffa000"
+39^done
+(gdb) 
+COMMAND -interpreter-exec console "set $t1 = (unsigned long long)0x87ffb560"
+40^done
+(gdb) 
+COMMAND -interpreter-exec console "set $satp = (unsigned long long)0"
+41^done
+(gdb) 
+COMMAND -interpreter-exec console "maintenance flush register-cache"
+~"Register cache flushed.\n"
+42^done
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)($satp)"
+43^done,value="0"
+(gdb) 
+COMMAND -exec-step-instruction
+44^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000000087ffa004",func="??",args=[],arch="riscv:rv64"},thread-id="1",stopped-threads="all"
+COMMAND -exec-step-instruction
+45^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000000087ffa008",func="??",args=[],arch="riscv:rv64"},thread-id="1",stopped-threads="all"
+COMMAND -data-evaluate-expression "(unsigned long long)($t0)"
+46^done,value="1234605616436508552"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)($t0)"
+47^done,value="1234605616436508552"
+(gdb) 
+COMMAND -exec-step-instruction
+48^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000000087ffa00c",func="??",args=[],arch="riscv:rv64"},thread-id="1",stopped-threads="all"
+COMMAND -data-evaluate-expression "(unsigned long long)($t2)"
+49^done,value="1234605616436508552"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)($t2)"
+50^done,value="1234605616436508552"
+(gdb) 
+COMMAND -interpreter-exec console "set $satp = (unsigned long long)0x800000000008020a"
+51^done
+(gdb) 
+COMMAND -interpreter-exec console "maintenance flush register-cache"
+~"Register cache flushed.\n"
+52^done
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)($satp)"
+53^done,value="9223372036855300618"
+(gdb) 
+COMMAND -interpreter-exec console "sv39-probe-restore"
+=memory-changed,thread-group="i1",addr="0xffffffffc020a008",len="0x8"
+~"Root restored. Execute stepi, then sv39-probe-restore-finish.\n"
+54^done
+(gdb) 
+COMMAND -exec-step-instruction
+55^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0xffffffffc7ffa010",func="??",args=[],arch="riscv:rv64"},thread-id="1",stopped-threads="all"
+COMMAND -interpreter-exec console "sv39-probe-restore-finish"
+=memory-changed,thread-group="i1",addr="0xffffffffc7ffa000",len="0x4000"
+~"Original root entry, scratch memory and registers restored at kern_init.\n"
+56^done
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)($pc)"
+57^done,value="18446744072637907160"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)($pc)"
+58^done,value="18446744072637907160"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)($t0)"
+59^done,value="18446744072637907160"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)($t1)"
+60^done,value="9223372036854775808"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)($t2)"
+61^done,value="1"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)($satp)"
+62^done,value="9223372036855300618"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)($pc)"
+63^done,value="18446744072637907160"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)($t0)"
+64^done,value="18446744072637907160"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)($t1)"
+65^done,value="9223372036854775808"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)($t2)"
+66^done,value="1"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)($satp)"
+67^done,value="9223372036855300618"
+(gdb) 
+COMMAND -interpreter-exec console "dump binary memory /home/andy/os_lab2_mmu_acceptance_20261025_214753/repro/code/.debug/evidence/verify-20261025-220646/scratch-after.bin 0xffffffffc7ffa000 0xffffffffc7ffe000"
+68^done
+(gdb) 
+COMMAND -interpreter-exec console "dump binary memory /home/andy/os_lab2_mmu_acceptance_20261025_214753/repro/code/.debug/evidence/verify-20261025-220646/root-after.bin 0xffffffffc020a008 0xffffffffc020a010"
+69^done
+(gdb) 
+COMMAND -exec-continue
+70^running
+*running,thread-id="all"
+(gdb) 
+COMMAND -exec-interrupt --all
+71^done
+(gdb) 
+~"\nProgram"
+~" received signal SIGINT, Interrupt.\n"
+~"kern_init () at kern/init/init.c:46\n"
+~"46\t    while (1)\n"
+*stopped,reason="signal-received",signal-name="SIGINT",signal-meaning="Interrupt",frame={addr="0xffffffffc0200118",func="kern_init",args=[],file="kern/init/init.c",fullname="/home/andy/os_lab2_mmu_acceptance_20261025_214753/repro/code/kern/init/init.c",line="46",arch="riscv:rv64"},thread-id="1",stopped-threads="all"
+COMMAND -data-evaluate-expression "(unsigned long long)(is_panic)"
+72^done,value="0"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(live_objects)"
+73^done,value="0"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(slab_count)"
+74^done,value="0"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(free_count)"
+75^done,value="31723"
+(gdb) 
+COMMAND -target-detach
+=thread-exited,id="1",group-id="i1"
+=thread-group-exited,id="i1"
+~"[Inferior 1 (process 1) detached]\n"
+76^done
+(gdb) 
+^exit

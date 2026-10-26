@@ -1,0 +1,100 @@
+$ /home/andy/os_lab2_qemu_debug/scripts/03_guest_gdb.sh --mi
+>>> 1-interpreter-exec console "set architecture riscv:rv64"
+=thread-group-added,id="i1"
+=cmd-param-changed,param="mi-async",value="on"
+~"Reading symbols from /home/andy/os_lab2_qemu_debug/guest/code/bin/kernel...\n"
+(gdb) 
+~"The target architecture is set to \"riscv:rv64\".\n"
+=cmd-param-changed,param="architecture",value="riscv:rv64"
+1^done
+(gdb) 
+>>> 2-interpreter-exec console "set remotetimeout 30"
+=cmd-param-changed,param="remotetimeout",value="30"
+2^done
+(gdb) 
+>>> 3-target-select remote 127.0.0.1:2345
+=thread-group-started,id="i1",pid="1"
+=thread-created,id="1",group-id="i1"
+~"0x0000000000001000 in ?? ()\n"
+*stopped,frame={addr="0x0000000000001000",func="??",args=[],arch="riscv:rv64"},thread-id="1",stopped-threads="all"
+3^connected
+(gdb) 
+>>> 4-interpreter-exec console "info registers pc satp mstatus"
+~"pc             0x1000\t0x1000\n"
+~"satp           0x0\t0\n"
+~"mstatus        0x0\tSD:0 VM:00 MXR:0 PUM:0 MPRV:0 XS:0 FS:0 MPP:0 HPP:0 SPP:0 MPIE:0 HPIE:0 SPIE:0 UPIE:0 MIE:0 HIE:0 SIE:0 UIE:0\n"
+4^done
+(gdb) 
+>>> 5-break-insert -h kern_init
+5^done,bkpt={number="1",type="hw breakpoint",disp="keep",enabled="y",addr="0xffffffffc02000d8",func="kern_init",file="kern/init/init.c",fullname="/mnt/d/college_study_materials/junior_year_fall/OS/lab2/screenshot_lab2/lab2/code/kern/init/init.c",line="31",thread-groups=["i1"],times="0",original-location="kern_init"}
+(gdb) 
+>>> 6-exec-continue
+6^running
+*running,thread-id="all"
+(gdb) 
+=breakpoint-modified,bkpt={number="1",type="hw breakpoint",disp="keep",enabled="y",addr="0xffffffffc02000d8",func="kern_init",file="kern/init/init.c",fullname="/mnt/d/college_study_materials/junior_year_fall/OS/lab2/screenshot_lab2/lab2/code/kern/init/init.c",line="31",thread-groups=["i1"],times="1",original-location="kern_init"}
+~"\n"
+~"Breakpoint 1, kern_init () at kern/init/init.c:31\n"
+~"31\t    memset(edata, 0, end - edata);\n"
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="1",frame={addr="0xffffffffc02000d8",func="kern_init",args=[],file="kern/init/init.c",fullname="/mnt/d/college_study_materials/junior_year_fall/OS/lab2/screenshot_lab2/lab2/code/kern/init/init.c",line="31",arch="riscv:rv64"},thread-id="1",stopped-threads="all"
+>>> 7-interpreter-exec console "source /home/andy/os_lab2_qemu_debug/scripts/tlb_guest.gdb"
+7^done
+(gdb) 
+>>> 8-interpreter-exec console "lab-state"
+~"pc             0xffffffffc02000d8\t0xffffffffc02000d8 <kern_init>\n"
+~"satp           0x800000000008020a\t-9223372036854250998\n"
+~"mstatus        Could not fetch register \"mstatus\"; remote failure reply 'E14'\n"
+~"$1 = 0x8\n"
+~"$2 = 0x8020a000\n"
+~"=> 0xffffffffc02000d8 <kern_init>:\tauipc\ta0,0xb\n"
+8^done
+(gdb) 
+>>> 9-interpreter-exec console "x/gx 0xffffffffc020aff8"
+~"0xffffffffc020aff8:\t0x00000000200000cf\n"
+9^done
+(gdb) 
+>>> 10-data-evaluate-expression "$satp"
+10^done,value="-9223372036854250998"
+(gdb) 
+>>> 11-exec-step-instruction
+11^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0xffffffffc02000dc",func="kern_init",args=[],file="kern/init/init.c",fullname="/mnt/d/college_study_materials/junior_year_fall/OS/lab2/screenshot_lab2/lab2/code/kern/init/init.c",line="31",arch="riscv:rv64"},thread-id="1",stopped-threads="all"
+>>> 12-interpreter-exec console "info registers pc satp"
+~"pc             0xffffffffc02000dc\t0xffffffffc02000dc <kern_init+4>\n"
+~"satp           0x800000000008020a\t-9223372036854250998\n"
+12^done
+(gdb) 
+>>> 13-interpreter-exec console "lab-run-to-end"
+~"Hardware assisted breakpoint 2 at 0xffffffffc0200118: file kern/init/init.c, line 46.\n"
+=breakpoint-created,bkpt={number="2",type="hw breakpoint",disp="keep",enabled="y",addr="0xffffffffc0200118",func="kern_init",file="kern/init/init.c",fullname="/mnt/d/college_study_materials/junior_year_fall/OS/lab2/screenshot_lab2/lab2/code/kern/init/init.c",line="46",thread-groups=["i1"],times="0",original-location="*0xffffffffc0200118"}
+13^running
+*running,thread-id="all"
+(gdb) 
+=breakpoint-modified,bkpt={number="2",type="hw breakpoint",disp="keep",enabled="y",addr="0xffffffffc0200118",func="kern_init",file="kern/init/init.c",fullname="/mnt/d/college_study_materials/junior_year_fall/OS/lab2/screenshot_lab2/lab2/code/kern/init/init.c",line="46",thread-groups=["i1"],times="1",original-location="*0xffffffffc0200118"}
+~"\n"
+~"Breakpoint 2, kern_init () at kern/init/init.c:46\n"
+~"46\t    while (1)\n"
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="2",frame={addr="0xffffffffc0200118",func="kern_init",args=[],file="kern/init/init.c",fullname="/mnt/d/college_study_materials/junior_year_fall/OS/lab2/screenshot_lab2/lab2/code/kern/init/init.c",line="46",arch="riscv:rv64"},thread-id="1",stopped-threads="all"
+(gdb) 
+>>> 14-data-evaluate-expression "is_panic"
+14^done,value="0"
+(gdb) 
+>>> 15-data-evaluate-expression "live_objects"
+15^done,value="0"
+(gdb) 
+>>> 16-data-evaluate-expression "slab_count"
+16^done,value="0"
+(gdb) 
+>>> 17-data-evaluate-expression "free_count"
+17^done,value="31723"
+(gdb) 
+>>> 18-target-detach
+=thread-exited,id="1",group-id="i1"
+=thread-group-exited,id="i1"
+~"[Inferior 1 (process 1) detached]\n"
+18^done
+(gdb) 
+>>> 19-gdb-exit
+19^exit

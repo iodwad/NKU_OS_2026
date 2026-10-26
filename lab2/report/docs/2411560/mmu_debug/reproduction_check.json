@@ -1,0 +1,27 @@
+{
+  "command": "bash lab2/report/docs/2411560/mmu_debug/reproduce.sh",
+  "status": "PASS",
+  "finished_at": "2026-10-25T22:13:53.106438+08:00",
+  "original_evidence": "/tmp/lab2-mmu-MMF57x/lab2/code/.debug/evidence/verify-20261025-221350",
+  "raw_result_sha256": "1f1b42f7769f0341de2b81550669ae71575ec084b96653b7ac8040c878a3d250",
+  "va": "0x41234560",
+  "pa": "0x87ffb560",
+  "t0": "0x1122334455667788",
+  "t2": "0x1122334455667788",
+  "bare_values": {
+    "t0": "0x1122334455667788",
+    "t2": "0x1122334455667788"
+  },
+  "kernel_final": {
+    "is_panic": 0,
+    "live_objects": 0,
+    "slab_count": 0,
+    "free_count": 31723
+  },
+  "cleanup": {
+    "qemu_pid": 30440,
+    "exit_code": 0,
+    "pid_released": true,
+    "port_released": true
+  }
+}

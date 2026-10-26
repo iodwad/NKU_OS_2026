@@ -1,0 +1,79 @@
+[
+  {
+    "path": "/home/andy/os_lab2_mmu_acceptance_20261025_214753/code/.debug/evidence/verify-20261025-214848",
+    "status": "FAIL",
+    "error": "Empty: ",
+    "result_sha256": "9114a70eebf7f7c551b3f1de21ea221d997a1369750a5e2a78bde1819a4acce7",
+    "host_log_sha256": "2ac3a3e8f8fc36296533d66b105fa597222a1b403cc22001059f1f6d4948f0fd"
+  },
+  {
+    "path": "/home/andy/os_lab2_mmu_acceptance_20261025_214753/code/.debug/evidence/verify-20261025-215228",
+    "status": "FAIL",
+    "error": "AssertionError: ",
+    "result_sha256": "ccb6262d26b829cd6151180a09d680ed8d167812a8427b731d89e26806734ccd",
+    "host_log_sha256": "9d0be6a58258e9c570209f339d52dc4ebc9a1b04d4dd57153452636575d12b8c"
+  },
+  {
+    "path": "/home/andy/os_lab2_mmu_acceptance_20261025_214753/code/.debug/evidence/verify-20261025-215246",
+    "status": "FAIL",
+    "error": "AssertionError: ",
+    "result_sha256": "df9d65168c39efe01ac9289dc483a836348ba23b8c594d2210c091ef88e4ce80",
+    "host_log_sha256": "c1eb744111632d884add9e6d87ed7525c04e8fffe99fcb8f2759f60a23cce980"
+  },
+  {
+    "path": "/home/andy/os_lab2_mmu_acceptance_20261025_214753/code/.debug/evidence/verify-20261025-215338",
+    "status": "FAIL",
+    "error": "AssertionError: ",
+    "result_sha256": "9c587461a2b83c645622c55b495a8e4a8087ca32c2110a214c78027d07bfe94a",
+    "host_log_sha256": "aa2780c2318564d5574394fb4c413506759f4f1cc347dc73ed57ae4ebd1483a9"
+  },
+  {
+    "path": "/home/andy/os_lab2_mmu_acceptance_20261025_214753/code/.debug/evidence/verify-20261025-215434",
+    "status": "FAIL",
+    "error": "AssertionError: ",
+    "result_sha256": "c26f3ddd11f5687cbdc1aa17a96ccaeac39a208c484e17001b6856abc5611dc9",
+    "host_log_sha256": "3707588d0fa783b212ea1545b3152b0f52638e6558f97e2a5075d150ccfaad69"
+  },
+  {
+    "path": "/home/andy/os_lab2_mmu_acceptance_20261025_214753/code/.debug/evidence/verify-20261025-215508",
+    "status": "FAIL",
+    "error": "Empty: ",
+    "result_sha256": "cd53b24c4a0b7ec0dc8a5c397c391d48497f3729bcd3cab3284cf4a9e165c4dd",
+    "host_log_sha256": "8c4729a40b95814888a85239beddb71e4540c551d3d8ab5bcc57bba6f8fb28d5"
+  },
+  {
+    "path": "/home/andy/os_lab2_mmu_acceptance_20261025_214753/code/.debug/evidence/verify-20261025-215633",
+    "status": "FAIL",
+    "error": "RuntimeError: 19^error,msg=\"Register restore mismatch: pc\"",
+    "result_sha256": "e79755f9e9455a39fcee3aa895205b128a2c5a2b9c60b61f5761582a70b65f6b",
+    "host_log_sha256": "5de5e6b2a364ae6db2a6642ce8d05ffb06fb5ec3e3c71fcb4ea2a0f69231c073"
+  },
+  {
+    "path": "/home/andy/os_lab2_mmu_acceptance_20261025_214753/code/.debug/evidence/verify-20261025-215709",
+    "status": "FAIL",
+    "error": "RuntimeError: 19^error,msg=\"Register restore mismatch: pc\"",
+    "result_sha256": "dc6e8ad0eeab7b131ccc9a5cc27a2e06c1426c2ddb278a81020420441f7478fa",
+    "host_log_sha256": "813b9cff888fdb88705c74f7231582d17425d0281026cd445f99598cb38969de"
+  },
+  {
+    "path": "/home/andy/os_lab2_mmu_acceptance_20261025_214753/code/.debug/evidence/verify-20261025-215734",
+    "status": "PASS",
+    "error": null,
+    "result_sha256": "884b625fdf621d8e461f96d5c650010875af031a529bb54b116ea1d5779bc65f",
+    "host_log_sha256": "78564c8b22fca338f7cca916d025e1f70519fe000246559f6c54a4dbdf46c3eb"
+  },
+  {
+    "path": "/home/andy/os_lab2_mmu_acceptance_20261025_214753/code/.debug/evidence/verify-20261025-220021",
+    "status": "FAIL",
+    "error": "AssertionError: ",
+    "result_sha256": "b1ab43b7e6451af94e7d2982327781b09755358c80abf74810370271f0481f42",
+    "host_log_sha256": "8674aeaac848f221a7bd1227ad4373a1b767ee47800eb5f8c3d7067917828530"
+  },
+  {
+    "path": "/home/andy/os_lab2_mmu_acceptance_20261025_214753/code/.debug/evidence/verify-20261025-220041",
+    "status": "PASS",
+    "error": null,
+    "result_sha256": "58990f31a4492d78dae9b30d657909a7325d4acd6ac3e8ec5ac1989e5fbad2fc",
+    "host_log_sha256": "fbe98cfdd2de1c19da685acf960b7d9fc2ba73bf98ac166b3e008a806663c8a8"
+  }
+]

@@ -1,0 +1,86 @@
+{
+  "overall": "SUCCESS",
+  "checks": [
+    {
+      "item": "data_load_va_to_pa",
+      "status": "PASS"
+    },
+    {
+      "item": "three_sv39_levels",
+      "status": "PASS"
+    },
+    {
+      "item": "indices_and_pte_reads",
+      "status": "PASS"
+    },
+    {
+      "item": "guest_t0_t2_values",
+      "status": "PASS"
+    },
+    {
+      "item": "separate_instruction_and_data_paths",
+      "status": "PASS"
+    },
+    {
+      "item": "first_main_and_victim_miss",
+      "status": "PASS"
+    },
+    {
+      "item": "page_walk_and_fill",
+      "status": "PASS"
+    },
+    {
+      "item": "second_load_without_refill",
+      "status": "PASS"
+    },
+    {
+      "item": "instruction_hit_branch_historical",
+      "status": "PASS_HISTORICAL"
+    },
+    {
+      "item": "sv39_superpage_historical",
+      "status": "PASS_HISTORICAL"
+    },
+    {
+      "item": "s_mode_bare_control",
+      "status": "PASS"
+    },
+    {
+      "item": "software_vs_hardware_analysis",
+      "status": "PASS_STATIC"
+    },
+    {
+      "item": "scratch_root_and_register_restore",
+      "status": "PASS"
+    },
+    {
+      "item": "buddy_5_slub_7_regression",
+      "status": "PASS"
+    },
+    {
+      "item": "no_kernel_panic",
+      "status": "PASS"
+    },
+    {
+      "item": "owned_process_port_cleanup",
+      "status": "PASS"
+    },
+    {
+      "item": "old_sessions_unchanged",
+      "status": "PASS"
+    },
+    {
+      "item": "jit_fast_hit_instruction_trace",
+      "status": "NOT_TESTED"
+    },
+    {
+      "item": "invalid_pte_permission_faults_ad_writeback",
+      "status": "NOT_TESTED"
+    },
+    {
+      "item": "victim_hit_swap",
+      "status": "NOT_TESTED"
+    }
+  ],
+  "scope": "Normal paths observed; untriggered error/JIT/victim-hit branches explicitly remain static analysis."
+}

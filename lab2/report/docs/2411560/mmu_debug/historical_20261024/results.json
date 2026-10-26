@@ -1,0 +1,99 @@
+{
+  "status": "PASS",
+  "scope": "live initial M-mode and S-mode Sv39 instruction lookup",
+  "session": "/home/andy/os_lab2_qemu_debug/run/session_20261024_012137_393",
+  "m_fill_stop": "*stopped,reason=\"breakpoint-hit\",disp=\"keep\",bkptno=\"1\",frame={addr=\"0x00005d477a1c37ca\",func=\"riscv_cpu_tlb_fill\",args=[{name=\"cs\",value=\"0x5d47aa8d47d0\"},{name=\"address\",value=\"4096\"},{name=\"size\",value=\"0\"},{name=\"access_type\",value=\"MMU_INST_FETCH\"},{name=\"mmu_idx\",value=\"3\"},{name=\"probe\",value=\"false\"},{name=\"retaddr\",value=\"0\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"438\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"11\"",
+  "m_physical_stop": "*stopped,reason=\"breakpoint-hit\",disp=\"keep\",bkptno=\"2\",frame={addr=\"0x00005d477a1c2bb5\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x5d47aa8dd1e0\"},{name=\"physical\",value=\"0x7ce6e93fd6b0\"},{name=\"prot\",value=\"0x7ce6e93fd6a4\"},{name=\"addr\",value=\"4096\"},{name=\"access_type\",value=\"2\"},{name=\"mmu_idx\",value=\"3\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"158\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"11\"",
+  "m_entry": {
+    "addr": "4096",
+    "access_type": "2",
+    "mmu_idx": "3",
+    "env->priv": "3",
+    "env->satp": "0",
+    "env->mstatus": "0"
+  },
+  "m_result": {
+    "mode": "3",
+    "*physical": "4096",
+    "*prot": "7"
+  },
+  "first_lookup_stop": "*stopped,reason=\"breakpoint-hit\",disp=\"keep\",bkptno=\"4\",frame={addr=\"0x00005d477a10a141\",func=\"get_page_addr_code\",args=[{name=\"env\",value=\"0x5d47aa8dd1e0\"},{name=\"addr\",value=\"18446744072637907160\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1030\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"11\"",
+  "first_lookup_match": "0",
+  "first_lookup": {
+    "addr": "18446744072637907160",
+    "env->satp": "9223372036855300618",
+    "env->priv": "1",
+    "mmu_idx": "1",
+    "index": "0",
+    "entry->addr_code": "18446744073709551615"
+  },
+  "sv_fill_stop": "*stopped,reason=\"breakpoint-hit\",disp=\"keep\",bkptno=\"5\",frame={addr=\"0x00005d477a1c37ca\",func=\"riscv_cpu_tlb_fill\",args=[{name=\"cs\",value=\"0x5d47aa8d47d0\"},{name=\"address\",value=\"18446744072637907160\"},{name=\"size\",value=\"0\"},{name=\"access_type\",value=\"MMU_INST_FETCH\"},{name=\"mmu_idx\",value=\"1\"},{name=\"probe\",value=\"false\"},{name=\"retaddr\",value=\"0\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"438\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"11\"",
+  "sv_physical_stop": "*stopped,reason=\"breakpoint-hit\",disp=\"keep\",bkptno=\"6\",frame={addr=\"0x00005d477a1c2bb5\",func=\"get_physical_address\",args=[{name=\"env\",value=\"0x5d47aa8dd1e0\"},{name=\"physical\",value=\"0x7ce6e93fd180\"},{name=\"prot\",value=\"0x7ce6e93fd174\"},{name=\"addr\",value=\"18446744072637907160\"},{name=\"access_type\",value=\"2\"},{name=\"mmu_idx\",value=\"1\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"158\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"11\"",
+  "sv_entry": {
+    "addr": "18446744072637907160",
+    "access_type": "2",
+    "mmu_idx": "1",
+    "env->priv": "1",
+    "env->satp": "9223372036855300618",
+    "env->mstatus": "9223372036854800384"
+  },
+  "walk_setup": {
+    "base": "2149621760",
+    "levels": "3",
+    "ptidxbits": "9",
+    "ptesize": "8",
+    "ptshift": "18",
+    "mode": "1",
+    "vm": "8"
+  },
+  "walk_leaf": {
+    "addr": "18446744072637907160",
+    "i": "0",
+    "base": "2149621760",
+    "levels": "3",
+    "ptidxbits": "9",
+    "ptshift": "18",
+    "idx": "511",
+    "pte_addr": "2149625848",
+    "pte": "536871119",
+    "ppn": "524288"
+  },
+  "walk_finish_stop": "*stopped,reason=\"function-finished\",frame={addr=\"0x00005d477a1c3891\",func=\"riscv_cpu_tlb_fill\",args=[{name=\"cs\",value=\"0x5d47aa8d47d0\"},{name=\"address\",value=\"18446744072637907160\"},{name=\"size\",value=\"0\"},{name=\"access_type\",value=\"MMU_INST_FETCH\"},{name=\"mmu_idx\",value=\"1\"},{name=\"probe\",value=\"false\"},{name=\"retaddr\",value=\"0\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c\",line=\"451\",arch=\"i386:x86-64\"},gdb-result-var=\"$26\",return-value=\"0\",thread-id=\"3\",stopped-threads=\"all\",core=\"11\"",
+  "translation": {
+    "*$out_pa": "2149580800",
+    "*$out_prot": "7",
+    "address": "18446744072637907160",
+    "pa": "2149580800",
+    "prot": "7"
+  },
+  "fill_install": {
+    "address": "18446744072637907160",
+    "pa": "2149580800",
+    "prot": "7",
+    "mmu_idx": "1",
+    "ret": "0"
+  },
+  "guest_kern_init": "*stopped,reason=\"breakpoint-hit\",disp=\"keep\",bkptno=\"1\",frame={addr=\"0xffffffffc02000d8\",func=\"kern_init\",args=[],file=\"kern/init/init.c\",fullname=\"/mnt/d/college_study_materials/junior_year_fall/OS/lab2/screenshot_lab2/lab2/code/kern/init/init.c\",line=\"31\",arch=\"riscv:rv64\"},thread-id=\"1\",stopped-threads=\"all\"",
+  "guest_satp": "10^done,value=\"-9223372036854250998\"",
+  "repeat_lookup_stop": "*stopped,reason=\"breakpoint-hit\",disp=\"keep\",bkptno=\"10\",frame={addr=\"0x00005d477a10a141\",func=\"get_page_addr_code\",args=[{name=\"env\",value=\"0x5d47aa8dd1e0\"},{name=\"addr\",value=\"18446744072637907160\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1030\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"11\"",
+  "repeat_lookup": {
+    "addr": "18446744072637907160",
+    "env->satp": "9223372036855300618",
+    "env->priv": "1",
+    "mmu_idx": "1",
+    "index": "0",
+    "entry->addr_code": "18446744072637906944"
+  },
+  "repeat_lookup_match": "1",
+  "repeat_next_stop": "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x00005d477a10a244\",func=\"get_page_addr_code\",args=[{name=\"env\",value=\"0x5d47aa8dd1e0\"},{name=\"addr\",value=\"18446744072637907160\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1039\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"11\"",
+  "repeat_next_line": "*stopped,reason=\"end-stepping-range\",frame={addr=\"0x00005d477a10a244\",func=\"get_page_addr_code\",args=[{name=\"env\",value=\"0x5d47aa8dd1e0\"},{name=\"addr\",value=\"18446744072637907160\"}],file=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",fullname=\"/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c\",line=\"1039\",arch=\"i386:x86-64\"},thread-id=\"3\",stopped-threads=\"all\",core=\"11\"",
+  "guest_step_stop": "*stopped,reason=\"end-stepping-range\",frame={addr=\"0xffffffffc02000dc\",func=\"kern_init\",args=[],file=\"kern/init/init.c\",fullname=\"/mnt/d/college_study_materials/junior_year_fall/OS/lab2/screenshot_lab2/lab2/code/kern/init/init.c\",line=\"31\",arch=\"riscv:rv64\"},thread-id=\"1\",stopped-threads=\"all\"",
+  "resident": "*stopped,reason=\"breakpoint-hit\",disp=\"keep\",bkptno=\"2\",frame={addr=\"0xffffffffc0200118\",func=\"kern_init\",args=[],file=\"kern/init/init.c\",fullname=\"/mnt/d/college_study_materials/junior_year_fall/OS/lab2/screenshot_lab2/lab2/code/kern/init/init.c\",line=\"46\",arch=\"riscv:rv64\"},thread-id=\"1\",stopped-threads=\"all\"",
+  "is_panic": "14^done,value=\"0\"",
+  "live_objects": "15^done,value=\"0\"",
+  "slab_count": "16^done,value=\"0\"",
+  "free_count": "17^done,value=\"31723\"",
+  "host_exit": "*stopped,reason=\"exited-normally\"",
+  "protected_files_unchanged": 92,
+  "port_released": true
+}

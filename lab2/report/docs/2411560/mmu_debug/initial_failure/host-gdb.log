@@ -1,0 +1,110 @@
+~"254\t        target_ulong ppn = pte >> PTE_PPN_SHIFT;\n"
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="3",frame={addr="0x000061e7986920c6",func="get_physical_address",args=[{name="env",value="0x61e7cb6012c0"},{name="physical",value="0x72e24cbfd230"},{name="prot",value="0x72e24cbfd224"},{name="addr",value="1092830560"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="254",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="17"
+COMMAND -data-evaluate-expression "(unsigned long long)(i)"
+(gdb) 
+31^done,value="1"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(ptshift)"
+32^done,value="9"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(idx)"
+33^done,value="9"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(pte_addr)"
+34^done,value="2281685064"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(pte)"
+35^done,value="570422273"
+(gdb) 
+COMMAND -exec-continue
+36^running
+*running,thread-id="all"
+(gdb) 
+=breakpoint-modified,bkpt={number="3",type="breakpoint",disp="keep",enabled="y",addr="0x000061e7986920c6",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="254",thread-groups=["i1"],cond="addr == 1092830560 && mmu_idx == 1",times="3",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:254"}
+~"\n"
+~"Thread 3 \"qemu-system-ris\" hit Breakpoint 3, get_physical_address (env=0x61e7cb6012c0, physical=0x72e24cbfd230, prot=0x72e24cbfd224, addr=1092830560, access_type=0, mmu_idx=1) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:254\n"
+~"254\t        target_ulong ppn = pte >> PTE_PPN_SHIFT;\n"
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="3",frame={addr="0x000061e7986920c6",func="get_physical_address",args=[{name="env",value="0x61e7cb6012c0"},{name="physical",value="0x72e24cbfd230"},{name="prot",value="0x72e24cbfd224"},{name="addr",value="1092830560"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="254",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="17"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(i)"
+37^done,value="2"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(ptshift)"
+38^done,value="0"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(idx)"
+39^done,value="52"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(pte_addr)"
+40^done,value="2281689504"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(pte)"
+41^done,value="570420423"
+(gdb) 
+COMMAND -exec-continue
+42^running
+*running,thread-id="all"
+(gdb) 
+=breakpoint-modified,bkpt={number="4",type="breakpoint",disp="keep",enabled="y",addr="0x000061e7985d8a04",func="tlb_set_page",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="847",thread-groups=["i1"],cond="vaddr == 1092829184 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:847"}
+~"\n"
+~"Thread 3 \"qemu-system-ris\" hit Breakpoint 4, tlb_set_page (cpu=0x61e7cb5f88b0, vaddr=1092829184, paddr=2281680896, prot=3, mmu_idx=1, size=4096) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:847\n"
+~"847\t    tlb_set_page_with_attrs(cpu, vaddr, paddr, MEMTXATTRS_UNSPECIFIED,\n"
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="4",frame={addr="0x000061e7985d8a04",func="tlb_set_page",args=[{name="cpu",value="0x61e7cb5f88b0"},{name="vaddr",value="1092829184"},{name="paddr",value="2281680896"},{name="prot",value="3"},{name="mmu_idx",value="1"},{name="size",value="4096"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="847",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="17"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(vaddr)"
+43^done,value="1092829184"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(paddr)"
+44^done,value="2281680896"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(prot)"
+45^done,value="3"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(mmu_idx)"
+46^done,value="1"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(size)"
+47^done,value="4096"
+(gdb) 
+COMMAND -exec-continue
+48^running
+*running,thread-id="all"
+(gdb) 
+=breakpoint-modified,bkpt={number="5",type="breakpoint",disp="keep",enabled="y",addr="0x000061e7985d8993",func="tlb_set_page_with_attrs",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="835",thread-groups=["i1"],cond="vaddr == 1092829184 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:835"}
+~"\n"
+~"Thread 3 \"qemu-system-ris\" hit Breakpoint 5, tlb_set_page_with_attrs (cpu=0x61e7cb5f88b0, vaddr=1092829184, paddr=2281680896, attrs=..., prot=3, mmu_idx=1, size=4096) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:835\n"
+~"835\t    copy_tlb_helper_locked(te, &tn);\n"
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="5",frame={addr="0x000061e7985d8993",func="tlb_set_page_with_attrs",args=[{name="cpu",value="0x61e7cb5f88b0"},{name="vaddr",value="1092829184"},{name="paddr",value="2281680896"},{name="attrs",value="..."},{name="prot",value="3"},{name="mmu_idx",value="1"},{name="size",value="4096"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="835",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="17"
+COMMAND -interpreter-exec console "print tn"
+(gdb) 
+~"$1 = {{{addr_read = 1092829184, addr_write = 1092829184, addr_code = 18446744073709551615, addend = 126314966970368}, dummy = \"\\000@#A\\000\\000\\000\\000\\000@#A\\000\\000\\000\\000\\377\\377\\377\\377\\377\\377\\377\\377\\000p\\274\\376\\341r\\000\"}}\n"
+49^done
+(gdb) 
+COMMAND -exec-next
+50^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x000061e7985d89a6",func="tlb_set_page_with_attrs",args=[{name="cpu",value="0x61e7cb5f88b0"},{name="vaddr",value="1092829184"},{name="paddr",value="2281680896"},{name="attrs",value="..."},{name="prot",value="3"},{name="mmu_idx",value="1"},{name="size",value="4096"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="836",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="17"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(te->addr_read)"
+51^done,value="1092829184"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(te->addr_write)"
+52^done,value="1092829184"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(te->addr_code)"
+53^done,value="18446744073709551615"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(te->addend)"
+54^done,value="126314966970368"
+(gdb) 
+COMMAND -interpreter-exec console "print *te"
+~"$2 = {{{addr_read = 1092829184, addr_write = 1092829184, addr_code = 18446744073709551615, addend = 126314966970368}, dummy = \"\\000@#A\\000\\000\\000\\000\\000@#A\\000\\000\\000\\000\\377\\377\\377\\377\\377\\377\\377\\377\\000p\\274\\376\\341r\\000\"}}\n"
+55^done
+(gdb) 
+COMMAND -exec-continue
+56^running
+*running,thread-id="all"
+(gdb) 
+COMMAND -break-info 1
+&"Quit\n"

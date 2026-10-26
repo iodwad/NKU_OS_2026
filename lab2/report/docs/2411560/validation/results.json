@@ -1,0 +1,163 @@
+{
+  "status": "PASS",
+  "tested_in": "publish_work/lab2/code",
+  "base_commit": "b2298c6f0be7b2b5001b3d29d7b039cb7f72c19b",
+  "buddy_host": {
+    "total": 43,
+    "passed": 43,
+    "failed": 0,
+    "unexecuted": 0
+  },
+  "slub_host": {
+    "total": 73,
+    "passed": 73,
+    "failed": 0,
+    "unexecuted": 0,
+    "negative_cases": 17
+  },
+  "kernel": {
+    "build": [
+      {
+        "name": "object",
+        "exit_code": 0
+      },
+      {
+        "name": "kernel",
+        "exit_code": 0
+      }
+    ],
+    "qemu_exit_code": 124,
+    "slub": [
+      {
+        "id": "T01",
+        "status": "PASS"
+      },
+      {
+        "id": "T02",
+        "status": "PASS"
+      },
+      {
+        "id": "T03",
+        "status": "PASS"
+      },
+      {
+        "id": "T04",
+        "status": "PASS"
+      },
+      {
+        "id": "T05",
+        "status": "PASS"
+      },
+      {
+        "id": "T06",
+        "status": "PASS"
+      },
+      {
+        "id": "T07",
+        "status": "PASS"
+      }
+    ],
+    "buddy": [
+      {
+        "id": "K01",
+        "status": "PASS"
+      },
+      {
+        "id": "K02",
+        "status": "PASS"
+      },
+      {
+        "id": "K03",
+        "status": "PASS"
+      },
+      {
+        "id": "K04",
+        "status": "PASS"
+      },
+      {
+        "id": "K05",
+        "status": "PASS"
+      }
+    ],
+    "normal_completion_observed": true
+  },
+  "resident": {
+    "pc": "0xffffffffc0200118",
+    "panic": false,
+    "live_objects": 0,
+    "slab_count": 0,
+    "owner_all_zero": true,
+    "all_partial_lists_empty": true,
+    "free_pages": 31723,
+    "slab_header_struct_bytes": 88,
+    "owner_bytes": 262144
+  },
+  "protected_local_directories_unchanged": {
+    "lab1": true,
+    "lab2/code": true,
+    "lab2/buddy_work": true,
+    "lab2/slub_work": true
+  },
+  "upstream_preserved_except_minimal_integration": true,
+  "prompt_original_hashes_verified": true,
+  "report_fenced_code_and_prompt_checklists_unchanged": true,
+  "source_sha256": {
+    ".gitattributes": "1d5d71dcc6ccd28ab46a335349ecc74742ca4b81f4fcad212f8d134f70f1f13e",
+    ".gitignore": "e8069042eeac9607096bd30f4af3381c817d4752e75bd5617bc7ab388846f042",
+    "Makefile": "76417f0c8edb189b06edd4f7a9ad70a20e0ee2266946874bfdeccf9f56e67c74",
+    "kern/debug/assert.h": "0a93afd3ff9538d1712e7e1df0006668d5a9c91cfd38c0fa945dceaa72613633",
+    "kern/debug/panic.c": "7ad06be18808f6318c5beeeb415f7c9dd399dde52dc0b79b346e2f54a43c9aeb",
+    "kern/driver/console.c": "d7ca78720834a50fe79748ca151ef148d2ef2f643cb63d9f456f36f1d42ea499",
+    "kern/driver/console.h": "964c039c962830691c15da313b6be9139a3fbca86512ade5fd5bae350bf5085b",
+    "kern/driver/dtb.c": "8f3ff040219d3a53ab562767a85716fd36f2a6a91a0d9d167be07489775694d0",
+    "kern/driver/dtb.h": "98424767ae61af61020145f95ce867ab0a5e0c78d5979eeda2c404ce7458f30b",
+    "kern/init/entry.S": "90ba28c3db60c14092c525e1b734ce429b45982601ce394d4e16db19155ad223",
+    "kern/init/init.c": "171ef2961a6da6b8e598d5694328e8ea4a65c2cc6b8491fc577866da1a209372",
+    "kern/libs/stdio.c": "bfb8d86465315f26cfce15d5b9ec9728a0e473c411f651ae1c289843561e5cbc",
+    "kern/mm/best_fit_pmm.c": "7a29f95b1ee80724999d9f7e7a3533305d655ba831ca8304a35ace4f4ed8f55e",
+    "kern/mm/best_fit_pmm.h": "49e887c754f3845c8fa290a69613c4dad37bafaded5cf62899f21c0168749383",
+    "kern/mm/buddy_checks.inc": "20294da70b7b1b67dec605839f772390e89fe66b4a2fb0b77b78f72b73d8bfa3",
+    "kern/mm/buddy_pmm.c": "26a478972aa47fb328f71ba8f546d3ce29f4509514d980e3641c0f5321f866f8",
+    "kern/mm/buddy_pmm.h": "6337732c94382adba5d58ded56322730303c46fd42b515b6b7d6ccdcd01482bd",
+    "kern/mm/default_pmm.c": "d0d58ce42280ff885847cae16ea0bd592f63055a6ba95406c4fa5ea3b59fc927",
+    "kern/mm/default_pmm.h": "85e13acb8f3f0b90c9de95016db21d4882db383213a71daa2374ec6b6a295645",
+    "kern/mm/memlayout.h": "179b092ca8e035eaf72e1ed105e59e23885064f2efa8cb6b71b6b4e27906dd53",
+    "kern/mm/mmu.h": "75057c4508aa70bdc990ccaa86a02470cd39548c2fdd398bc019db79635f29be",
+    "kern/mm/pmm.c": "08846021a754aab6b03311b563e58a2541c16904e4f07f94dcc52d4be126a7a0",
+    "kern/mm/pmm.h": "a1c97b722a50cb706e493215741d47bdb13eee22a14bc7034bed86883f170f48",
+    "kern/mm/slub.c": "b985aed451ef258d8462ab7c31432ed573696cf8a11c759c60c0b1419e7e7d6f",
+    "kern/mm/slub.h": "84700a70b463dd20fa27b97047c1417f1ecd7c429342c4232f00031777e41c33",
+    "kern/mm/slub_checks.inc": "1446124cc5c9ad8bd821f6feefd26dae226a00c877bad07ec4d0a2ecc9424f47",
+    "kern/mm/slub_test_cases.inc": "9629ba11986641751fdd19a1181016f2c7f496a40d05b47c841a06f89ee2debf",
+    "libs/defs.h": "5fb960293b7c3cf559b22c36d08ffa81ff22edf4b633575869d33761d7e1ee51",
+    "libs/error.h": "77ff4d08fb84f4e50d1f67949ea896cf35adfeb7cc328a646600228cb5605777",
+    "libs/list.h": "bc6281ef203d444d1acd1e2954f97c73201974df0eb27b9d75f10b0128601b6e",
+    "libs/printfmt.c": "0e8a99504668efaf1d538a71cd829db70ddd5dce6c93e3102cd213f840a89fb0",
+    "libs/readline.c": "16d505c7ac5cb40bab0c0b57cfbae97eb47e0cad3903aeb6db7736806123994c",
+    "libs/riscv.h": "4a3ee787f54b12e4163618eed6ce825cbfef1fe3d67152a5971562f15cd2ee8b",
+    "libs/sbi.c": "a7278800d3d733e146cb020916996e89a1acc5f50982cc44593dffcea97a53a5",
+    "libs/sbi.h": "ffa39439148aa22d8c8f841e6af31948a9a6591579e85e5fa0a00f7ea894afeb",
+    "libs/stdarg.h": "deee724be1034684e0e97026b674ebfb9b19be4d0a285da5626201bc16f20710",
+    "libs/stdio.h": "5afe3a6abfacaec120b2bbd149fb944298c566e750e31b71be770e78c20d27f0",
+    "libs/string.c": "d97fbebb402c48e1644db5e9438b33f10efa87965c7877e2496d5313441906df",
+    "libs/string.h": "47557a62a2b2f29639f48373bdb521a2cfdb6c1d4beedad0e3e4792b824c8dd0",
+    "tests/buddy_host_tests.c": "5d6c9351124f921ed73b7973f413bc8ebd6ddae5d990c4aa05f7934322b4486b",
+    "tests/confirm_slub_test_resident.py": "2c47c60bb8b2eb71cf368dce3bcfa5b049fbe3e6e8d07594d69eb9e294c2cab3",
+    "tests/run_buddy_tests.py": "bda6c2f4d6c861ccb20b312aa5a15c5199c78d38422d5bace619343c04ef6506",
+    "tests/run_slub_host_tests.py": "66d7944bafb3567905ef927e47643fee8af9139009b0ba3755dbcff9d9dc789d",
+    "tests/run_slub_kernel_tests.py": "e3f8e1437aa9c0aa4d3f4782133dd5763f9ff6f9bd8867813f4353e315757f52",
+    "tests/slub_host_tests.c": "bf64765200f4200e5cf7413777bb6a2d6ca38c8de7b10f6f55caf9ffa5734ac2",
+    "tests/test_catalog.json": "8cd68b9df8490bddf12af5f1a49094d43d8a1708539d55e858f5528a9018ad5e",
+    "tools/boot.ld": "fb6fdb3b44d58fe7a3ebacf6ce5fedf0c67c3d14d0708853965d7be55c784944",
+    "tools/function.mk": "46fab30a764a277562f3bebb6ac9cf4e11d6e1718e9698d363b78dcefc8effc6",
+    "tools/gdbinit": "ad7953cf55adfbaf79175b470cfe500c6d9cbea5b72d5edbc24e02505afc734b",
+    "tools/grade.sh": "9f4b6a6277daa092b70706a67a656dc3978acb0eb8139352a3a7b21ec9f522b1",
+    "tools/inject.py": "d195be11847b6574071ccc7bbff96baad03d4aef971c5b67245ec8bf92017f08",
+    "tools/kernel.ld": "82e5df6e5802a00c4cab55b0e65991af03cc86facbc556ee7387742cab413a63",
+    "tools/kernel_nopage.ld": "86fdd18a858f6a1dc390d77edad69890b6302f4e4b9cf5c357920749abf0a039",
+    "tools/test_lab2.c": "4c0a886419f9b4b00a6c3ac6bc1f9b06e90eef1d897d8da4bf8332c9891a8846",
+    "tools/test_lab2.h": "3aeccce8e3ff0c48691c024b74fafa6960679334933c06fc2f135f86c432981b"
+  },
+  "kernel_sha256": "e6ad4a3292ffe50240b701ae6d913cf111ad68e082e85f550daaad5efccc8e03",
+  "image_sha256": "0fc65045757b1a5530024454c5a4fbd92933f770702fd880455febaf45d76e78"
+}

@@ -1,0 +1,84 @@
+--- first_run/slub_host_tests.c
++++ final/slub_host_tests.c
+@@ -226,21 +226,50 @@
+ };
+ static struct snapshot snapshot;
+ static const char *expected_assertion;
++struct snapshot_segment { size_t offset,bytes; };
++static struct snapshot_segment snapshot_segments[65536];
++static size_t snapshot_segment_count;
++static void capture_segment(uintptr_t address,size_t bytes) {
++    REQUIRE(address>=KERNBASE && address-KERNBASE<=resource_pages*PGSIZE);
++    size_t offset=address-KERNBASE;
++    REQUIRE(bytes<=resource_pages*PGSIZE-offset && snapshot_segment_count<65536);
++    snapshot_segments[snapshot_segment_count++]=(struct snapshot_segment){offset,bytes};
++    memcpy(snapshot.data+offset,(void *)address,bytes);
++}
+ static void capture(void) {
+     memcpy(snapshot.descriptors,descriptors,sizeof(descriptors)); memcpy(snapshot.records,records,sizeof(records));
+     memcpy(snapshot.free_lists,free_lists,sizeof(free_lists)); memcpy(snapshot.partial,partial,sizeof(partial));
+     memcpy(snapshot.owners,owner,sizeof(owner)); memcpy(snapshot.original,pmm_original,sizeof(pmm_original));
+     memcpy(snapshot.actual,pmm_actual,sizeof(pmm_actual)); memcpy(snapshot.raw,pmm_raw,sizeof(pmm_raw));
+-    memcpy(snapshot.data,(void *)KERNBASE,resource_pages*PGSIZE);
++    /* Do not inspect freed user payload. Snapshot active data, valid headers,
++     * and the two-byte free-list links that are allocator metadata. */
++    snapshot_segment_count=0;
++    for(size_t i=0;i<TEST_MAX_OBJECTS;++i)
++        if(objects[i].ptr) capture_segment((uintptr_t)objects[i].ptr,objects[i].size);
++    for(size_t i=0;i<resource_pages;++i) {
++        struct expected_slab *g=groups+i;
++        if(g->address) {
++            capture_segment(g->address,TEST_HEADER);
++            if(g->width<=2048) for(size_t slot=0;slot<(PGSIZE-TEST_HEADER)/g->width;++slot)
++                if(!(g->bits[slot/64]&(1ULL<<(slot%64))))
++                    capture_segment(g->address+TEST_HEADER+slot*g->width,sizeof(uint16_t));
++        }
++        if(pmm_original[TEST_FIRST_PAGE+i] && pmm_raw[TEST_FIRST_PAGE+i])
++            capture_segment(KERNBASE+i*PGSIZE,pmm_actual[TEST_FIRST_PAGE+i]*PGSIZE);
++    }
+     snapshot.free=nr_free_pages(); snapshot.objects=live_objects; snapshot.slabs=slab_count; snapshot.ready=slub_ready;
+ }
+ static bool unchanged(void) {
+-    return snapshot.free==nr_free_pages() && snapshot.objects==live_objects && snapshot.slabs==slab_count && snapshot.ready==slub_ready &&
++    bool same=snapshot.free==nr_free_pages() && snapshot.objects==live_objects && snapshot.slabs==slab_count && snapshot.ready==slub_ready &&
+       !memcmp(snapshot.descriptors,descriptors,sizeof(descriptors)) && !memcmp(snapshot.records,records,sizeof(records)) &&
+       !memcmp(snapshot.free_lists,free_lists,sizeof(free_lists)) && !memcmp(snapshot.partial,partial,sizeof(partial)) &&
+       !memcmp(snapshot.owners,owner,sizeof(owner)) && !memcmp(snapshot.original,pmm_original,sizeof(pmm_original)) &&
+-      !memcmp(snapshot.actual,pmm_actual,sizeof(pmm_actual)) && !memcmp(snapshot.raw,pmm_raw,sizeof(pmm_raw)) &&
+-      !memcmp(snapshot.data,(void *)KERNBASE,resource_pages*PGSIZE);
++      !memcmp(snapshot.actual,pmm_actual,sizeof(pmm_actual)) && !memcmp(snapshot.raw,pmm_raw,sizeof(pmm_raw));
++    for(size_t i=0;i<snapshot_segment_count;++i) {
++        struct snapshot_segment s=snapshot_segments[i];
++        if(memcmp(snapshot.data+s.offset,(void *)(KERNBASE+s.offset),s.bytes)) same=0;
++    }
++    return same;
+ }
+ void __panic(const char *file,int line,const char *fmt,...) {
+     __builtin_va_list ap,copy; __builtin_va_start(ap,fmt); __builtin_va_copy(copy,ap);
+@@ -352,7 +381,7 @@
+         drain();
+     } else if(!strcmp(id,"no_pages")) { REQUIRE(take(1)==-1 && take(5000)==-1); }
+     else if(!strcmp(id,"oom_small") || !strcmp(id,"oom_16")) {
+-        size_t n=!strcmp(id,"oom_16")?16:1000,capacity=2*((PGSIZE-TEST_HEADER)/n);
++        size_t n=!strcmp(id,"oom_16")?16:1000,capacity=2*((PGSIZE-TEST_HEADER)/expected_width(n));
+         for(size_t i=0;i<capacity;++i) REQUIRE(take(n)>=0);
+         REQUIRE(nr_free_pages()==0 && take(n)==-1); drain(); REQUIRE(take(n)>=0); drain();
+     } else if(!strcmp(id,"free_slots_oom")) {
+@@ -406,11 +435,12 @@
+         expect("va >= KERNBASE && va < KERNTOP && va >= va_pa_offset"); slub_free((void *)(uintptr_t)-1);
+     } else if(!strcmp(id,"N11")) {
+         expect("ppn >= nbase && ppn < npage && ppn - nbase < SLUB_PAGE_LIMIT"); slub_free((void *)(KERNBASE+resource_pages*PGSIZE));
+-    } else if(!strcmp(id,"N12") || !strcmp(id,"N13")) {
+-        int a=take(100); struct slub_slab *h=(void *)((uintptr_t)objects[a].ptr&~(uintptr_t)4095);
+-        if(!strcmp(id,"N12")) { h->magic=0; expect("slab != NULL && slab->magic == SLUB_MAGIC"); }
+-        else { h->inuse=h->slots+1; expect("slab->inuse <= slab->slots"); }
+-        slub_free(objects[a].ptr);
++    } else if(!strcmp(id,"N12")) {
++        int a=take(8200); REQUIRE(a>=0); void *old=objects[a].ptr; release(a);
++        expect("slab != NULL"); slub_free(old);
++    } else if(!strcmp(id,"N13")) {
++        REQUIRE(take(100)>=0);
++        expect("va >= KERNBASE && va < KERNTOP && va >= va_pa_offset"); slub_free(pages);
+     } else if(!strcmp(id,"N14")) {
+         int a=take(100); expect("displacement < (size_t)slab->slots * slab->object_bytes");
+         slub_free((void *)(((uintptr_t)objects[a].ptr&~(uintptr_t)4095)+4095));

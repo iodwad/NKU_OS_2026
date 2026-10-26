@@ -1,0 +1,974 @@
+COMMAND -interpreter-exec console "set pagination off"
+=thread-group-added,id="i1"
+=cmd-param-changed,param="mi-async",value="on"
+~"Reading symbols from /home/andy/os_lab2_qemu_debug/build/riscv64-softmmu/qemu-system-riscv64...\n"
+~"Attaching to program: /home/andy/os_lab2_qemu_debug/build/riscv64-softmmu/qemu-system-riscv64, process 30085\n"
+=thread-group-started,id="i1",pid="30085"
+=thread-created,id="1",group-id="i1"
+=thread-created,id="2",group-id="i1"
+~"[New LWP 30086]\n"
+*running,thread-id="2"
+=thread-created,id="3",group-id="i1"
+~"[New LWP 30087]\n"
+*running,thread-id="3"
+=library-loaded,id="/lib/x86_64-linux-gnu/libncursesw.so.6",target-name="/lib/x86_64-linux-gnu/libncursesw.so.6",host-name="/lib/x86_64-linux-gnu/libncursesw.so.6",symbols-loaded="0",thread-group="i1",ranges=[{from="0x0000745beb201090",to="0x0000745beb2285ea"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/libtinfo.so.6",target-name="/lib/x86_64-linux-gnu/libtinfo.so.6",host-name="/lib/x86_64-linux-gnu/libtinfo.so.6",symbols-loaded="0",thread-group="i1",ranges=[{from="0x0000745beb1d4780",to="0x0000745beb1e41ab"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/libz.so.1",target-name="/lib/x86_64-linux-gnu/libz.so.1",host-name="/lib/x86_64-linux-gnu/libz.so.1",symbols-loaded="0",thread-group="i1",ranges=[{from="0x0000745beb1ac280",to="0x0000745beb1bcc14"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/libpixman-1.so.0",target-name="/lib/x86_64-linux-gnu/libpixman-1.so.0",host-name="/lib/x86_64-linux-gnu/libpixman-1.so.0",symbols-loaded="0",thread-group="i1",ranges=[{from="0x0000745beb109300",to="0x0000745beb18e4bf"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/libglib-2.0.so.0",target-name="/lib/x86_64-linux-gnu/libglib-2.0.so.0",host-name="/lib/x86_64-linux-gnu/libglib-2.0.so.0",symbols-loaded="0",thread-group="i1",ranges=[{from="0x0000745beafe2b20",to="0x0000745beb0702c2"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/libm.so.6",target-name="/lib/x86_64-linux-gnu/libm.so.6",host-name="/lib/x86_64-linux-gnu/libm.so.6",symbols-loaded="0",thread-group="i1",ranges=[{from="0x0000745beaee93a0",to="0x0000745beaf648c8"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/libgcc_s.so.1",target-name="/lib/x86_64-linux-gnu/libgcc_s.so.1",host-name="/lib/x86_64-linux-gnu/libgcc_s.so.1",symbols-loaded="0",thread-group="i1",ranges=[{from="0x0000745beaebe660",to="0x0000745beaed4805"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/libc.so.6",target-name="/lib/x86_64-linux-gnu/libc.so.6",host-name="/lib/x86_64-linux-gnu/libc.so.6",symbols-loaded="0",thread-group="i1",ranges=[{from="0x0000745beac28700",to="0x0000745beadba9fd"}]
+=library-loaded,id="/lib64/ld-linux-x86-64.so.2",target-name="/lib64/ld-linux-x86-64.so.2",host-name="/lib64/ld-linux-x86-64.so.2",symbols-loaded="0",thread-group="i1",ranges=[{from="0x0000745beb240090",to="0x0000745beb269315"}]
+=library-loaded,id="/lib/x86_64-linux-gnu/libpcre.so.3",target-name="/lib/x86_64-linux-gnu/libpcre.so.3",host-name="/lib/x86_64-linux-gnu/libpcre.so.3",symbols-loaded="0",thread-group="i1",ranges=[{from="0x0000745beae472a0",to="0x0000745beae9b5b0"}]
+~"[Thread debugging using libthread_db enabled]\n"
+~"Using host libthread_db library \"/lib/x86_64-linux-gnu/libthread_db.so.1\".\n"
+~"0x0000745bead18e1e in ppoll () from /lib/x86_64-linux-gnu/libc.so.6\n"
+*stopped,frame={addr="0x0000745bead18e1e",func="ppoll",args=[],from="/lib/x86_64-linux-gnu/libc.so.6",arch="i386:x86-64"},thread-id="1",stopped-threads="all",core="5"
+(gdb) 
+=cmd-param-changed,param="pagination",value="off"
+1^done
+(gdb) 
+COMMAND -interpreter-exec console "handle SIGPIPE nostop noprint pass"
+~"Signal        Stop\tPrint\tPass to program\tDescription\n"
+~"SIGPIPE       No\tNo\tYes\t\tBroken pipe\n"
+2^done
+(gdb) 
+COMMAND -interpreter-exec console "info address riscv_cpu_tlb_fill"
+~"Symbol \"riscv_cpu_tlb_fill\" is a function at address 0x634c0d33b7a6.\n"
+3^done
+(gdb) 
+COMMAND -interpreter-exec console "list riscv_cpu_tlb_fill"
+~"433\t#endif\n"
+~"434\t\n"
+~"435\tbool riscv_cpu_tlb_fill(CPUState *cs, vaddr address, int size,\n"
+~"436\t                        MMUAccessType access_type, int mmu_idx,\n"
+~"437\t                        bool probe, uintptr_t retaddr)\n"
+~"438\t{\n"
+~"439\t#ifndef CONFIG_USER_ONLY\n"
+~"440\t    RISCVCPU *cpu = RISCV_CPU(cs);\n"
+~"441\t    CPURISCVState *env = &cpu->env;\n"
+~"442\t    hwaddr pa = 0;\n"
+4^done
+(gdb) 
+COMMAND -interpreter-exec console "info address get_physical_address"
+~"Symbol \"get_physical_address\" is a function at address 0x634c0d33ab7c.\n"
+5^done
+(gdb) 
+COMMAND -interpreter-exec console "list get_physical_address"
+~"153\t *\n"
+~"154\t */\n"
+~"155\tstatic int get_physical_address(CPURISCVState *env, hwaddr *physical,\n"
+~"156\t                                int *prot, target_ulong addr,\n"
+~"157\t                                int access_type, int mmu_idx)\n"
+~"158\t{\n"
+~"159\t    /* NOTE: the env->pc value visible here will not be\n"
+~"160\t     * correct, but the value visible to the exception handler\n"
+~"161\t     * (riscv_cpu_do_interrupt) is correct */\n"
+~"162\t\n"
+6^done
+(gdb) 
+COMMAND -interpreter-exec console "info address tlb_set_page"
+~"Symbol \"tlb_set_page\" is a function at address 0x634c0d2819e1.\n"
+7^done
+(gdb) 
+COMMAND -interpreter-exec console "list tlb_set_page"
+~"841\t * transaction attributes to be used.\n"
+~"842\t */\n"
+~"843\tvoid tlb_set_page(CPUState *cpu, target_ulong vaddr,\n"
+~"844\t                  hwaddr paddr, int prot,\n"
+~"845\t                  int mmu_idx, target_ulong size)\n"
+~"846\t{\n"
+~"847\t    tlb_set_page_with_attrs(cpu, vaddr, paddr, MEMTXATTRS_UNSPECIFIED,\n"
+~"848\t                            prot, mmu_idx, size);\n"
+~"849\t}\n"
+~"850\t\n"
+8^done
+(gdb) 
+COMMAND -interpreter-exec console "break /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:451 if address == 1092830560 && mmu_idx == 1"
+~"Breakpoint 1 at 0x634c0d33b86c: file /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c, line 451.\n"
+=breakpoint-created,bkpt={number="1",type="breakpoint",disp="keep",enabled="y",addr="0x0000634c0d33b86c",func="riscv_cpu_tlb_fill",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="451",thread-groups=["i1"],cond="address == 1092830560 && mmu_idx == 1",times="0",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:451"}
+9^done
+(gdb) 
+COMMAND -interpreter-exec console "break /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:163 if addr == 1092830560 && mmu_idx == 1"
+~"Breakpoint 2 at 0x634c0d33abc4: file /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c, line 163.\n"
+=breakpoint-created,bkpt={number="2",type="breakpoint",disp="keep",enabled="y",addr="0x0000634c0d33abc4",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="163",thread-groups=["i1"],cond="addr == 1092830560 && mmu_idx == 1",times="0",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:163"}
+10^done
+(gdb) 
+COMMAND -interpreter-exec console "break /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:254 if addr == 1092830560 && mmu_idx == 1"
+~"Breakpoint 3 at 0x634c0d33b0c6: file /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c, line 254.\n"
+=breakpoint-created,bkpt={number="3",type="breakpoint",disp="keep",enabled="y",addr="0x0000634c0d33b0c6",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="254",thread-groups=["i1"],cond="addr == 1092830560 && mmu_idx == 1",times="0",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:254"}
+11^done
+(gdb) 
+COMMAND -interpreter-exec console "break /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:847 if vaddr == 1092829184 && mmu_idx == 1"
+~"Breakpoint 4 at 0x634c0d281a04: file /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c, line 847.\n"
+=breakpoint-created,bkpt={number="4",type="breakpoint",disp="keep",enabled="y",addr="0x0000634c0d281a04",func="tlb_set_page",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="847",thread-groups=["i1"],cond="vaddr == 1092829184 && mmu_idx == 1",times="0",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:847"}
+12^done
+(gdb) 
+COMMAND -interpreter-exec console "break /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:835 if vaddr == 1092829184 && mmu_idx == 1"
+~"Breakpoint 5 at 0x634c0d281993: file /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c, line 835.\n"
+=breakpoint-created,bkpt={number="5",type="breakpoint",disp="keep",enabled="y",addr="0x0000634c0d281993",func="tlb_set_page_with_attrs",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="835",thread-groups=["i1"],cond="vaddr == 1092829184 && mmu_idx == 1",times="0",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:835"}
+13^done
+(gdb) 
+COMMAND -interpreter-exec console "break /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1271 if addr == 0x41234560"
+~"Breakpoint 6 at 0x634c0d282af0: /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1271. (14 locations)\n"
+=breakpoint-created,bkpt={number="6",type="breakpoint",disp="keep",enabled="y",addr="<MULTIPLE>",cond="addr == 0x41234560",times="0",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1271"},{number="6.1",enabled="y",addr="0x0000634c0d282af0",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.2",enabled="y",addr="0x0000634c0d2831dc",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.3",enabled="y",addr="0x0000634c0d2838c8",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.4",enabled="y",addr="0x0000634c0d283fb4",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.5",enabled="y",addr="0x0000634c0d2846a0",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.6",enabled="y",addr="0x0000634c0d284d8c",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.7",enabled="y",addr="0x0000634c0d285444",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.8",enabled="y",addr="0x0000634c0d29c907",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.9",enabled="y",addr="0x0000634c0d29cff3",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.10",enabled="y",addr="0x0000634c0d29d6df",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.11",enabled="y",addr="0x0000634c0d29ddcb",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.12",enabled="y",addr="0x0000634c0d29e4b7",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.13",enabled="y",addr="0x0000634c0d29eba3",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.14",enabled="y",addr="0x0000634c0d29f25b",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]}
+14^done
+(gdb) 
+COMMAND -interpreter-exec console "break /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1010 if page == 0x41234000 && mmu_idx == 1"
+~"Breakpoint 7 at 0x634c0d2820c4: file /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c, line 1010.\n"
+=breakpoint-created,bkpt={number="7",type="breakpoint",disp="keep",enabled="y",addr="0x0000634c0d2820c4",func="victim_tlb_hit",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1010",thread-groups=["i1"],cond="page == 0x41234000 && mmu_idx == 1",times="0",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1010"}
+15^done
+(gdb) 
+COMMAND -interpreter-exec console "break /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1338 if addr == 0x41234560"
+~"Breakpoint 8 at 0x634c0d282edb: /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1338. (14 locations)\n"
+=breakpoint-created,bkpt={number="8",type="breakpoint",disp="keep",enabled="y",addr="<MULTIPLE>",cond="addr == 0x41234560",times="0",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1338"},{number="8.1",enabled="y",addr="0x0000634c0d282edb",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.2",enabled="y",addr="0x0000634c0d2835c7",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.3",enabled="y",addr="0x0000634c0d283cb3",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.4",enabled="y",addr="0x0000634c0d28439f",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.5",enabled="y",addr="0x0000634c0d284a8b",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.6",enabled="y",addr="0x0000634c0d285177",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.7",enabled="y",addr="0x0000634c0d28582f",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.8",enabled="y",addr="0x0000634c0d29ccf2",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.9",enabled="y",addr="0x0000634c0d29d3de",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.10",enabled="y",addr="0x0000634c0d29daca",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.11",enabled="y",addr="0x0000634c0d29e1b6",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.12",enabled="y",addr="0x0000634c0d29e8a2",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.13",enabled="y",addr="0x0000634c0d29ef8e",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.14",enabled="y",addr="0x0000634c0d29f646",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]}
+16^done
+(gdb) 
+COMMAND -exec-continue
+17^running
+*running,thread-id="all"
+(gdb) 
+=breakpoint-modified,bkpt={number="6",type="breakpoint",disp="keep",enabled="y",addr="<MULTIPLE>",cond="addr == 0x41234560",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1271"},{number="6.1",enabled="y",addr="0x0000634c0d282af0",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.2",enabled="y",addr="0x0000634c0d2831dc",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.3",enabled="y",addr="0x0000634c0d2838c8",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.4",enabled="y",addr="0x0000634c0d283fb4",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.5",enabled="y",addr="0x0000634c0d2846a0",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.6",enabled="y",addr="0x0000634c0d284d8c",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.7",enabled="y",addr="0x0000634c0d285444",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.8",enabled="y",addr="0x0000634c0d29c907",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.9",enabled="y",addr="0x0000634c0d29cff3",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.10",enabled="y",addr="0x0000634c0d29d6df",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.11",enabled="y",addr="0x0000634c0d29ddcb",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.12",enabled="y",addr="0x0000634c0d29e4b7",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.13",enabled="y",addr="0x0000634c0d29eba3",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.14",enabled="y",addr="0x0000634c0d29f25b",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]}
+~"[Switching to Thread 0x745be3fff640 (LWP 30087)]\n"
+~"\n"
+~"Thread 3 \"qemu-system-ris\" hit Breakpoint 6, load_helper (full_load=0x634c0d284bf2 <helper_le_ldq_mmu>, code_read=false, big_endian=false, size=8, retaddr=127938086822204, oi=49, addr=1092830560, env=0x634c288a6ca0) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1271\n"
+~"1271\t    if (!tlb_hit(tlb_addr, addr)) {\n"
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="6",frame={addr="0x0000634c0d284d8c",func="load_helper",args=[{name="full_load",value="0x634c0d284bf2 <helper_le_ldq_mmu>"},{name="code_read",value="false"},{name="big_endian",value="false"},{name="size",value="8"},{name="retaddr",value="127938086822204"},{name="oi",value="49"},{name="addr",value="1092830560"},{name="env",value="0x634c288a6ca0"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -data-evaluate-expression "(unsigned long long)(addr)"
+18^done,value="1092830560"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(mmu_idx)"
+19^done,value="1"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(index)"
+20^done,value="52"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(tlb_addr)"
+21^done,value="18446744073709551615"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(code_read)"
+22^done,value="0"
+(gdb) 
+COMMAND -exec-next
+23^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d284dad",func="load_helper",args=[{name="full_load",value="0x634c0d284bf2 <helper_le_ldq_mmu>"},{name="code_read",value="false"},{name="big_endian",value="false"},{name="size",value="8"},{name="retaddr",value="127938086822204"},{name="oi",value="49"},{name="addr",value="1092830560"},{name="env",value="0x634c288a6ca0"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1272",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-continue
+24^running
+*running,thread-id="all"
+(gdb) 
+=breakpoint-modified,bkpt={number="7",type="breakpoint",disp="keep",enabled="y",addr="0x0000634c0d2820c4",func="victim_tlb_hit",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1010",thread-groups=["i1"],cond="page == 0x41234000 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1010"}
+~"\n"
+~"Thread 3 \"qemu-system-ris\" hit Breakpoint 7, victim_tlb_hit (env=0x634c288a6ca0, mmu_idx=1, index=52, elt_ofs=0, page=1092829184) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1010\n"
+~"1010\t    return false;\n"
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="7",frame={addr="0x0000634c0d2820c4",func="victim_tlb_hit",args=[{name="env",value="0x634c288a6ca0"},{name="mmu_idx",value="1"},{name="index",value="52"},{name="elt_ofs",value="0"},{name="page",value="1092829184"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1010",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -data-evaluate-expression "(unsigned long long)(mmu_idx)"
+25^done,value="1"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(index)"
+26^done,value="52"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(vidx)"
+27^done,value="8"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(page)"
+28^done,value="1092829184"
+(gdb) 
+COMMAND -exec-finish
+29^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="function-finished",frame={addr="0x0000634c0d284ddb",func="load_helper",args=[{name="full_load",value="0x634c0d284bf2 <helper_le_ldq_mmu>"},{name="code_read",value="false"},{name="big_endian",value="false"},{name="size",value="8"},{name="retaddr",value="127938086822204"},{name="oi",value="49"},{name="addr",value="1092830560"},{name="env",value="0x634c288a6ca0"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1272",arch="i386:x86-64"},gdb-result-var="$1",return-value="false",thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-continue
+30^running
+*running,thread-id="all"
+(gdb) 
+=breakpoint-modified,bkpt={number="1",type="breakpoint",disp="keep",enabled="y",addr="0x0000634c0d33b86c",func="riscv_cpu_tlb_fill",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="451",thread-groups=["i1"],cond="address == 1092830560 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:451"}
+~"\n"
+~"Thread 3 \"qemu-system-ris\" hit Breakpoint 1, riscv_cpu_tlb_fill (cs=0x634c2889e290, address=1092830560, size=8, access_type=MMU_DATA_LOAD, mmu_idx=1, probe=false, retaddr=127938086822204) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:451\n"
+~"451\t    ret = get_physical_address(env, &pa, &prot, address, access_type, mmu_idx);\n"
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="1",frame={addr="0x0000634c0d33b86c",func="riscv_cpu_tlb_fill",args=[{name="cs",value="0x634c2889e290"},{name="address",value="1092830560"},{name="size",value="8"},{name="access_type",value="MMU_DATA_LOAD"},{name="mmu_idx",value="1"},{name="probe",value="false"},{name="retaddr",value="127938086822204"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="451",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -interpreter-exec console "info args"
+~"cs = 0x634c2889e290\n"
+~"address = 1092830560\n"
+~"size = 8\n"
+~"access_type = MMU_DATA_LOAD\n"
+~"mmu_idx = 1\n"
+~"probe = false\n"
+~"retaddr = 127938086822204\n"
+31^done
+(gdb) 
+COMMAND -interpreter-exec console "info locals"
+~"cpu = 0x634c2889e290\n"
+~"__func__ = \"riscv_cpu_tlb_fill\"\n"
+~"env = 0x634c288a6ca0\n"
+~"pa = 0\n"
+~"prot = 0\n"
+~"pmp_violation = false\n"
+~"ret = 1\n"
+~"mode = 1\n"
+32^done
+(gdb) 
+COMMAND -interpreter-exec console "bt 12"
+~"#0  riscv_cpu_tlb_fill (cs=0x634c2889e290, address=1092830560, size=8, access_type=MMU_DATA_LOAD, mmu_idx=1, probe=false, retaddr=127938086822204) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:451\n"
+~"#1  0x0000634c0d281b0f in tlb_fill (cpu=0x634c2889e290, addr=1092830560, size=8, access_type=MMU_DATA_LOAD, mmu_idx=1, retaddr=127938086822204) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:878\n"
+~"#2  0x0000634c0d284e28 in load_helper (full_load=0x634c0d284bf2 <helper_le_ldq_mmu>, code_read=false, big_endian=false, size=8, retaddr=127938086822204, oi=49, addr=1092830560, env=0x634c288a6ca0) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1274\n"
+~"#3  helper_le_ldq_mmu (env=0x634c288a6ca0, addr=1092830560, oi=49, retaddr=127938086822204) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1449\n"
+~"#4  0x0000745be837e17a in code_gen_buffer ()\n"
+~"#5  0x0000634c0d2a673b in cpu_tb_exec (cpu=0x634c2889e290, itb=0x745be837e040 <code_gen_buffer+19>) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cpu-exec.c:173\n"
+~"#6  0x0000634c0d2a7581 in cpu_loop_exec_tb (cpu=0x634c2889e290, tb=0x745be837e040 <code_gen_buffer+19>, last_tb=0x745be3ffe918, tb_exit=0x745be3ffe910) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cpu-exec.c:621\n"
+~"#7  0x0000634c0d2a78b6 in cpu_exec (cpu=0x634c2889e290) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cpu-exec.c:732\n"
+~"#8  0x0000634c0d259f16 in tcg_cpu_exec (cpu=0x634c2889e290) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/cpus.c:1435\n"
+~"#9  0x0000634c0d25a7cf in qemu_tcg_cpu_thread_fn (arg=0x634c2889e290) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/cpus.c:1743\n"
+~"#10 0x0000634c0d6debd3 in qemu_thread_start (args=0x634c288b4930) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/util/qemu-thread-posix.c:502\n"
+~"#11 0x0000745beac94a83 in ?? () from /lib/x86_64-linux-gnu/libc.so.6\n"
+~"(More stack frames follow...)\n"
+33^done
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(address)"
+34^done,value="1092830560"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(size)"
+35^done,value="8"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(access_type)"
+36^done,value="0"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(mmu_idx)"
+37^done,value="1"
+(gdb) 
+COMMAND -exec-continue
+38^running
+*running,thread-id="all"
+(gdb) 
+=breakpoint-modified,bkpt={number="2",type="breakpoint",disp="keep",enabled="y",addr="0x0000634c0d33abc4",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="163",thread-groups=["i1"],cond="addr == 1092830560 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:163"}
+~"\n"
+~"Thread 3 \"qemu-system-ris\" hit Breakpoint 2, get_physical_address (env=0x634c288a6ca0, physical=0x745be3ffe230, prot=0x745be3ffe224, addr=1092830560, access_type=0, mmu_idx=1) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:163\n"
+~"163\t    int mode = mmu_idx;\n"
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="2",frame={addr="0x0000634c0d33abc4",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="1092830560"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="163",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -data-evaluate-expression "(unsigned long long)(env->satp)"
+39^done,value="9223372036855300618"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(env->priv)"
+40^done,value="1"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(env->satp)"
+41^done,value="9223372036855300618"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(access_type)"
+42^done,value="0"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(mmu_idx)"
+43^done,value="1"
+(gdb) 
+COMMAND -interpreter-exec console "set $case_out_pa = physical"
+44^done
+(gdb) 
+COMMAND -interpreter-exec console "set $case_out_prot = prot"
+45^done
+(gdb) 
+COMMAND -exec-continue
+46^running
+*running,thread-id="all"
+(gdb) 
+=breakpoint-modified,bkpt={number="3",type="breakpoint",disp="keep",enabled="y",addr="0x0000634c0d33b0c6",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="254",thread-groups=["i1"],cond="addr == 1092830560 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:254"}
+~"\n"
+~"Thread 3 \"qemu-system-ris\" hit Breakpoint 3, get_physical_address (env=0x634c288a6ca0, physical=0x745be3ffe230, prot=0x745be3ffe224, addr=1092830560, access_type=0, mmu_idx=1) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:254\n"
+~"254\t        target_ulong ppn = pte >> PTE_PPN_SHIFT;\n"
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="3",frame={addr="0x0000634c0d33b0c6",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="1092830560"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="254",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-next
+47^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d33b0d2",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="1092830560"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="256",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -data-evaluate-expression "(unsigned long long)(i)"
+48^done,value="0"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(levels)"
+49^done,value="3"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(ptidxbits)"
+50^done,value="9"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(ptesize)"
+51^done,value="8"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(ptshift)"
+52^done,value="18"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(idx)"
+53^done,value="1"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(base)"
+54^done,value="2149621760"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(pte_addr)"
+55^done,value="2149621768"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(pte)"
+56^done,value="570421249"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(ppn)"
+57^done,value="557052"
+(gdb) 
+COMMAND -interpreter-exec console "info locals"
+~"idx = 1\n"
+~"pte_addr = 2149621768\n"
+~"pte = 570421249\n"
+~"ppn = 557052\n"
+~"mode = 1\n"
+~"base = 2149621760\n"
+~"levels = 3\n"
+~"ptidxbits = 9\n"
+~"ptesize = 8\n"
+~"vm = 8\n"
+~"sum = 0\n"
+~"mxr = 0\n"
+~"__func__ = \"get_physical_address\"\n"
+~"cs = 0x634c2889e290\n"
+~"va_bits = 39\n"
+~"mask = 67108863\n"
+~"masked_msbs = 0\n"
+~"ptshift = 18\n"
+~"i = 0\n"
+58^done
+(gdb) 
+COMMAND -exec-next
+59^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d33b0e8",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="1092830560"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="259",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-next
+60^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d33b0f4",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="1092830560"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="261",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-next
+61^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d33b3e5",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="1092830560"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="237",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -data-evaluate-expression "(unsigned long long)(base)"
+62^done,value="2281684992"
+(gdb) 
+COMMAND -exec-continue
+63^running
+*running,thread-id="all"
+(gdb) 
+=breakpoint-modified,bkpt={number="3",type="breakpoint",disp="keep",enabled="y",addr="0x0000634c0d33b0c6",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="254",thread-groups=["i1"],cond="addr == 1092830560 && mmu_idx == 1",times="2",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:254"}
+~"\n"
+~"Thread 3 \"qemu-system-ris\" hit Breakpoint 3, get_physical_address (env=0x634c288a6ca0, physical=0x745be3ffe230, prot=0x745be3ffe224, addr=1092830560, access_type=0, mmu_idx=1) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:254\n"
+~"254\t        target_ulong ppn = pte >> PTE_PPN_SHIFT;\n"
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="3",frame={addr="0x0000634c0d33b0c6",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="1092830560"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="254",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-next
+64^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d33b0d2",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="1092830560"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="256",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -data-evaluate-expression "(unsigned long long)(i)"
+65^done,value="1"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(levels)"
+66^done,value="3"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(ptidxbits)"
+67^done,value="9"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(ptesize)"
+68^done,value="8"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(ptshift)"
+69^done,value="9"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(idx)"
+70^done,value="9"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(base)"
+71^done,value="2281684992"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(pte_addr)"
+72^done,value="2281685064"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(pte)"
+73^done,value="570422273"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(ppn)"
+74^done,value="557053"
+(gdb) 
+COMMAND -interpreter-exec console "info locals"
+~"idx = 9\n"
+~"pte_addr = 2281685064\n"
+~"pte = 570422273\n"
+~"ppn = 557053\n"
+~"mode = 1\n"
+~"base = 2281684992\n"
+~"levels = 3\n"
+~"ptidxbits = 9\n"
+~"ptesize = 8\n"
+~"vm = 8\n"
+~"sum = 0\n"
+~"mxr = 0\n"
+~"__func__ = \"get_physical_address\"\n"
+~"cs = 0x634c2889e290\n"
+~"va_bits = 39\n"
+~"mask = 67108863\n"
+~"masked_msbs = 0\n"
+~"ptshift = 9\n"
+~"i = 1\n"
+75^done
+(gdb) 
+COMMAND -exec-next
+76^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d33b0e8",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="1092830560"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="259",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-next
+77^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d33b0f4",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="1092830560"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="261",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-next
+78^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d33b3e5",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="1092830560"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="237",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -data-evaluate-expression "(unsigned long long)(base)"
+79^done,value="2281689088"
+(gdb) 
+COMMAND -exec-continue
+80^running
+*running,thread-id="all"
+(gdb) 
+=breakpoint-modified,bkpt={number="3",type="breakpoint",disp="keep",enabled="y",addr="0x0000634c0d33b0c6",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="254",thread-groups=["i1"],cond="addr == 1092830560 && mmu_idx == 1",times="3",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:254"}
+~"\n"
+~"Thread 3 \"qemu-system-ris\" hit Breakpoint 3, get_physical_address (env=0x634c288a6ca0, physical=0x745be3ffe230, prot=0x745be3ffe224, addr=1092830560, access_type=0, mmu_idx=1) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:254\n"
+~"254\t        target_ulong ppn = pte >> PTE_PPN_SHIFT;\n"
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="3",frame={addr="0x0000634c0d33b0c6",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="1092830560"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="254",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-next
+81^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d33b0d2",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="1092830560"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="256",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -data-evaluate-expression "(unsigned long long)(i)"
+82^done,value="2"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(levels)"
+83^done,value="3"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(ptidxbits)"
+84^done,value="9"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(ptesize)"
+85^done,value="8"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(ptshift)"
+86^done,value="0"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(idx)"
+87^done,value="52"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(base)"
+88^done,value="2281689088"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(pte_addr)"
+89^done,value="2281689504"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(pte)"
+90^done,value="570420423"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(ppn)"
+91^done,value="557051"
+(gdb) 
+COMMAND -interpreter-exec console "info locals"
+~"idx = 52\n"
+~"pte_addr = 2281689504\n"
+~"pte = 570420423\n"
+~"ppn = 557051\n"
+~"mode = 1\n"
+~"base = 2281689088\n"
+~"levels = 3\n"
+~"ptidxbits = 9\n"
+~"ptesize = 8\n"
+~"vm = 8\n"
+~"sum = 0\n"
+~"mxr = 0\n"
+~"__func__ = \"get_physical_address\"\n"
+~"cs = 0x634c2889e290\n"
+~"va_bits = 39\n"
+~"mask = 67108863\n"
+~"masked_msbs = 0\n"
+~"ptshift = 0\n"
+~"i = 2\n"
+92^done
+(gdb) 
+COMMAND -exec-next
+93^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d33b0e8",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="1092830560"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="259",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-next
+94^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d33b105",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="1092830560"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="262",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-next
+95^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d33b11c",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="1092830560"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="265",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-next
+96^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d33b133",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="1092830560"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="268",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-next
+97^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d33b164",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="1092830560"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="273",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-next
+98^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d33b183",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="1092830560"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="276",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-next
+99^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d33b1ae",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="1092830560"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="279",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-next
+100^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d33b1e2",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="1092830560"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="283",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-next
+101^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d33b201",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="1092830560"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="286",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-next
+102^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d33b220",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="1092830560"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="292",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-next
+103^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d33b235",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="1092830560"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="291",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-next
+104^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d33b241",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="1092830560"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="295",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-next
+105^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d33b30a",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="1092830560"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="333",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-next
+106^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d33b319",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="1092830560"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="334",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-next
+107^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d33b349",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="1092830560"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="337",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -data-evaluate-expression "(unsigned long long)(*physical)"
+108^done,value="2281680896"
+(gdb) 
+COMMAND -exec-finish
+109^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="function-finished",frame={addr="0x0000634c0d33b891",func="riscv_cpu_tlb_fill",args=[{name="cs",value="0x634c2889e290"},{name="address",value="1092830560"},{name="size",value="8"},{name="access_type",value="MMU_DATA_LOAD"},{name="mmu_idx",value="1"},{name="probe",value="false"},{name="retaddr",value="127938086822204"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="451",arch="i386:x86-64"},gdb-result-var="$2",return-value="0",thread-id="3",stopped-threads="all",core="20"
+COMMAND -data-evaluate-expression "(unsigned long long)(*$case_out_pa)"
+110^done,value="2281680896"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(*$case_out_prot)"
+111^done,value="3"
+(gdb) 
+COMMAND -exec-continue
+112^running
+*running,thread-id="all"
+(gdb) 
+=breakpoint-modified,bkpt={number="4",type="breakpoint",disp="keep",enabled="y",addr="0x0000634c0d281a04",func="tlb_set_page",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="847",thread-groups=["i1"],cond="vaddr == 1092829184 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:847"}
+~"\n"
+~"Thread 3 \"qemu-system-ris\" hit Breakpoint 4, tlb_set_page (cpu=0x634c2889e290, vaddr=1092829184, paddr=2281680896, prot=3, mmu_idx=1, size=4096) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:847\n"
+~"847\t    tlb_set_page_with_attrs(cpu, vaddr, paddr, MEMTXATTRS_UNSPECIFIED,\n"
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="4",frame={addr="0x0000634c0d281a04",func="tlb_set_page",args=[{name="cpu",value="0x634c2889e290"},{name="vaddr",value="1092829184"},{name="paddr",value="2281680896"},{name="prot",value="3"},{name="mmu_idx",value="1"},{name="size",value="4096"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="847",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -data-evaluate-expression "(unsigned long long)(vaddr)"
+113^done,value="1092829184"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(paddr)"
+114^done,value="2281680896"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(prot)"
+115^done,value="3"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(mmu_idx)"
+116^done,value="1"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(size)"
+117^done,value="4096"
+(gdb) 
+COMMAND -exec-continue
+118^running
+*running,thread-id="all"
+(gdb) 
+=breakpoint-modified,bkpt={number="5",type="breakpoint",disp="keep",enabled="y",addr="0x0000634c0d281993",func="tlb_set_page_with_attrs",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="835",thread-groups=["i1"],cond="vaddr == 1092829184 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:835"}
+~"\n"
+~"Thread 3 \"qemu-system-ris\" hit Breakpoint 5, tlb_set_page_with_attrs (cpu=0x634c2889e290, vaddr=1092829184, paddr=2281680896, attrs=..., prot=3, mmu_idx=1, size=4096) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:835\n"
+~"835\t    copy_tlb_helper_locked(te, &tn);\n"
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="5",frame={addr="0x0000634c0d281993",func="tlb_set_page_with_attrs",args=[{name="cpu",value="0x634c2889e290"},{name="vaddr",value="1092829184"},{name="paddr",value="2281680896"},{name="attrs",value="..."},{name="prot",value="3"},{name="mmu_idx",value="1"},{name="size",value="4096"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="835",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -interpreter-exec console "print tn"
+~"$3 = {{{addr_read = 1092829184, addr_write = 1092829184, addr_code = 18446744073709551615, addend = 127936786886656}, dummy = \"\\000@#A\\000\\000\\000\\000\\000@#A\\000\\000\\000\\000\\377\\377\\377\\377\\377\\377\\377\\377\\000p\\274\\232[t\\000\"}}\n"
+119^done
+(gdb) 
+COMMAND -exec-next
+120^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d2819a6",func="tlb_set_page_with_attrs",args=[{name="cpu",value="0x634c2889e290"},{name="vaddr",value="1092829184"},{name="paddr",value="2281680896"},{name="attrs",value="..."},{name="prot",value="3"},{name="mmu_idx",value="1"},{name="size",value="4096"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="836",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -data-evaluate-expression "(unsigned long long)(te->addr_read)"
+121^done,value="1092829184"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(te->addr_write)"
+122^done,value="1092829184"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(te->addr_code)"
+123^done,value="18446744073709551615"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(te->addend)"
+124^done,value="127936786886656"
+(gdb) 
+COMMAND -interpreter-exec console "print *te"
+~"$4 = {{{addr_read = 1092829184, addr_write = 1092829184, addr_code = 18446744073709551615, addend = 127936786886656}, dummy = \"\\000@#A\\000\\000\\000\\000\\000@#A\\000\\000\\000\\000\\377\\377\\377\\377\\377\\377\\377\\377\\000p\\274\\232[t\\000\"}}\n"
+125^done
+(gdb) 
+COMMAND -interpreter-exec console "set $data_te = te"
+126^done
+(gdb) 
+COMMAND -exec-continue
+127^running
+*running,thread-id="all"
+(gdb) 
+=breakpoint-modified,bkpt={number="8",type="breakpoint",disp="keep",enabled="y",addr="<MULTIPLE>",cond="addr == 0x41234560",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1338"},{number="8.1",enabled="y",addr="0x0000634c0d282edb",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.2",enabled="y",addr="0x0000634c0d2835c7",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.3",enabled="y",addr="0x0000634c0d283cb3",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.4",enabled="y",addr="0x0000634c0d28439f",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.5",enabled="y",addr="0x0000634c0d284a8b",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.6",enabled="y",addr="0x0000634c0d285177",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.7",enabled="y",addr="0x0000634c0d28582f",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.8",enabled="y",addr="0x0000634c0d29ccf2",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.9",enabled="y",addr="0x0000634c0d29d3de",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.10",enabled="y",addr="0x0000634c0d29daca",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.11",enabled="y",addr="0x0000634c0d29e1b6",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.12",enabled="y",addr="0x0000634c0d29e8a2",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.13",enabled="y",addr="0x0000634c0d29ef8e",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.14",enabled="y",addr="0x0000634c0d29f646",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]}
+~"\n"
+~"Thread 3 \"qemu-system-ris\" hit Breakpoint 8, load_helper (full_load=0x634c0d284bf2 <helper_le_ldq_mmu>, code_read=false, big_endian=false, size=8, retaddr=127938086822204, oi=49, addr=1092830560, env=0x634c288a6ca0) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1338\n"
+~"1338\t    haddr = (void *)((uintptr_t)addr + entry->addend);\n"
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="8",frame={addr="0x0000634c0d285177",func="load_helper",args=[{name="full_load",value="0x634c0d284bf2 <helper_le_ldq_mmu>"},{name="code_read",value="false"},{name="big_endian",value="false"},{name="size",value="8"},{name="retaddr",value="127938086822204"},{name="oi",value="49"},{name="addr",value="1092830560"},{name="env",value="0x634c288a6ca0"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-next
+128^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d28518d",func="load_helper",args=[{name="full_load",value="0x634c0d284bf2 <helper_le_ldq_mmu>"},{name="code_read",value="false"},{name="big_endian",value="false"},{name="size",value="8"},{name="retaddr",value="127938086822204"},{name="oi",value="49"},{name="addr",value="1092830560"},{name="env",value="0x634c288a6ca0"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1339",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -data-evaluate-expression "(unsigned long long)((uintptr_t)haddr)"
+129^done,value="127937879717216"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(*(uint64_t*)haddr)"
+130^done,value="1234605616436508552"
+(gdb) 
+COMMAND -interpreter-exec console "disable 6 7 8"
+=breakpoint-modified,bkpt={number="6",type="breakpoint",disp="keep",enabled="n",addr="<MULTIPLE>",cond="addr == 0x41234560",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1271"},{number="6.1",enabled="y",addr="0x0000634c0d282af0",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.2",enabled="y",addr="0x0000634c0d2831dc",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.3",enabled="y",addr="0x0000634c0d2838c8",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.4",enabled="y",addr="0x0000634c0d283fb4",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.5",enabled="y",addr="0x0000634c0d2846a0",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.6",enabled="y",addr="0x0000634c0d284d8c",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.7",enabled="y",addr="0x0000634c0d285444",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.8",enabled="y",addr="0x0000634c0d29c907",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.9",enabled="y",addr="0x0000634c0d29cff3",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.10",enabled="y",addr="0x0000634c0d29d6df",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.11",enabled="y",addr="0x0000634c0d29ddcb",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.12",enabled="y",addr="0x0000634c0d29e4b7",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.13",enabled="y",addr="0x0000634c0d29eba3",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.14",enabled="y",addr="0x0000634c0d29f25b",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]}
+=breakpoint-modified,bkpt={number="7",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d2820c4",func="victim_tlb_hit",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1010",thread-groups=["i1"],cond="page == 0x41234000 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1010"}
+=breakpoint-modified,bkpt={number="8",type="breakpoint",disp="keep",enabled="n",addr="<MULTIPLE>",cond="addr == 0x41234560",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1338"},{number="8.1",enabled="y",addr="0x0000634c0d282edb",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.2",enabled="y",addr="0x0000634c0d2835c7",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.3",enabled="y",addr="0x0000634c0d283cb3",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.4",enabled="y",addr="0x0000634c0d28439f",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.5",enabled="y",addr="0x0000634c0d284a8b",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.6",enabled="y",addr="0x0000634c0d285177",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.7",enabled="y",addr="0x0000634c0d28582f",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.8",enabled="y",addr="0x0000634c0d29ccf2",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.9",enabled="y",addr="0x0000634c0d29d3de",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.10",enabled="y",addr="0x0000634c0d29daca",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.11",enabled="y",addr="0x0000634c0d29e1b6",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.12",enabled="y",addr="0x0000634c0d29e8a2",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.13",enabled="y",addr="0x0000634c0d29ef8e",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.14",enabled="y",addr="0x0000634c0d29f646",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]}
+131^done
+(gdb) 
+COMMAND -exec-continue
+132^running
+*running,thread-id="all"
+(gdb) 
+COMMAND -exec-interrupt --all
+133^done
+(gdb) 
+~"\nThread "
+~"1 \"qemu-system-ris\" received signal SIGINT, Interrupt.\n"
+~"[Switching to Thread 0x745beae40b00 (LWP 30085)]\n"
+~"0x0000745bead18e1e in ppoll () from /lib/x86_64-linux-gnu/libc.so.6\n"
+*stopped,reason="signal-received",signal-name="SIGINT",signal-meaning="Interrupt",frame={addr="0x0000745bead18e1e",func="ppoll",args=[],from="/lib/x86_64-linux-gnu/libc.so.6",arch="i386:x86-64"},thread-id="1",stopped-threads="all",core="5"
+COMMAND -data-evaluate-expression "(unsigned long long)($data_te->addr_read)"
+134^done,value="1092829184"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)($data_te->addr_write)"
+135^done,value="1092829184"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)($data_te->addr_code)"
+136^done,value="18446744073709551615"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)($data_te->addend)"
+137^done,value="127936786886656"
+(gdb) 
+COMMAND -exec-continue
+138^running
+*running,thread-id="all"
+(gdb) 
+COMMAND -break-info 1
+139^done,BreakpointTable={nr_rows="1",nr_cols="6",hdr=[{width="7",alignment="-1",col_name="number",colhdr="Num"},{width="14",alignment="-1",col_name="type",colhdr="Type"},{width="4",alignment="-1",col_name="disp",colhdr="Disp"},{width="3",alignment="-1",col_name="enabled",colhdr="Enb"},{width="18",alignment="-1",col_name="addr",colhdr="Address"},{width="40",alignment="2",col_name="what",colhdr="What"}],body=[bkpt={number="1",type="breakpoint",disp="keep",enabled="y",addr="0x0000634c0d33b86c",func="riscv_cpu_tlb_fill",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="451",thread-groups=["i1"],cond="address == 1092830560 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:451"}]}
+(gdb) 
+COMMAND -exec-interrupt --all
+140^done
+(gdb) 
+~"\nThread "
+~"1 \"qemu-system-ris\" received signal SIGINT, Interrupt.\n"
+~"0x0000745bead18e1e in ppoll () from /lib/x86_64-linux-gnu/libc.so.6\n"
+*stopped,reason="signal-received",signal-name="SIGINT",signal-meaning="Interrupt",frame={addr="0x0000745bead18e1e",func="ppoll",args=[],from="/lib/x86_64-linux-gnu/libc.so.6",arch="i386:x86-64"},thread-id="1",stopped-threads="all",core="5"
+COMMAND -data-evaluate-expression "(unsigned long long)($data_te->addr_read)"
+141^done,value="1092829184"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)($data_te->addr_write)"
+142^done,value="1092829184"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)($data_te->addr_code)"
+143^done,value="18446744073709551615"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)($data_te->addend)"
+144^done,value="127936786886656"
+(gdb) 
+COMMAND -break-list
+145^done,BreakpointTable={nr_rows="8",nr_cols="6",hdr=[{width="7",alignment="-1",col_name="number",colhdr="Num"},{width="14",alignment="-1",col_name="type",colhdr="Type"},{width="4",alignment="-1",col_name="disp",colhdr="Disp"},{width="3",alignment="-1",col_name="enabled",colhdr="Enb"},{width="18",alignment="-1",col_name="addr",colhdr="Address"},{width="40",alignment="2",col_name="what",colhdr="What"}],body=[bkpt={number="1",type="breakpoint",disp="keep",enabled="y",addr="0x0000634c0d33b86c",func="riscv_cpu_tlb_fill",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="451",thread-groups=["i1"],cond="address == 1092830560 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:451"},bkpt={number="2",type="breakpoint",disp="keep",enabled="y",addr="0x0000634c0d33abc4",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="163",thread-groups=["i1"],cond="addr == 1092830560 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:163"},bkpt={number="3",type="breakpoint",disp="keep",enabled="y",addr="0x0000634c0d33b0c6",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="254",thread-groups=["i1"],cond="addr == 1092830560 && mmu_idx == 1",times="3",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:254"},bkpt={number="4",type="breakpoint",disp="keep",enabled="y",addr="0x0000634c0d281a04",func="tlb_set_page",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="847",thread-groups=["i1"],cond="vaddr == 1092829184 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:847"},bkpt={number="5",type="breakpoint",disp="keep",enabled="y",addr="0x0000634c0d281993",func="tlb_set_page_with_attrs",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="835",thread-groups=["i1"],cond="vaddr == 1092829184 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:835"},bkpt={number="6",type="breakpoint",disp="keep",enabled="n",addr="<MULTIPLE>",cond="addr == 0x41234560",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1271"},{number="6.1",enabled="y",addr="0x0000634c0d282af0",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.2",enabled="y",addr="0x0000634c0d2831dc",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.3",enabled="y",addr="0x0000634c0d2838c8",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.4",enabled="y",addr="0x0000634c0d283fb4",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.5",enabled="y",addr="0x0000634c0d2846a0",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.6",enabled="y",addr="0x0000634c0d284d8c",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.7",enabled="y",addr="0x0000634c0d285444",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.8",enabled="y",addr="0x0000634c0d29c907",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.9",enabled="y",addr="0x0000634c0d29cff3",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.10",enabled="y",addr="0x0000634c0d29d6df",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.11",enabled="y",addr="0x0000634c0d29ddcb",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.12",enabled="y",addr="0x0000634c0d29e4b7",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.13",enabled="y",addr="0x0000634c0d29eba3",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.14",enabled="y",addr="0x0000634c0d29f25b",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},bkpt={number="7",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d2820c4",func="victim_tlb_hit",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1010",thread-groups=["i1"],cond="page == 0x41234000 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1010"},bkpt={number="8",type="breakpoint",disp="keep",enabled="n",addr="<MULTIPLE>",cond="addr == 0x41234560",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1338"},{number="8.1",enabled="y",addr="0x0000634c0d282edb",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.2",enabled="y",addr="0x0000634c0d2835c7",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.3",enabled="y",addr="0x0000634c0d283cb3",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.4",enabled="y",addr="0x0000634c0d28439f",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.5",enabled="y",addr="0x0000634c0d284a8b",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.6",enabled="y",addr="0x0000634c0d285177",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.7",enabled="y",addr="0x0000634c0d28582f",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.8",enabled="y",addr="0x0000634c0d29ccf2",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.9",enabled="y",addr="0x0000634c0d29d3de",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.10",enabled="y",addr="0x0000634c0d29daca",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.11",enabled="y",addr="0x0000634c0d29e1b6",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.12",enabled="y",addr="0x0000634c0d29e8a2",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.13",enabled="y",addr="0x0000634c0d29ef8e",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.14",enabled="y",addr="0x0000634c0d29f646",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]}]}
+(gdb) 
+COMMAND -interpreter-exec console "disable breakpoints"
+=breakpoint-modified,bkpt={number="1",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d33b86c",func="riscv_cpu_tlb_fill",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="451",thread-groups=["i1"],cond="address == 1092830560 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:451"}
+=breakpoint-modified,bkpt={number="2",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d33abc4",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="163",thread-groups=["i1"],cond="addr == 1092830560 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:163"}
+=breakpoint-modified,bkpt={number="3",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d33b0c6",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="254",thread-groups=["i1"],cond="addr == 1092830560 && mmu_idx == 1",times="3",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:254"}
+=breakpoint-modified,bkpt={number="4",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d281a04",func="tlb_set_page",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="847",thread-groups=["i1"],cond="vaddr == 1092829184 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:847"}
+=breakpoint-modified,bkpt={number="5",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d281993",func="tlb_set_page_with_attrs",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="835",thread-groups=["i1"],cond="vaddr == 1092829184 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:835"}
+=breakpoint-modified,bkpt={number="6",type="breakpoint",disp="keep",enabled="n",addr="<MULTIPLE>",cond="addr == 0x41234560",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1271"},{number="6.1",enabled="y",addr="0x0000634c0d282af0",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.2",enabled="y",addr="0x0000634c0d2831dc",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.3",enabled="y",addr="0x0000634c0d2838c8",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.4",enabled="y",addr="0x0000634c0d283fb4",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.5",enabled="y",addr="0x0000634c0d2846a0",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.6",enabled="y",addr="0x0000634c0d284d8c",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.7",enabled="y",addr="0x0000634c0d285444",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.8",enabled="y",addr="0x0000634c0d29c907",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.9",enabled="y",addr="0x0000634c0d29cff3",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.10",enabled="y",addr="0x0000634c0d29d6df",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.11",enabled="y",addr="0x0000634c0d29ddcb",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.12",enabled="y",addr="0x0000634c0d29e4b7",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.13",enabled="y",addr="0x0000634c0d29eba3",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.14",enabled="y",addr="0x0000634c0d29f25b",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]}
+=breakpoint-modified,bkpt={number="7",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d2820c4",func="victim_tlb_hit",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1010",thread-groups=["i1"],cond="page == 0x41234000 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1010"}
+=breakpoint-modified,bkpt={number="8",type="breakpoint",disp="keep",enabled="n",addr="<MULTIPLE>",cond="addr == 0x41234560",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1338"},{number="8.1",enabled="y",addr="0x0000634c0d282edb",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.2",enabled="y",addr="0x0000634c0d2835c7",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.3",enabled="y",addr="0x0000634c0d283cb3",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.4",enabled="y",addr="0x0000634c0d28439f",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.5",enabled="y",addr="0x0000634c0d284a8b",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.6",enabled="y",addr="0x0000634c0d285177",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.7",enabled="y",addr="0x0000634c0d28582f",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.8",enabled="y",addr="0x0000634c0d29ccf2",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.9",enabled="y",addr="0x0000634c0d29d3de",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.10",enabled="y",addr="0x0000634c0d29daca",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.11",enabled="y",addr="0x0000634c0d29e1b6",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.12",enabled="y",addr="0x0000634c0d29e8a2",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.13",enabled="y",addr="0x0000634c0d29ef8e",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.14",enabled="y",addr="0x0000634c0d29f646",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]}
+146^done
+(gdb) 
+COMMAND -interpreter-exec console "break /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:451 if address == 0x87ffb560 && access_type == 0 && mmu_idx == 1"
+~"Note: breakpoint 1 (disabled) also set at pc 0x634c0d33b86c.\n"
+~"Breakpoint 9 at 0x634c0d33b86c: file /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c, line 451.\n"
+=breakpoint-created,bkpt={number="9",type="breakpoint",disp="keep",enabled="y",addr="0x0000634c0d33b86c",func="riscv_cpu_tlb_fill",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="451",thread-groups=["i1"],cond="address == 0x87ffb560 && access_type == 0 && mmu_idx == 1",times="0",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:451"}
+147^done
+(gdb) 
+COMMAND -interpreter-exec console "break /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:163 if addr == 0x87ffb560 && access_type == 0 && mmu_idx == 1"
+~"Note: breakpoint 2 (disabled) also set at pc 0x634c0d33abc4.\n"
+~"Breakpoint 10 at 0x634c0d33abc4: file /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c, line 163.\n"
+=breakpoint-created,bkpt={number="10",type="breakpoint",disp="keep",enabled="y",addr="0x0000634c0d33abc4",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="163",thread-groups=["i1"],cond="addr == 0x87ffb560 && access_type == 0 && mmu_idx == 1",times="0",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:163"}
+148^done
+(gdb) 
+COMMAND -interpreter-exec console "break /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:254 if addr == 0x87ffb560 && mmu_idx == 1"
+~"Note: breakpoint 3 (disabled) also set at pc 0x634c0d33b0c6.\n"
+~"Breakpoint 11 at 0x634c0d33b0c6: file /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c, line 254.\n"
+=breakpoint-created,bkpt={number="11",type="breakpoint",disp="keep",enabled="y",addr="0x0000634c0d33b0c6",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="254",thread-groups=["i1"],cond="addr == 0x87ffb560 && mmu_idx == 1",times="0",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:254"}
+149^done
+(gdb) 
+COMMAND -interpreter-exec console "break /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:847 if vaddr == 0x87ffb000 && mmu_idx == 1"
+~"Note: breakpoint 4 (disabled) also set at pc 0x634c0d281a04.\n"
+~"Breakpoint 12 at 0x634c0d281a04: file /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c, line 847.\n"
+=breakpoint-created,bkpt={number="12",type="breakpoint",disp="keep",enabled="y",addr="0x0000634c0d281a04",func="tlb_set_page",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="847",thread-groups=["i1"],cond="vaddr == 0x87ffb000 && mmu_idx == 1",times="0",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:847"}
+150^done
+(gdb) 
+COMMAND -exec-continue
+151^running
+*running,thread-id="all"
+(gdb) 
+=breakpoint-modified,bkpt={number="9",type="breakpoint",disp="keep",enabled="y",addr="0x0000634c0d33b86c",func="riscv_cpu_tlb_fill",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="451",thread-groups=["i1"],cond="address == 0x87ffb560 && access_type == 0 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:451"}
+~"[Switching to Thread 0x745be3fff640 (LWP 30087)]\n"
+~"\n"
+~"Thread 3 \"qemu-system-ris\" hit Breakpoint 9, riscv_cpu_tlb_fill (cs=0x634c2889e290, address=2281682272, size=8, access_type=MMU_DATA_LOAD, mmu_idx=1, probe=false, retaddr=127938086822204) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:451\n"
+~"451\t    ret = get_physical_address(env, &pa, &prot, address, access_type, mmu_idx);\n"
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="9",frame={addr="0x0000634c0d33b86c",func="riscv_cpu_tlb_fill",args=[{name="cs",value="0x634c2889e290"},{name="address",value="2281682272"},{name="size",value="8"},{name="access_type",value="MMU_DATA_LOAD"},{name="mmu_idx",value="1"},{name="probe",value="false"},{name="retaddr",value="127938086822204"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="451",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-continue
+152^running
+*running,thread-id="all"
+(gdb) 
+=breakpoint-modified,bkpt={number="10",type="breakpoint",disp="keep",enabled="y",addr="0x0000634c0d33abc4",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="163",thread-groups=["i1"],cond="addr == 0x87ffb560 && access_type == 0 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:163"}
+~"\n"
+~"Thread 3 \"qemu-system-ris\" hit Breakpoint 10, get_physical_address (env=0x634c288a6ca0, physical=0x745be3ffe230, prot=0x745be3ffe224, addr=2281682272, access_type=0, mmu_idx=1) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:163\n"
+~"163\t    int mode = mmu_idx;\n"
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="10",frame={addr="0x0000634c0d33abc4",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="2281682272"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="163",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -data-evaluate-expression "(unsigned long long)(env->priv)"
+153^done,value="1"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(env->satp)"
+154^done,value="0"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(mmu_idx)"
+155^done,value="1"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(addr)"
+156^done,value="2281682272"
+(gdb) 
+COMMAND -exec-next
+157^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d33abd0",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="2281682272"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="165",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-next
+158^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d33ac1a",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="2281682272"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="171",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-next
+159^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d33ac66",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="2281682272"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="177",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-next
+160^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d33ac73",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="2281682272"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="181",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-next
+161^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d33ac90",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="2281682272"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="183",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-next
+162^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d33acaa",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="2281682272"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="184",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-next
+163^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d33acd0",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="2281682272"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="185",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-next
+164^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d33aced",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="2281682272"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="186",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-next
+165^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d33ad05",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="2281682272"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="187",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-next
+166^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d33adc5",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="2281682272"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="197",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-next
+167^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d33add6",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="2281682272"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="198",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-next
+168^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="end-stepping-range",frame={addr="0x0000634c0d33ade3",func="get_physical_address",args=[{name="env",value="0x634c288a6ca0"},{name="physical",value="0x745be3ffe230"},{name="prot",value="0x745be3ffe224"},{name="addr",value="2281682272"},{name="access_type",value="0"},{name="mmu_idx",value="1"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="199",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -data-evaluate-expression "(unsigned long long)(*physical)"
+169^done,value="2281682272"
+(gdb) 
+COMMAND -exec-finish
+170^running
+*running,thread-id="all"
+(gdb) 
+*stopped,reason="function-finished",frame={addr="0x0000634c0d33b891",func="riscv_cpu_tlb_fill",args=[{name="cs",value="0x634c2889e290"},{name="address",value="2281682272"},{name="size",value="8"},{name="access_type",value="MMU_DATA_LOAD"},{name="mmu_idx",value="1"},{name="probe",value="false"},{name="retaddr",value="127938086822204"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="451",arch="i386:x86-64"},gdb-result-var="$5",return-value="0",thread-id="3",stopped-threads="all",core="20"
+COMMAND -exec-continue
+171^running
+*running,thread-id="all"
+(gdb) 
+=breakpoint-modified,bkpt={number="12",type="breakpoint",disp="keep",enabled="y",addr="0x0000634c0d281a04",func="tlb_set_page",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="847",thread-groups=["i1"],cond="vaddr == 0x87ffb000 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:847"}
+~"\n"
+~"Thread 3 \"qemu-system-ris\" hit Breakpoint 12, tlb_set_page (cpu=0x634c2889e290, vaddr=2281680896, paddr=2281680896, prot=7, mmu_idx=1, size=4096) at /home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:847\n"
+~"847\t    tlb_set_page_with_attrs(cpu, vaddr, paddr, MEMTXATTRS_UNSPECIFIED,\n"
+*stopped,reason="breakpoint-hit",disp="keep",bkptno="12",frame={addr="0x0000634c0d281a04",func="tlb_set_page",args=[{name="cpu",value="0x634c2889e290"},{name="vaddr",value="2281680896"},{name="paddr",value="2281680896"},{name="prot",value="7"},{name="mmu_idx",value="1"},{name="size",value="4096"}],file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="847",arch="i386:x86-64"},thread-id="3",stopped-threads="all",core="20"
+COMMAND -data-evaluate-expression "(unsigned long long)(vaddr)"
+172^done,value="2281680896"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(paddr)"
+173^done,value="2281680896"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(prot)"
+174^done,value="7"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(mmu_idx)"
+175^done,value="1"
+(gdb) 
+COMMAND -data-evaluate-expression "(unsigned long long)(size)"
+176^done,value="4096"
+(gdb) 
+COMMAND -interpreter-exec console "disable 9 10 11 12"
+=breakpoint-modified,bkpt={number="9",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d33b86c",func="riscv_cpu_tlb_fill",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="451",thread-groups=["i1"],cond="address == 0x87ffb560 && access_type == 0 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:451"}
+=breakpoint-modified,bkpt={number="10",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d33abc4",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="163",thread-groups=["i1"],cond="addr == 0x87ffb560 && access_type == 0 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:163"}
+=breakpoint-modified,bkpt={number="11",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d33b0c6",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="254",thread-groups=["i1"],cond="addr == 0x87ffb560 && mmu_idx == 1",times="0",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:254"}
+=breakpoint-modified,bkpt={number="12",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d281a04",func="tlb_set_page",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="847",thread-groups=["i1"],cond="vaddr == 0x87ffb000 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:847"}
+177^done
+(gdb) 
+COMMAND -exec-continue
+178^running
+*running,thread-id="all"
+(gdb) 
+COMMAND -exec-interrupt --all
+179^done
+(gdb) 
+~"\nThread "
+~"1 \"qemu-system-ris\" received signal SIGINT, Interrupt.\n"
+~"[Switching to Thread 0x745beae40b00 (LWP 30085)]\n"
+~"0x0000745bead18e1e in ppoll () from /lib/x86_64-linux-gnu/libc.so.6\n"
+*stopped,reason="signal-received",signal-name="SIGINT",signal-meaning="Interrupt",frame={addr="0x0000745bead18e1e",func="ppoll",args=[],from="/lib/x86_64-linux-gnu/libc.so.6",arch="i386:x86-64"},thread-id="1",stopped-threads="all",core="5"
+COMMAND -break-list
+180^done,BreakpointTable={nr_rows="12",nr_cols="6",hdr=[{width="7",alignment="-1",col_name="number",colhdr="Num"},{width="14",alignment="-1",col_name="type",colhdr="Type"},{width="4",alignment="-1",col_name="disp",colhdr="Disp"},{width="3",alignment="-1",col_name="enabled",colhdr="Enb"},{width="18",alignment="-1",col_name="addr",colhdr="Address"},{width="40",alignment="2",col_name="what",colhdr="What"}],body=[bkpt={number="1",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d33b86c",func="riscv_cpu_tlb_fill",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="451",thread-groups=["i1"],cond="address == 1092830560 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:451"},bkpt={number="2",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d33abc4",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="163",thread-groups=["i1"],cond="addr == 1092830560 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:163"},bkpt={number="3",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d33b0c6",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="254",thread-groups=["i1"],cond="addr == 1092830560 && mmu_idx == 1",times="3",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:254"},bkpt={number="4",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d281a04",func="tlb_set_page",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="847",thread-groups=["i1"],cond="vaddr == 1092829184 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:847"},bkpt={number="5",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d281993",func="tlb_set_page_with_attrs",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="835",thread-groups=["i1"],cond="vaddr == 1092829184 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:835"},bkpt={number="6",type="breakpoint",disp="keep",enabled="n",addr="<MULTIPLE>",cond="addr == 0x41234560",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1271"},{number="6.1",enabled="y",addr="0x0000634c0d282af0",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.2",enabled="y",addr="0x0000634c0d2831dc",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.3",enabled="y",addr="0x0000634c0d2838c8",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.4",enabled="y",addr="0x0000634c0d283fb4",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.5",enabled="y",addr="0x0000634c0d2846a0",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.6",enabled="y",addr="0x0000634c0d284d8c",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.7",enabled="y",addr="0x0000634c0d285444",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.8",enabled="y",addr="0x0000634c0d29c907",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.9",enabled="y",addr="0x0000634c0d29cff3",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.10",enabled="y",addr="0x0000634c0d29d6df",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.11",enabled="y",addr="0x0000634c0d29ddcb",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.12",enabled="y",addr="0x0000634c0d29e4b7",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.13",enabled="y",addr="0x0000634c0d29eba3",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.14",enabled="y",addr="0x0000634c0d29f25b",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},bkpt={number="7",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d2820c4",func="victim_tlb_hit",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1010",thread-groups=["i1"],cond="page == 0x41234000 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1010"},bkpt={number="8",type="breakpoint",disp="keep",enabled="n",addr="<MULTIPLE>",cond="addr == 0x41234560",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1338"},{number="8.1",enabled="y",addr="0x0000634c0d282edb",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.2",enabled="y",addr="0x0000634c0d2835c7",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.3",enabled="y",addr="0x0000634c0d283cb3",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.4",enabled="y",addr="0x0000634c0d28439f",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.5",enabled="y",addr="0x0000634c0d284a8b",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.6",enabled="y",addr="0x0000634c0d285177",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.7",enabled="y",addr="0x0000634c0d28582f",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.8",enabled="y",addr="0x0000634c0d29ccf2",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.9",enabled="y",addr="0x0000634c0d29d3de",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.10",enabled="y",addr="0x0000634c0d29daca",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.11",enabled="y",addr="0x0000634c0d29e1b6",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.12",enabled="y",addr="0x0000634c0d29e8a2",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.13",enabled="y",addr="0x0000634c0d29ef8e",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.14",enabled="y",addr="0x0000634c0d29f646",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},bkpt={number="9",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d33b86c",func="riscv_cpu_tlb_fill",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="451",thread-groups=["i1"],cond="address == 0x87ffb560 && access_type == 0 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:451"},bkpt={number="10",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d33abc4",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="163",thread-groups=["i1"],cond="addr == 0x87ffb560 && access_type == 0 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:163"},bkpt={number="11",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d33b0c6",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="254",thread-groups=["i1"],cond="addr == 0x87ffb560 && mmu_idx == 1",times="0",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:254"},bkpt={number="12",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d281a04",func="tlb_set_page",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="847",thread-groups=["i1"],cond="vaddr == 0x87ffb000 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:847"}]}
+(gdb) 
+COMMAND -interpreter-exec console "disable breakpoints"
+=breakpoint-modified,bkpt={number="1",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d33b86c",func="riscv_cpu_tlb_fill",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="451",thread-groups=["i1"],cond="address == 1092830560 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:451"}
+=breakpoint-modified,bkpt={number="2",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d33abc4",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="163",thread-groups=["i1"],cond="addr == 1092830560 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:163"}
+=breakpoint-modified,bkpt={number="3",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d33b0c6",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="254",thread-groups=["i1"],cond="addr == 1092830560 && mmu_idx == 1",times="3",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:254"}
+=breakpoint-modified,bkpt={number="4",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d281a04",func="tlb_set_page",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="847",thread-groups=["i1"],cond="vaddr == 1092829184 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:847"}
+=breakpoint-modified,bkpt={number="5",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d281993",func="tlb_set_page_with_attrs",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="835",thread-groups=["i1"],cond="vaddr == 1092829184 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:835"}
+=breakpoint-modified,bkpt={number="6",type="breakpoint",disp="keep",enabled="n",addr="<MULTIPLE>",cond="addr == 0x41234560",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1271"},{number="6.1",enabled="y",addr="0x0000634c0d282af0",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.2",enabled="y",addr="0x0000634c0d2831dc",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.3",enabled="y",addr="0x0000634c0d2838c8",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.4",enabled="y",addr="0x0000634c0d283fb4",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.5",enabled="y",addr="0x0000634c0d2846a0",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.6",enabled="y",addr="0x0000634c0d284d8c",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.7",enabled="y",addr="0x0000634c0d285444",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.8",enabled="y",addr="0x0000634c0d29c907",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.9",enabled="y",addr="0x0000634c0d29cff3",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.10",enabled="y",addr="0x0000634c0d29d6df",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.11",enabled="y",addr="0x0000634c0d29ddcb",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.12",enabled="y",addr="0x0000634c0d29e4b7",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.13",enabled="y",addr="0x0000634c0d29eba3",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.14",enabled="y",addr="0x0000634c0d29f25b",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]}
+=breakpoint-modified,bkpt={number="7",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d2820c4",func="victim_tlb_hit",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1010",thread-groups=["i1"],cond="page == 0x41234000 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1010"}
+=breakpoint-modified,bkpt={number="8",type="breakpoint",disp="keep",enabled="n",addr="<MULTIPLE>",cond="addr == 0x41234560",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1338"},{number="8.1",enabled="y",addr="0x0000634c0d282edb",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.2",enabled="y",addr="0x0000634c0d2835c7",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.3",enabled="y",addr="0x0000634c0d283cb3",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.4",enabled="y",addr="0x0000634c0d28439f",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.5",enabled="y",addr="0x0000634c0d284a8b",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.6",enabled="y",addr="0x0000634c0d285177",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.7",enabled="y",addr="0x0000634c0d28582f",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.8",enabled="y",addr="0x0000634c0d29ccf2",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.9",enabled="y",addr="0x0000634c0d29d3de",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.10",enabled="y",addr="0x0000634c0d29daca",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.11",enabled="y",addr="0x0000634c0d29e1b6",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.12",enabled="y",addr="0x0000634c0d29e8a2",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.13",enabled="y",addr="0x0000634c0d29ef8e",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.14",enabled="y",addr="0x0000634c0d29f646",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]}
+=breakpoint-modified,bkpt={number="9",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d33b86c",func="riscv_cpu_tlb_fill",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="451",thread-groups=["i1"],cond="address == 0x87ffb560 && access_type == 0 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:451"}
+=breakpoint-modified,bkpt={number="10",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d33abc4",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="163",thread-groups=["i1"],cond="addr == 0x87ffb560 && access_type == 0 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:163"}
+=breakpoint-modified,bkpt={number="11",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d33b0c6",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="254",thread-groups=["i1"],cond="addr == 0x87ffb560 && mmu_idx == 1",times="0",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:254"}
+=breakpoint-modified,bkpt={number="12",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d281a04",func="tlb_set_page",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="847",thread-groups=["i1"],cond="vaddr == 0x87ffb000 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:847"}
+181^done
+(gdb) 
+COMMAND -exec-continue
+182^running
+*running,thread-id="all"
+(gdb) 
+COMMAND -exec-interrupt --all
+183^done
+(gdb) 
+~"\nThread "
+~"1 \"qemu-system-ris\" received signal SIGINT, Interrupt.\n"
+~"0x0000745bead18e1e in ppoll () from /lib/x86_64-linux-gnu/libc.so.6\n"
+*stopped,reason="signal-received",signal-name="SIGINT",signal-meaning="Interrupt",frame={addr="0x0000745bead18e1e",func="ppoll",args=[],from="/lib/x86_64-linux-gnu/libc.so.6",arch="i386:x86-64"},thread-id="1",stopped-threads="all",core="5"
+COMMAND -interpreter-exec console "disable breakpoints"
+=breakpoint-modified,bkpt={number="1",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d33b86c",func="riscv_cpu_tlb_fill",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="451",thread-groups=["i1"],cond="address == 1092830560 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:451"}
+=breakpoint-modified,bkpt={number="2",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d33abc4",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="163",thread-groups=["i1"],cond="addr == 1092830560 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:163"}
+=breakpoint-modified,bkpt={number="3",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d33b0c6",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="254",thread-groups=["i1"],cond="addr == 1092830560 && mmu_idx == 1",times="3",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:254"}
+=breakpoint-modified,bkpt={number="4",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d281a04",func="tlb_set_page",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="847",thread-groups=["i1"],cond="vaddr == 1092829184 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:847"}
+=breakpoint-modified,bkpt={number="5",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d281993",func="tlb_set_page_with_attrs",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="835",thread-groups=["i1"],cond="vaddr == 1092829184 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:835"}
+=breakpoint-modified,bkpt={number="6",type="breakpoint",disp="keep",enabled="n",addr="<MULTIPLE>",cond="addr == 0x41234560",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1271"},{number="6.1",enabled="y",addr="0x0000634c0d282af0",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.2",enabled="y",addr="0x0000634c0d2831dc",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.3",enabled="y",addr="0x0000634c0d2838c8",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.4",enabled="y",addr="0x0000634c0d283fb4",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.5",enabled="y",addr="0x0000634c0d2846a0",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.6",enabled="y",addr="0x0000634c0d284d8c",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.7",enabled="y",addr="0x0000634c0d285444",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.8",enabled="y",addr="0x0000634c0d29c907",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.9",enabled="y",addr="0x0000634c0d29cff3",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.10",enabled="y",addr="0x0000634c0d29d6df",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.11",enabled="y",addr="0x0000634c0d29ddcb",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.12",enabled="y",addr="0x0000634c0d29e4b7",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.13",enabled="y",addr="0x0000634c0d29eba3",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]},{number="6.14",enabled="y",addr="0x0000634c0d29f25b",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1271",thread-groups=["i1"]}
+=breakpoint-modified,bkpt={number="7",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d2820c4",func="victim_tlb_hit",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1010",thread-groups=["i1"],cond="page == 0x41234000 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1010"}
+=breakpoint-modified,bkpt={number="8",type="breakpoint",disp="keep",enabled="n",addr="<MULTIPLE>",cond="addr == 0x41234560",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:1338"},{number="8.1",enabled="y",addr="0x0000634c0d282edb",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.2",enabled="y",addr="0x0000634c0d2835c7",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.3",enabled="y",addr="0x0000634c0d283cb3",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.4",enabled="y",addr="0x0000634c0d28439f",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.5",enabled="y",addr="0x0000634c0d284a8b",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.6",enabled="y",addr="0x0000634c0d285177",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.7",enabled="y",addr="0x0000634c0d28582f",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.8",enabled="y",addr="0x0000634c0d29ccf2",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.9",enabled="y",addr="0x0000634c0d29d3de",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.10",enabled="y",addr="0x0000634c0d29daca",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.11",enabled="y",addr="0x0000634c0d29e1b6",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.12",enabled="y",addr="0x0000634c0d29e8a2",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.13",enabled="y",addr="0x0000634c0d29ef8e",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]},{number="8.14",enabled="y",addr="0x0000634c0d29f646",func="load_helper",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="1338",thread-groups=["i1"]}
+=breakpoint-modified,bkpt={number="9",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d33b86c",func="riscv_cpu_tlb_fill",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="451",thread-groups=["i1"],cond="address == 0x87ffb560 && access_type == 0 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:451"}
+=breakpoint-modified,bkpt={number="10",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d33abc4",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="163",thread-groups=["i1"],cond="addr == 0x87ffb560 && access_type == 0 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:163"}
+=breakpoint-modified,bkpt={number="11",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d33b0c6",func="get_physical_address",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c",line="254",thread-groups=["i1"],cond="addr == 0x87ffb560 && mmu_idx == 1",times="0",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/target/riscv/cpu_helper.c:254"}
+=breakpoint-modified,bkpt={number="12",type="breakpoint",disp="keep",enabled="n",addr="0x0000634c0d281a04",func="tlb_set_page",file="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",fullname="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c",line="847",thread-groups=["i1"],cond="vaddr == 0x87ffb000 && mmu_idx == 1",times="1",original-location="/home/andy/os_lab2_qemu_debug/qemu-4.1.1/accel/tcg/cputlb.c:847"}
+184^done
+(gdb) 
+COMMAND -target-detach
+=thread-exited,id="1",group-id="i1"
+=thread-exited,id="2",group-id="i1"
+=thread-exited,id="3",group-id="i1"
+=thread-group-exited,id="i1"
+~"[Inferior 1 (process 30085) detached]\n"
+=library-unloaded,id="/lib/x86_64-linux-gnu/libncursesw.so.6",target-name="/lib/x86_64-linux-gnu/libncursesw.so.6",host-name="/lib/x86_64-linux-gnu/libncursesw.so.6",thread-group="i1"
+=library-unloaded,id="/lib/x86_64-linux-gnu/libtinfo.so.6",target-name="/lib/x86_64-linux-gnu/libtinfo.so.6",host-name="/lib/x86_64-linux-gnu/libtinfo.so.6",thread-group="i1"
+=library-unloaded,id="/lib/x86_64-linux-gnu/libz.so.1",target-name="/lib/x86_64-linux-gnu/libz.so.1",host-name="/lib/x86_64-linux-gnu/libz.so.1",thread-group="i1"
+=library-unloaded,id="/lib/x86_64-linux-gnu/libpixman-1.so.0",target-name="/lib/x86_64-linux-gnu/libpixman-1.so.0",host-name="/lib/x86_64-linux-gnu/libpixman-1.so.0",thread-group="i1"
+=library-unloaded,id="/lib/x86_64-linux-gnu/libglib-2.0.so.0",target-name="/lib/x86_64-linux-gnu/libglib-2.0.so.0",host-name="/lib/x86_64-linux-gnu/libglib-2.0.so.0",thread-group="i1"
+=library-unloaded,id="/lib/x86_64-linux-gnu/libm.so.6",target-name="/lib/x86_64-linux-gnu/libm.so.6",host-name="/lib/x86_64-linux-gnu/libm.so.6",thread-group="i1"
+=library-unloaded,id="/lib/x86_64-linux-gnu/libgcc_s.so.1",target-name="/lib/x86_64-linux-gnu/libgcc_s.so.1",host-name="/lib/x86_64-linux-gnu/libgcc_s.so.1",thread-group="i1"
+=library-unloaded,id="/lib/x86_64-linux-gnu/libc.so.6",target-name="/lib/x86_64-linux-gnu/libc.so.6",host-name="/lib/x86_64-linux-gnu/libc.so.6",thread-group="i1"
+=library-unloaded,id="/lib64/ld-linux-x86-64.so.2",target-name="/lib64/ld-linux-x86-64.so.2",host-name="/lib64/ld-linux-x86-64.so.2",thread-group="i1"
+=library-unloaded,id="/lib/x86_64-linux-gnu/libpcre.so.3",target-name="/lib/x86_64-linux-gnu/libpcre.so.3",host-name="/lib/x86_64-linux-gnu/libpcre.so.3",thread-group="i1"
+185^done
+(gdb) 
+^exit
