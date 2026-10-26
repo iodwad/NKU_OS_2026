@@ -1147,39 +1147,43 @@ PA = (0x87ffb << 12) + 0x560 = 0x87ffb560
 
 ### 5.1 物理内存初始化验证
 
-任务一的实际原生测试运行结果为通过。源码核对重点是设备树基址与大小、`va_pa_offset`、`npage`、描述符数组的布局与数量，以及保留区和空闲区的边界。工程还提供 [test_page_init()](../code/tools/test_lab2.c)，其检查项可以作为理解初始化规格的依据；本报告没有据此声称收到该独立入口的逐项运行日志。
+为验证物理内存初始化部分的实现，在实验目录下执行 `make grade`。运行结果中 `check page init` 返回 `OK`，说明当前代码通过了官方提供的物理内存初始化检查，如图1所示。
 
-此外，已入库的 [联合运行日志](./docs/2411560/validation/qemu.log) 提供了正常初始化的运行证据：DTB 报告基址 `0x80000000`、大小 `0x08000000`（128 MiB），`page_init()` 输出排他区间 `[0x80000000, 0x88000000)`，随后完成物理页与对象分配检查。它支持该布局下的正常流程，不单独证明无效 DTB、空间不足或零空闲页等分支已经运行。
+![图1 Lab2 官方测试结果](./images/grade_page_init_best_fit.png)
+
+**图1：Lab2 官方测试结果，物理内存初始化与 Best-Fit 检查均通过，总分 20/20。**
+
+此外，已有的 [QEMU 联合运行日志](./docs/2411560/validation/qemu.log) 显示，设备树报告的物理内存起始地址为 `0x80000000`，大小为 `0x08000000`（128 MiB），初始化后系统继续执行物理页分配检查。结合官方测试结果，可以确认本次实验在当前 QEMU 内存布局下完成了物理内存初始化。
 
 ### 5.2 Best-Fit 原生测试验证
 
-任务二的实际原生测试运行结果为通过。[best_fit_pmm.c](../code/kern/mm/best_fit_pmm.c) 保留 `basic_check()` 和 `best_fit_check()`，管理器的 `check` 回调指向后者。它们检查单页分配与回收、空链表分配失败、较小可用块优先、连续空间不足时失败，以及测试后的链表和计数恢复。测试覆盖理由见 4.3.3。
+完成 Best-Fit 分配算法后，使用 `make grade` 进行测试。运行结果中 `check best fit` 返回 `OK`，最终总分为 `20/20`，说明本次实现通过了官方测试，结果见图1。该总分对应物理内存初始化与 Best-Fit 两项检查。
 
-这一结果来自本人对当时原生测试运行的确认，与当前选择 Buddy 的联合镜像区分。现有 [发布验证说明](./docs/2411560/PUBLISH_VALIDATION.md) 未声称官方 Best-Fit 评分通过，本报告也不将 Buddy 的成功输出当作 Best-Fit 自检或官方评分结果。
+结合 [best_fit_pmm.c](../code/kern/mm/best_fit_pmm.c) 中 `basic_check()` 和 `best_fit_check()` 的检查内容，本次测试主要验证了物理页分配、释放、空闲块选择、内存不足时的处理，以及分配器状态恢复等功能。
 
 ### 5.3 Buddy System Host 专项测试
 
 使用实际 Buddy 源码运行 Host 测试，并启用 ASan、UBSan。**43 项测试全部通过，0 项失败**，覆盖物理页登记、拆分与合并、非法操作及资源恢复。
 
-![图1 Buddy System Host 专项测试：43/43 通过](./images/buddy_host.png)
+![图2 Buddy System Host 专项测试：43/43 通过](./images/buddy_host.png)
 
-*图1 Buddy System Host 专项测试结果。*
+*图2 Buddy System Host 专项测试结果。*
 
 ### 5.4 SLUB Host 专项测试
 
 对 SLUB 的对象大小边界、槽位复用、Slab 回收、大对象及异常释放进行验证。**73 项测试全部通过，其中 17 项为非法操作测试**；Host ASan、UBSan 未报告异常。
 
-![图2 SLUB Host 专项测试：73/73 通过](./images/slub_host.png)
+![图3 SLUB Host 专项测试：73/73 通过](./images/slub_host.png)
 
-*图2 SLUB Host 专项测试结果。*
+*图3 SLUB Host 专项测试结果。*
 
 ### 5.5 QEMU 内核联合验证
 
 在 QEMU 模拟的 RISC-V 内核中，**Buddy 5/5、SLUB 7/7 均通过**，并确认测试后恢复 **31723 个空闲物理页**。截图中的 `Terminated` 是测试结束时通过超时命令终止常驻内核，不是内核 panic。
 
-![图3 Buddy 与 SLUB 在 QEMU 中的联合验证：5/5 与 7/7 通过](./images/qemu_buddy_slub.png)
+![图4 Buddy 与 SLUB 在 QEMU 中的联合验证：5/5 与 7/7 通过](./images/qemu_buddy_slub.png)
 
-*图3 Buddy System 与 SLUB Challenge 的 QEMU 内核验证结果。*
+*图4 Buddy System 与 SLUB Challenge 的 QEMU 内核验证结果。*
 
 ### 5.6 QEMU MMU、三级Sv39与TLB补充验证
 
