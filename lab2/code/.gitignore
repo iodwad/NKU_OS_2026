@@ -1,8 +1,0 @@
-/bin/
-/obj/
-/evidence/
-/.debug/
-/.qemu-debug.mk
-__pycache__/
-core
-core.*

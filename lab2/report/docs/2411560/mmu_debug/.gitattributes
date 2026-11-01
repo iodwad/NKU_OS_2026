@@ -1,2 +1,0 @@
-# Preserve original debugger and QEMU log bytes.
-*.log -text

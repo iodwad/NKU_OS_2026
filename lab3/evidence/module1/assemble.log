@@ -1,0 +1,2 @@
++ cc kern/trap/trapentry.S
+riscv64-unknown-elf-gcc -Ikern/trap/ -mcmodel=medany -std=gnu99 -Wno-unused -Werror  -fno-builtin -Wall -O2 -nostdinc  -fno-stack-protector -ffunction-sections -fdata-sections -g -Ilibs/ -Ikern/debug/ -Ikern/driver/ -Ikern/trap/ -Ikern/mm/ -Ikern/arch/ -c kern/trap/trapentry.S -o ../evidence/module1/build/obj/kern/trap/trapentry.o

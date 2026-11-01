@@ -1,0 +1,90 @@
+PASS SAVE_ALL unchanged from task-start file
+PASS __trapret and sret unchanged from task-start file
+PASS only two authorized implementation regions changed
+PASS both module1 markers use 2411560
+PASS SAVE_ALL x0/x1/x3..x31 slots
+PASS SAVE_ALL original sp slot and CSR slots
+PASS restore all x1..x31 from matching slots exactly once
+PASS sp restored by final frame access/instruction
+PASS restore only sstatus/sepc, no frame stores or internal sret
+FAIL trapframe address passed in a0, call then fall through
+PASS 288-byte frame preserves 16-byte stack alignment
+PASS trap takes struct trapframe pointer
+PASS actual RV64 macros use sd/ld and 8-byte slots
+PASS symbolic source execution restores all registers/CSR and preserves frame
+PASS symbolic source execution uses handler-modified epc
+PASS no other pre-existing code file changed
+{
+  "checks": [
+    {
+      "name": "SAVE_ALL unchanged from task-start file",
+      "pass": true
+    },
+    {
+      "name": "__trapret and sret unchanged from task-start file",
+      "pass": true
+    },
+    {
+      "name": "only two authorized implementation regions changed",
+      "pass": true
+    },
+    {
+      "name": "both module1 markers use 2411560",
+      "pass": true
+    },
+    {
+      "name": "SAVE_ALL x0/x1/x3..x31 slots",
+      "pass": true
+    },
+    {
+      "name": "SAVE_ALL original sp slot and CSR slots",
+      "pass": true
+    },
+    {
+      "name": "restore all x1..x31 from matching slots exactly once",
+      "pass": true
+    },
+    {
+      "name": "sp restored by final frame access/instruction",
+      "pass": true
+    },
+    {
+      "name": "restore only sstatus/sepc, no frame stores or internal sret",
+      "pass": true
+    },
+    {
+      "name": "trapframe address passed in a0, call then fall through",
+      "pass": false
+    },
+    {
+      "name": "288-byte frame preserves 16-byte stack alignment",
+      "pass": true
+    },
+    {
+      "name": "trap takes struct trapframe pointer",
+      "pass": true
+    },
+    {
+      "name": "actual RV64 macros use sd/ld and 8-byte slots",
+      "pass": true
+    },
+    {
+      "name": "symbolic source execution restores all registers/CSR and preserves frame",
+      "pass": true
+    },
+    {
+      "name": "symbolic source execution uses handler-modified epc",
+      "pass": true
+    },
+    {
+      "name": "no other pre-existing code file changed",
+      "pass": true
+    }
+  ],
+  "passed": 15,
+  "total": 16,
+  "changed_code_files": [
+    "kern/trap/trapentry.S"
+  ],
+  "scope": "source checks and symbolic model; not QEMU execution"
+}

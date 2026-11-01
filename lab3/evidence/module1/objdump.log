@@ -1,0 +1,95 @@
+
+/mnt/d/college_study_materials/junior_year_fall/OS/lab3/evidence/module1/build/obj/kern/trap/trapentry.o:     file format elf64-littleriscv
+
+
+Disassembly of section .text:
+
+0000000000000000 <__alltraps-0x2>:
+   0:	0001                	c.addi	x0,0
+			0: R_RISCV_ALIGN	*ABS*+0x2
+
+0000000000000002 <__alltraps>:
+   2:	14011073          	csrrw	x0,sscratch,x2
+   6:	712d                	c.addi16sp	x2,-288
+   8:	e002                	c.sdsp	x0,0(x2)
+   a:	e406                	c.sdsp	x1,8(x2)
+   c:	ec0e                	c.sdsp	x3,24(x2)
+   e:	f012                	c.sdsp	x4,32(x2)
+  10:	f416                	c.sdsp	x5,40(x2)
+  12:	f81a                	c.sdsp	x6,48(x2)
+  14:	fc1e                	c.sdsp	x7,56(x2)
+  16:	e0a2                	c.sdsp	x8,64(x2)
+  18:	e4a6                	c.sdsp	x9,72(x2)
+  1a:	e8aa                	c.sdsp	x10,80(x2)
+  1c:	ecae                	c.sdsp	x11,88(x2)
+  1e:	f0b2                	c.sdsp	x12,96(x2)
+  20:	f4b6                	c.sdsp	x13,104(x2)
+  22:	f8ba                	c.sdsp	x14,112(x2)
+  24:	fcbe                	c.sdsp	x15,120(x2)
+  26:	e142                	c.sdsp	x16,128(x2)
+  28:	e546                	c.sdsp	x17,136(x2)
+  2a:	e94a                	c.sdsp	x18,144(x2)
+  2c:	ed4e                	c.sdsp	x19,152(x2)
+  2e:	f152                	c.sdsp	x20,160(x2)
+  30:	f556                	c.sdsp	x21,168(x2)
+  32:	f95a                	c.sdsp	x22,176(x2)
+  34:	fd5e                	c.sdsp	x23,184(x2)
+  36:	e1e2                	c.sdsp	x24,192(x2)
+  38:	e5e6                	c.sdsp	x25,200(x2)
+  3a:	e9ea                	c.sdsp	x26,208(x2)
+  3c:	edee                	c.sdsp	x27,216(x2)
+  3e:	f1f2                	c.sdsp	x28,224(x2)
+  40:	f5f6                	c.sdsp	x29,232(x2)
+  42:	f9fa                	c.sdsp	x30,240(x2)
+  44:	fdfe                	c.sdsp	x31,248(x2)
+  46:	14001473          	csrrw	x8,sscratch,x0
+  4a:	100024f3          	csrrs	x9,sstatus,x0
+  4e:	14102973          	csrrs	x18,sepc,x0
+  52:	143029f3          	csrrs	x19,stval,x0
+  56:	14202a73          	csrrs	x20,scause,x0
+  5a:	e822                	c.sdsp	x8,16(x2)
+  5c:	e226                	c.sdsp	x9,256(x2)
+  5e:	e64a                	c.sdsp	x18,264(x2)
+  60:	ea4e                	c.sdsp	x19,272(x2)
+  62:	ee52                	c.sdsp	x20,280(x2)
+  64:	850a                	c.mv	x10,x2
+  66:	f9bff0ef          	jal	x1,0 <__alltraps-0x2>
+			66: R_RISCV_JAL	trap
+
+000000000000006a <__trapret>:
+  6a:	6412                	c.ldsp	x8,256(x2)
+  6c:	64b2                	c.ldsp	x9,264(x2)
+  6e:	10041073          	csrrw	x0,sstatus,x8
+  72:	14149073          	csrrw	x0,sepc,x9
+  76:	60a2                	c.ldsp	x1,8(x2)
+  78:	61e2                	c.ldsp	x3,24(x2)
+  7a:	7202                	c.ldsp	x4,32(x2)
+  7c:	72a2                	c.ldsp	x5,40(x2)
+  7e:	7342                	c.ldsp	x6,48(x2)
+  80:	73e2                	c.ldsp	x7,56(x2)
+  82:	6406                	c.ldsp	x8,64(x2)
+  84:	64a6                	c.ldsp	x9,72(x2)
+  86:	6546                	c.ldsp	x10,80(x2)
+  88:	65e6                	c.ldsp	x11,88(x2)
+  8a:	7606                	c.ldsp	x12,96(x2)
+  8c:	76a6                	c.ldsp	x13,104(x2)
+  8e:	7746                	c.ldsp	x14,112(x2)
+  90:	77e6                	c.ldsp	x15,120(x2)
+  92:	680a                	c.ldsp	x16,128(x2)
+  94:	68aa                	c.ldsp	x17,136(x2)
+  96:	694a                	c.ldsp	x18,144(x2)
+  98:	69ea                	c.ldsp	x19,152(x2)
+  9a:	7a0a                	c.ldsp	x20,160(x2)
+  9c:	7aaa                	c.ldsp	x21,168(x2)
+  9e:	7b4a                	c.ldsp	x22,176(x2)
+  a0:	7bea                	c.ldsp	x23,184(x2)
+  a2:	6c0e                	c.ldsp	x24,192(x2)
+  a4:	6cae                	c.ldsp	x25,200(x2)
+  a6:	6d4e                	c.ldsp	x26,208(x2)
+  a8:	6dee                	c.ldsp	x27,216(x2)
+  aa:	7e0e                	c.ldsp	x28,224(x2)
+  ac:	7eae                	c.ldsp	x29,232(x2)
+  ae:	7f4e                	c.ldsp	x30,240(x2)
+  b0:	7fee                	c.ldsp	x31,248(x2)
+  b2:	6142                	c.ldsp	x2,16(x2)
+  b4:	10200073          	sret

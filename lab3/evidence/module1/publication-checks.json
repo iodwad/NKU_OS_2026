@@ -1,0 +1,13 @@
+{
+  "source_sha256": "ac06ebe361139959607814ead3dad7f149427049903ef10aff9ebe00f92746f5",
+  "assemble_exit": 0,
+  "restore_instruction_sequence_matches_historical": true,
+  "call_trap_abi_verified": true,
+  "historical_static_passed": 15,
+  "historical_static_total": 16,
+  "historical_static_mismatch": "fixed literal jal trap; current source uses call trap",
+  "save_all_unchanged": true,
+  "trapret_and_sret_instructions_unchanged": true,
+  "qemu_run": false,
+  "module2_and_migrated_memory_code_unchanged": true
+}

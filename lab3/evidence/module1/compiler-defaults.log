@@ -1,0 +1,27 @@
+The following options are target specific:
+  -mabi=                      		lp64d
+  -malign-data=               		xlen
+  -march=                     		rv64imafdc
+  -mbranch-cost=N             		0
+  -mcmodel=                   		medlow
+  -mdiv                       		[disabled]
+  -mexplicit-relocs           		[disabled]
+  -mfdiv                      		[disabled]
+  -mplt                       		[enabled]
+  -mpreferred-stack-boundary= 		0
+  -mrelax                     		[enabled]
+  -mriscv-attribute           		[enabled]
+  -msave-restore              		[disabled]
+  -msmall-data-limit=N        		8
+  -mstrict-align              		[disabled]
+  -mtune=PROCESSOR            		
+
+  Supported ABIs (for use with the -mabi= option):
+    ilp32 ilp32d ilp32e ilp32f lp64 lp64d lp64f
+
+  Known code models (for use with the -mcmodel= option):
+    medany medlow
+
+  Known data alignment choices (for use with the -malign-data= option):
+    natural xlen
+

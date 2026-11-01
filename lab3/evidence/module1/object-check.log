@@ -1,0 +1,23 @@
+PASS ELF64 RISC-V object
+PASS decoded CSR loads and all GPR offsets
+PASS sstatus and sepc restored before GPR loads
+PASS only expected restore loads CSR writes and sret
+PASS sp restored last immediately before sret
+PASS frame pointer passed in x10/a0
+PASS call uses ra with R_RISCV_JAL trap relocation
+PASS SAVE_ALL subtracts 288 bytes
+{
+  "checks": {
+    "ELF64 RISC-V object": true,
+    "decoded CSR loads and all GPR offsets": true,
+    "sstatus and sepc restored before GPR loads": true,
+    "only expected restore loads CSR writes and sret": true,
+    "sp restored last immediately before sret": true,
+    "frame pointer passed in x10/a0": true,
+    "call uses ra with R_RISCV_JAL trap relocation": true,
+    "SAVE_ALL subtracts 288 bytes": true
+  },
+  "passed": 8,
+  "total": 8,
+  "scope": "object disassembly/relocation audit; no CPU execution"
+}

@@ -1,0 +1,23 @@
+{
+  "completed_at": "2026-11-01T17:13:21.8032268+08:00",
+  "changed_preexisting_code_files": [
+    "kern/trap/trapentry.S"
+  ],
+  "new_code_files": [],
+  "diff_check_exit": 0,
+  "source_sha256": "6641a14ad578cbc9aff985804c21c25a5df5139b87db55b78dfc478bdf46b235",
+  "object_sha256": "0e42ba53aa888059e9b61db29e848802435525d67bb3df5870ed4915f4a7d152",
+  "prompt_sha256": "86bfea717ef299e3dcefb935b28d1c56f77697134f20538f090e929e502ab7bc",
+  "c_free_before_bytes": 32371007488,
+  "c_free_after_bytes": 32284188672,
+  "c_free_delta_bytes": -86818816,
+  "deleted_directories": [],
+  "deletion_reclaimed_bytes": 0,
+  "temporary_directories_created": [],
+  "retained_artifacts": "D:\\college_study_materials\\junior_year_fall\\OS\\lab3\\evidence\\module1",
+  "archive_state": "archived_verified_for_static_and_object_checks_only",
+  "cleanup_state": "retained_requested_evidence",
+  "kernel_build_exit": 2,
+  "qemu_run": false,
+  "commit_or_push_executed": false
+}

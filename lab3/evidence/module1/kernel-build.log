@@ -1,0 +1,34 @@
++ cc kern/init/entry.S
+riscv64-unknown-elf-gcc -Ikern/init/ -mcmodel=medany -std=gnu99 -Wno-unused -Werror  -fno-builtin -Wall -O2 -nostdinc  -fno-stack-protector -ffunction-sections -fdata-sections -g -Ilibs/ -Ikern/debug/ -Ikern/driver/ -Ikern/trap/ -Ikern/mm/ -Ikern/arch/ -c kern/init/entry.S -o ../evidence/module1/build/obj/kern/init/entry.o
++ cc kern/init/init.c
+riscv64-unknown-elf-gcc -Ikern/init/ -mcmodel=medany -std=gnu99 -Wno-unused -Werror  -fno-builtin -Wall -O2 -nostdinc  -fno-stack-protector -ffunction-sections -fdata-sections -g -Ilibs/ -Ikern/debug/ -Ikern/driver/ -Ikern/trap/ -Ikern/mm/ -Ikern/arch/ -c kern/init/init.c -o ../evidence/module1/build/obj/kern/init/init.o
++ cc kern/libs/stdio.c
+riscv64-unknown-elf-gcc -Ikern/libs/ -mcmodel=medany -std=gnu99 -Wno-unused -Werror  -fno-builtin -Wall -O2 -nostdinc  -fno-stack-protector -ffunction-sections -fdata-sections -g -Ilibs/ -Ikern/debug/ -Ikern/driver/ -Ikern/trap/ -Ikern/mm/ -Ikern/arch/ -c kern/libs/stdio.c -o ../evidence/module1/build/obj/kern/libs/stdio.o
++ cc kern/debug/kdebug.c
+riscv64-unknown-elf-gcc -Ikern/debug/ -mcmodel=medany -std=gnu99 -Wno-unused -Werror  -fno-builtin -Wall -O2 -nostdinc  -fno-stack-protector -ffunction-sections -fdata-sections -g -Ilibs/ -Ikern/debug/ -Ikern/driver/ -Ikern/trap/ -Ikern/mm/ -Ikern/arch/ -c kern/debug/kdebug.c -o ../evidence/module1/build/obj/kern/debug/kdebug.o
++ cc kern/debug/kmonitor.c
+riscv64-unknown-elf-gcc -Ikern/debug/ -mcmodel=medany -std=gnu99 -Wno-unused -Werror  -fno-builtin -Wall -O2 -nostdinc  -fno-stack-protector -ffunction-sections -fdata-sections -g -Ilibs/ -Ikern/debug/ -Ikern/driver/ -Ikern/trap/ -Ikern/mm/ -Ikern/arch/ -c kern/debug/kmonitor.c -o ../evidence/module1/build/obj/kern/debug/kmonitor.o
++ cc kern/debug/panic.c
+riscv64-unknown-elf-gcc -Ikern/debug/ -mcmodel=medany -std=gnu99 -Wno-unused -Werror  -fno-builtin -Wall -O2 -nostdinc  -fno-stack-protector -ffunction-sections -fdata-sections -g -Ilibs/ -Ikern/debug/ -Ikern/driver/ -Ikern/trap/ -Ikern/mm/ -Ikern/arch/ -c kern/debug/panic.c -o ../evidence/module1/build/obj/kern/debug/panic.o
++ cc kern/driver/clock.c
+riscv64-unknown-elf-gcc -Ikern/driver/ -mcmodel=medany -std=gnu99 -Wno-unused -Werror  -fno-builtin -Wall -O2 -nostdinc  -fno-stack-protector -ffunction-sections -fdata-sections -g -Ilibs/ -Ikern/debug/ -Ikern/driver/ -Ikern/trap/ -Ikern/mm/ -Ikern/arch/ -c kern/driver/clock.c -o ../evidence/module1/build/obj/kern/driver/clock.o
++ cc kern/driver/console.c
+riscv64-unknown-elf-gcc -Ikern/driver/ -mcmodel=medany -std=gnu99 -Wno-unused -Werror  -fno-builtin -Wall -O2 -nostdinc  -fno-stack-protector -ffunction-sections -fdata-sections -g -Ilibs/ -Ikern/debug/ -Ikern/driver/ -Ikern/trap/ -Ikern/mm/ -Ikern/arch/ -c kern/driver/console.c -o ../evidence/module1/build/obj/kern/driver/console.o
++ cc kern/driver/dtb.c
+riscv64-unknown-elf-gcc -Ikern/driver/ -mcmodel=medany -std=gnu99 -Wno-unused -Werror  -fno-builtin -Wall -O2 -nostdinc  -fno-stack-protector -ffunction-sections -fdata-sections -g -Ilibs/ -Ikern/debug/ -Ikern/driver/ -Ikern/trap/ -Ikern/mm/ -Ikern/arch/ -c kern/driver/dtb.c -o ../evidence/module1/build/obj/kern/driver/dtb.o
++ cc kern/driver/intr.c
+riscv64-unknown-elf-gcc -Ikern/driver/ -mcmodel=medany -std=gnu99 -Wno-unused -Werror  -fno-builtin -Wall -O2 -nostdinc  -fno-stack-protector -ffunction-sections -fdata-sections -g -Ilibs/ -Ikern/debug/ -Ikern/driver/ -Ikern/trap/ -Ikern/mm/ -Ikern/arch/ -c kern/driver/intr.c -o ../evidence/module1/build/obj/kern/driver/intr.o
++ cc kern/trap/trap.c
+riscv64-unknown-elf-gcc -Ikern/trap/ -mcmodel=medany -std=gnu99 -Wno-unused -Werror  -fno-builtin -Wall -O2 -nostdinc  -fno-stack-protector -ffunction-sections -fdata-sections -g -Ilibs/ -Ikern/debug/ -Ikern/driver/ -Ikern/trap/ -Ikern/mm/ -Ikern/arch/ -c kern/trap/trap.c -o ../evidence/module1/build/obj/kern/trap/trap.o
++ cc kern/mm/best_fit_pmm.c
+riscv64-unknown-elf-gcc -Ikern/mm/ -mcmodel=medany -std=gnu99 -Wno-unused -Werror  -fno-builtin -Wall -O2 -nostdinc  -fno-stack-protector -ffunction-sections -fdata-sections -g -Ilibs/ -Ikern/debug/ -Ikern/driver/ -Ikern/trap/ -Ikern/mm/ -Ikern/arch/ -c kern/mm/best_fit_pmm.c -o ../evidence/module1/build/obj/kern/mm/best_fit_pmm.o
+kern/trap/trap.c: In function 'trap_dispatch':
+kern/trap/trap.c:89:9: error: implicit declaration of function 'interrupt_handler' [-Werror=implicit-function-declaration]
+   89 |         interrupt_handler(tf);
+      |         ^~~~~~~~~~~~~~~~~
+kern/trap/trap.c:92:9: error: implicit declaration of function 'exception_handler' [-Werror=implicit-function-declaration]
+   92 |         exception_handler(tf);
+      |         ^~~~~~~~~~~~~~~~~
+cc1: all warnings being treated as errors
+make: *** [Makefile:118: ../evidence/module1/build/obj/kern/trap/trap.o] Error 1
+make: *** Waiting for unfinished jobs....

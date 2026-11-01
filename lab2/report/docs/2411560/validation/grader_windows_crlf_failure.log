@@ -1,4 +1,0 @@
-$ sh -n tools/grade.sh
-tools/grade.sh: 146: Syntax error: ")" unexpected (expecting "then")
-
-EXIT_CODE=2

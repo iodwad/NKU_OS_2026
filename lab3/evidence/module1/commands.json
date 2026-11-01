@@ -1,0 +1,138 @@
+[
+  {
+    "name": "static-before",
+    "cwd": "/mnt/d/college_study_materials/junior_year_fall/OS/lab3",
+    "argv": [
+      "python3",
+      "/mnt/d/college_study_materials/junior_year_fall/OS/lab3/evidence/module1/verify_static.py",
+      "/mnt/d/college_study_materials/junior_year_fall/OS/lab3/evidence/module1/trapentry.before.S"
+    ],
+    "command": "python3 /mnt/d/college_study_materials/junior_year_fall/OS/lab3/evidence/module1/verify_static.py /mnt/d/college_study_materials/junior_year_fall/OS/lab3/evidence/module1/trapentry.before.S",
+    "exit_code": 1
+  },
+  {
+    "name": "static-after",
+    "cwd": "/mnt/d/college_study_materials/junior_year_fall/OS/lab3",
+    "argv": [
+      "python3",
+      "/mnt/d/college_study_materials/junior_year_fall/OS/lab3/evidence/module1/verify_static.py"
+    ],
+    "command": "python3 /mnt/d/college_study_materials/junior_year_fall/OS/lab3/evidence/module1/verify_static.py",
+    "exit_code": 0
+  },
+  {
+    "name": "compiler-version",
+    "cwd": "/mnt/d/college_study_materials/junior_year_fall/OS/lab3",
+    "argv": [
+      "riscv64-unknown-elf-gcc",
+      "--version"
+    ],
+    "command": "riscv64-unknown-elf-gcc --version",
+    "exit_code": 0
+  },
+  {
+    "name": "compiler-target",
+    "cwd": "/mnt/d/college_study_materials/junior_year_fall/OS/lab3",
+    "argv": [
+      "riscv64-unknown-elf-gcc",
+      "-dumpmachine"
+    ],
+    "command": "riscv64-unknown-elf-gcc -dumpmachine",
+    "exit_code": 0
+  },
+  {
+    "name": "compiler-defaults",
+    "cwd": "/mnt/d/college_study_materials/junior_year_fall/OS/lab3",
+    "argv": [
+      "riscv64-unknown-elf-gcc",
+      "-Q",
+      "--help=target"
+    ],
+    "command": "riscv64-unknown-elf-gcc -Q --help=target",
+    "exit_code": 0
+  },
+  {
+    "name": "assemble",
+    "cwd": "/mnt/d/college_study_materials/junior_year_fall/OS/lab3/code",
+    "argv": [
+      "make",
+      "V=",
+      "OBJDIR=../evidence/module1/build/obj",
+      "BINDIR=../evidence/module1/build/bin",
+      "-B",
+      "../evidence/module1/build/obj/kern/trap/trapentry.o"
+    ],
+    "command": "make V= OBJDIR=../evidence/module1/build/obj BINDIR=../evidence/module1/build/bin -B ../evidence/module1/build/obj/kern/trap/trapentry.o",
+    "exit_code": 0
+  },
+  {
+    "name": "objdump",
+    "cwd": "/mnt/d/college_study_materials/junior_year_fall/OS/lab3",
+    "argv": [
+      "riscv64-unknown-elf-objdump",
+      "-dr",
+      "-M",
+      "no-aliases,numeric",
+      "/mnt/d/college_study_materials/junior_year_fall/OS/lab3/evidence/module1/build/obj/kern/trap/trapentry.o"
+    ],
+    "command": "riscv64-unknown-elf-objdump -dr -M no-aliases,numeric /mnt/d/college_study_materials/junior_year_fall/OS/lab3/evidence/module1/build/obj/kern/trap/trapentry.o",
+    "exit_code": 0
+  },
+  {
+    "name": "readelf",
+    "cwd": "/mnt/d/college_study_materials/junior_year_fall/OS/lab3",
+    "argv": [
+      "riscv64-unknown-elf-readelf",
+      "-h",
+      "-A",
+      "-s",
+      "-r",
+      "/mnt/d/college_study_materials/junior_year_fall/OS/lab3/evidence/module1/build/obj/kern/trap/trapentry.o"
+    ],
+    "command": "riscv64-unknown-elf-readelf -h -A -s -r /mnt/d/college_study_materials/junior_year_fall/OS/lab3/evidence/module1/build/obj/kern/trap/trapentry.o",
+    "exit_code": 0
+  },
+  {
+    "name": "layout-compile",
+    "cwd": "/mnt/d/college_study_materials/junior_year_fall/OS/lab3/code",
+    "argv": [
+      "riscv64-unknown-elf-gcc",
+      "-mcmodel=medany",
+      "-std=gnu99",
+      "-Wall",
+      "-Werror",
+      "-nostdinc",
+      "-fno-builtin",
+      "-Ilibs",
+      "-Ikern/trap",
+      "-c",
+      "/mnt/d/college_study_materials/junior_year_fall/OS/lab3/evidence/module1/layout_check.c",
+      "-o",
+      "/mnt/d/college_study_materials/junior_year_fall/OS/lab3/evidence/module1/build/layout_check.o"
+    ],
+    "command": "riscv64-unknown-elf-gcc -mcmodel=medany -std=gnu99 -Wall -Werror -nostdinc -fno-builtin -Ilibs -Ikern/trap -c /mnt/d/college_study_materials/junior_year_fall/OS/lab3/evidence/module1/layout_check.c -o /mnt/d/college_study_materials/junior_year_fall/OS/lab3/evidence/module1/build/layout_check.o",
+    "exit_code": 0
+  },
+  {
+    "name": "kernel-build",
+    "cwd": "/mnt/d/college_study_materials/junior_year_fall/OS/lab3/code",
+    "argv": [
+      "make",
+      "V=",
+      "OBJDIR=../evidence/module1/build/obj",
+      "BINDIR=../evidence/module1/build/bin",
+      "-j2"
+    ],
+    "command": "make V= OBJDIR=../evidence/module1/build/obj BINDIR=../evidence/module1/build/bin -j2",
+    "exit_code": 2
+  },
+  {
+    "name": "object-check",
+    "argv": [
+      "python3",
+      "/mnt/d/college_study_materials/junior_year_fall/OS/lab3/evidence/module1/verify_object.py"
+    ],
+    "cwd": "/mnt/d/college_study_materials/junior_year_fall/OS/lab3",
+    "exit_code": 0
+  }
+]
