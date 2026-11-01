@@ -1,0 +1,337 @@
+# Role
+
+你是一名熟悉 RISC-V RV64、ucore、操作系统实验、Linux/WSL、Git 和 C/Assembly 的高级系统工程师。
+
+现在重新建立我的 NKU OS 2026 Lab3 工程。
+
+这次不要继续使用之前建立在 /home/andy 下的 Lab3 工作区。
+
+我要直接在 Windows D 盘的课程目录中创建一个全新的 Lab3 文件夹，并在官方 Lab3 原始代码基础上，迁移已经完成的 Lab2 代码。
+
+**本阶段需要实际创建工程、完成 Lab2 代码迁移并进行编译验证；但暂时不实现 Lab3 功能模块一和模块二。**
+
+# 1. Target Directory
+
+Windows 目标目录：
+
+D:\college_study_materials\junior_year_fall\OS\lab3
+
+WSL 对应路径：
+
+/mnt/d/college_study_materials/junior_year_fall/OS/lab3
+
+期望结构：
+
+```text
+OS/
+├── lab1/
+├── lab2/
+├── lab3/
+│   ├── code/
+│   │   ├── kern/
+│   │   ├── libs/
+│   │   ├── tools/
+│   │   └── Makefile
+│   ├── report/
+│   ├── evidence/
+│   └── reference/
+└── report_build/
+```
+
+注意：
+
+1. 绝对不能修改原来的 lab1、lab2、report_build。
+2. 先检查目标 lab3 是否已存在。
+3. 如果已存在且包含文件，不得删除、覆盖或自动清理；使用新的非冲突目录并报告。
+4. 后续的全部实验代码都放在这个新的 D 盘 Lab3 工程中。
+5. 优先通过 WSL Ubuntu 完成构建，不要把 Windows PowerShell 和 Linux 路径混用。
+6. 所有文件修改必须限制在新建的 Lab3 工程内。
+
+# 2. Sources of Truth
+
+课程官方网站：
+
+http://oslab.mobisys.top/lab2026/
+
+官方代码：
+
+http://oslab.mobisys.top/lab2026/lab3.zip
+
+团队 GitHub：
+
+https://github.com/iodwad/NKU_OS_2026
+
+已完成的 Lab2：
+
+https://github.com/iodwad/NKU_OS_2026/tree/lab2
+
+Lab2 参考提交：
+
+ea3300cd028a0af8ddea475b093a2a8f9c7f10a8
+
+课程 Lab3 骨架在 GitHub 上的导入提交：
+
+d0bb450d845bfd33b9e4584855d9194d93a9ab5c
+
+注意：团队 lab3 分支后续有人实现了 RESTORE_ALL 和 __alltraps。这次我希望自己重新完成，因此不能直接将队友已经完成的整个 lab3 分支复制为新工程。
+
+# 3. Task A：创建全新 Lab3 工程
+
+首先检查：
+
+- D 盘 OS 目录
+- 原 Lab2 目录
+- 新 Lab3 目标路径
+- WSL 和 RISC-V 工具链是否可用
+
+创建目标目录。
+
+优先从课程官网下载 lab3.zip，验证 ZIP 可以完整解压，检查内部目录结构和 Makefile。
+
+保存未经修改的官方 ZIP 到 reference/。
+
+从压缩包中定位真正的实验代码根目录，把内容放入 lab3/code/，不要出现 lab3/code/lab3/code 这种重复嵌套。
+
+如果官网下载失败：
+
+1. 检查是否已有本地官方 lab3.zip。
+2. 如果仍不可用，可以从 GitHub 的 d0bb450 原始骨架提交取得 lab3/code 作为替代起点。
+3. 明确说明此时使用的是 GitHub 导入版本，不能冒称已经验证与官方 ZIP 完全一致。
+
+禁止直接采用团队当前 lab3 分支中已实现的 RESTORE_ALL 和 __alltraps。
+
+创建 report/ 与 evidence/。
+
+检查最终目录是否正确。
+
+# 4. Task B：读取已经完成的 Lab2
+
+重点读取 GitHub origin/lab2 中：
+
+```text
+lab2/code/kern/mm/pmm.c
+lab2/code/kern/mm/best_fit_pmm.c
+lab2/code/kern/mm/best_fit_pmm.h
+lab2/code/kern/mm/memlayout.h
+lab2/code/kern/mm/pmm.h
+```
+
+如果本地 D:\college_study_materials\junior_year_fall\OS\lab2 中有已完成代码，也要对照。
+
+以 GitHub 上已经验证并提交的 Lab2 实现为主要迁移参考，避免误用本地历史草稿。
+
+重点是：
+
+- page_init()
+- best_fit_init()
+- best_fit_init_memmap()
+- best_fit_alloc_pages()
+- best_fit_free_pages()
+- best_fit_nr_free_pages()
+- best_fit_pmm_manager
+- 相关 free_area 数据结构和宏
+
+先对照 Lab3 的结构、接口、头文件与已有函数，确认需要迁移的最小代码范围。
+
+不要直接将整个 Lab2 源文件覆盖到 Lab3。
+
+# 5. Task C：实际迁移 Lab2 代码
+
+现在可以修改新建的 Lab3 工程中的 Lab2 占位位置。
+
+## C1. pmm.c
+
+目标：
+
+lab3/code/kern/mm/pmm.c
+
+将 Lab2 中已完成的 page_init() 迁移到 Lab3 对应的 `lab2` 注释位置。
+
+要求：
+
+- 保留原有 lab2 注释。
+- 保留 DTB 物理内存探测逻辑。
+- 保留物理地址范围和溢出检查。
+- 保留页描述符初始化。
+- 保留空闲内存区初始化。
+- 检查 Lab3 的地址常量是否与 Lab2 一致。
+- 对 Lab3 缺失的常量做最小、可解释的等价适配。
+- 保留 Lab3 已有的 local_intr_save/local_intr_restore 中断保护。
+- 不覆盖 Lab3 原有的 alloc_pages、free_pages、nr_free_pages 封装。
+
+如果迁移的 Best-Fit 完整且需要延续 Lab2 分配策略，将 pmm_manager 绑定为 best_fit_pmm_manager。
+
+但必须解释选择这一 manager 的原因，并保留已有检查机制。
+
+## C2. best_fit_pmm.c
+
+目标：
+
+lab3/code/kern/mm/best_fit_pmm.c
+
+迁移 Lab2 已完成的 Best-Fit 算法与管理器定义。
+
+要求：
+
+- 补齐 free_area。
+- 补齐 free_list/nr_free 宏。
+- 迁移五个 Best-Fit 核心函数。
+- 补齐 best_fit_pmm_manager。
+- 保留 Lab3 官方已有的 basic_check() 和 best_fit_check()。
+- 不重复定义函数。
+- 不改变算法的最小合适空闲块选择原则。
+- 确认内存分配、拆分、释放、相邻块合并均与原 Lab2 实现一致。
+
+## C3. 迁移约束
+
+不要迁移：
+
+- Buddy System 扩展
+- SLUB 扩展
+- Lab2 报告和无关测试
+- 与 Lab3 无关的调试补丁
+
+所有迁移都要能够追溯到 Lab2 的源代码或明确的 Lab3 兼容性调整。
+
+# 6. Task D：保持 Lab3 练习为原始待实现状态
+
+我之后要自己完整完成 Lab3 的功能模块一。
+
+因此本阶段：
+
+- 不实现 RESTORE_ALL。
+- 不实现 __alltraps。
+- 不实现 interrupt_handler。
+- 不实现 exception_handler。
+- 不复制队友后续已完成的 Trap 代码。
+- 不添加临时空函数欺骗编译器。
+- 不修改 SAVE_ALL。
+- 不修改 struct trapframe。
+- 不修改 trap() 函数签名。
+
+尤其检查：
+
+```text
+lab3/code/kern/trap/trapentry.S
+lab3/code/kern/trap/trap.c
+lab3/code/kern/trap/trap.h
+```
+
+确保这些文件仍处于官方课程骨架状态。
+
+保留 `lab3` 练习标记和 `YOUR CODE`，留待下一阶段我实现后再将本人负责的 `YOUR CODE` 替换为学号。
+
+注意：Lab2 已完成部分的原作者及学号注释应保留，不要更改为我的学号。
+
+# 7. Task E：真实编译验证
+
+在 WSL 中进入：
+
+```bash
+cd /mnt/d/college_study_materials/junior_year_fall/OS/lab3/code
+```
+
+首先检查：
+
+```bash
+which riscv64-unknown-elf-gcc
+which qemu-system-riscv64
+which make
+```
+
+然后执行：
+
+```bash
+make -j2
+```
+
+如果构建失败，请记录原始错误信息。
+
+重点判断：
+
+A. Lab2 迁移代码是否存在编译错误。
+
+B. 是否存在接口、数据结构或宏定义不兼容。
+
+C. 是否因为 Lab3 的 RESTORE_ALL、__alltraps 尚未实现而失败。
+
+D. 是否因为模块二 interrupt_handler、exception_handler 未实现而失败。
+
+必要时使用 Makefile 原有规则分别验证迁移源文件能否成功编译，不得修改官方 Makefile 来绕过问题。
+
+严格区分：
+
+- Lab2 迁移编译成功
+- Lab3 整体编译成功
+- Lab3 QEMU 运行成功
+
+三者不能混为一谈。
+
+本阶段不要求 make grade 达到满分，因为 Lab3 两个功能模块尚未完成。
+
+# 8. Task F：保存本阶段真实证据
+
+在新 Lab3 的 evidence/ 中保存：
+
+- 官方代码来源与 SHA256
+- Lab2 来源 commit SHA
+- Lab2 迁移前后代码差异
+- 实际编译命令
+- 编译日志
+- 编译退出码
+- 发现的兼容性问题
+- 修复过程与最终状态
+
+只记录真实发生的操作，不得编造错误、修复过程或成功截图。
+
+在 report/ 中创建一个简洁的 Markdown 实验记录初稿。
+
+本阶段只记录：
+
+- 实验环境
+- 代码来源
+- Lab2 迁移目标
+- 实际使用的 Prompt
+- 实际迁移情况
+- 编译与验证状态
+
+不要提前编造 Lab3 功能模块一的实现分析和测试结论。
+
+# 9. Specification
+
+必须遵守：
+
+1. 所有新增实验工作只发生在 D:\college_study_materials\junior_year_fall\OS\lab3。
+2. 不修改原 lab1、lab2。
+3. 不修改此前 /home/andy 下的 Git 仓库或 Lab3 worktree。
+4. 不删除或重置现有文件。
+5. 不覆盖团队已提交的成果。
+6. 不执行 git push。
+7. 本阶段不需要创建 commit。
+8. 保留课程原有 lab2、lab3 注释。
+9. 完整迁移 Lab2 必需功能，但不提前实现 Lab3 功能模块。
+10. 不修改官方评分脚本。
+11. 不为了消除错误而删除中断或异常处理调用。
+12. 不将尚未执行的测试描述为通过。
+
+# 10. Deliverables
+
+完成后输出中文报告，至少包含：
+
+一、最终 D 盘 Lab3 目录结构及绝对路径。
+
+二、官方 Lab3 代码来源与版本。
+
+三、Lab2 迁移清单及每个修改文件的说明。
+
+四、Lab2 与 Lab3 之间发现的接口差异及处理方案。
+
+五、实际编译结果与未解决错误。
+
+六、Lab3 功能模块一当前仍需要填写的位置。
+
+七、下一阶段实现 RESTORE_ALL、__alltraps 的建议顺序。
+
+完成创建、迁移和编译验证之后停止。
+
+不要继续自动实现 Lab3 功能模块一或模块二。

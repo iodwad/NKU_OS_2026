@@ -1,0 +1,26 @@
+# Build outputs
+/code/obj/
+/code/bin/
+*.o
+*.d
+*.a
+*.so
+*.pyc
+__pycache__/
+.cache/
+# QEMU and grader temporary outputs
+/code/.qemu*.out
+/code/.gdb.in
+/code/qemu*.log
+/code/serial*.log
+# Editor and operating system temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+Desktop.ini
+# Local-only synchronization receipts (avoid recursive publishing)
+/evidence/publish/

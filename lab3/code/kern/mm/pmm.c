@@ -35,7 +35,7 @@ static void check_alloc_page(void);
 
 // init_pmm_manager - initialize a pmm_manager instance
 static void init_pmm_manager(void) {
-    pmm_manager = &default_pmm_manager;
+    pmm_manager = &best_fit_pmm_manager;
     cprintf("memory management: %s\n", pmm_manager->name);
     pmm_manager->init();
 }
@@ -82,6 +82,59 @@ size_t nr_free_pages(void) {
 }
 
 //lab2 请补充你在lab2中的代码
+
+//lab2 function1 2412565
+static void page_init(void) {
+    extern char end[];
+    // Derive physical bounds from the Lab3 kernel mapping.
+    const uintptr_t kernel_begin_pa = KERNBASE - PHYSICAL_MEMORY_OFFSET;
+    const uintptr_t physical_memory_end = KERNTOP - PHYSICAL_MEMORY_OFFSET;
+
+    uint64_t mem_base = get_memory_base();
+    uint64_t mem_size = get_memory_size();
+    if (mem_base != DRAM_BASE || mem_size == 0 ||
+        mem_size > (uint64_t)-1 - mem_base) {
+        panic("invalid physical memory range from DTB");
+    }
+
+    uintptr_t mem_end = mem_base + mem_size; // exclusive
+    if (mem_end > physical_memory_end || mem_end <= kernel_begin_pa) {
+        panic("physical memory is incompatible with kernel layout");
+    }
+    cprintf("physical memory: [0x%016lx, 0x%016lx)\n",
+            (uintptr_t)mem_base, mem_end);
+
+    va_pa_offset = PHYSICAL_MEMORY_OFFSET;
+    npage = PPN(mem_end);
+    uintptr_t usable_end = ROUNDDOWN(mem_end, PGSIZE);
+    uintptr_t kernel_end_pa = PADDR(end);
+    if (kernel_end_pa < kernel_begin_pa || kernel_end_pa > usable_end) {
+        panic("kernel image exceeds physical memory");
+    }
+
+    uintptr_t pages_va = ROUNDUP((uintptr_t)end, PGSIZE);
+    uintptr_t pages_pa = PADDR(pages_va);
+    size_t page_count = npage - nbase;
+    if (page_count > (size_t)-1 / sizeof(struct Page) ||
+        pages_pa > usable_end ||
+        page_count * sizeof(struct Page) > usable_end - pages_pa) {
+        panic("physical memory cannot hold page descriptors");
+    }
+
+    pages = (struct Page *)pages_va;
+    for (size_t i = 0; i < page_count; i++) {
+        pages[i].ref = 0;
+        pages[i].flags = 0;
+        pages[i].property = 0;
+        SetPageReserved(&pages[i]);
+    }
+
+    uintptr_t free_start = ROUNDUP(pages_pa + page_count * sizeof(struct Page),
+                                   PGSIZE);
+    if (free_start < usable_end) {
+        init_memmap(pa2page(free_start), (usable_end - free_start) / PGSIZE);
+    }
+}
 
 /* pmm_init - initialize the physical memory management */
 void pmm_init(void) {

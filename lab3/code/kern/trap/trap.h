@@ -44,7 +44,11 @@ struct trapframe {
     uintptr_t epc;
     uintptr_t badvaddr;
     uintptr_t cause;
-};
+};/* gpr 保存通用寄存器的值。
+status 保存 sstatus。
+epc 保存 sepc。
+badvaddr 保存异常附加地址信息。
+cause 保存 Trap 原因。*/
 
 void trap(struct trapframe *tf);
 void idt_init(void);

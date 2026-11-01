@@ -1,0 +1,120 @@
+--- committed_lab2/pmm.c
++++ local_lab2/pmm.c
+@@ -1,6 +1,5 @@
+ #include <default_pmm.h>
+ #include <best_fit_pmm.h>
+-#include <buddy_pmm.h>
+ #include <defs.h>
+ #include <error.h>
+ #include <memlayout.h>
+@@ -14,9 +13,9 @@
+ 
+ // virtual address of physical page array
+ struct Page *pages;
+-// exclusive physical page number at the end of detected memory
++// amount of physical memory (in pages)
+ size_t npage = 0;
+-// offset between the kernel's virtual and physical addresses
++// the kernel image is mapped at VA=KERNBASE and PA=info.base
+ uint64_t va_pa_offset;
+ // memory starts at 0x80000000 in RISC-V
+ // DRAM_BASE defined in riscv.h as 0x80000000
+@@ -35,15 +34,15 @@
+ 
+ // init_pmm_manager - initialize a pmm_manager instance
+ static void init_pmm_manager(void) {
+-    // pmm_manager = &buddy_pmm_manager;
+-    pmm_manager = &best_fit_pmm_manager;
++    pmm_manager = &default_pmm_manager;
++    //当前选择 default_pmm_manager 作为物理内存分配器（First-Fit 算法）
+     cprintf("memory management: %s\n", pmm_manager->name);
+-    pmm_manager->init();
++    pmm_manager->init();//初始化这个分配器内部的数据结构
+ }
+ 
+ // init_memmap - call pmm->init_memmap to build Page struct for free memory
+ static void init_memmap(struct Page *base, size_t n) {
+-    pmm_manager->init_memmap(base, n);
++    pmm_manager->init_memmap(base, n);//从 base 指向的物理页描述符开始，有连续 100 个物理页可以使用
+ }
+ 
+ // alloc_pages - call pmm->alloc_pages to allocate a continuous n*PAGESIZE
+@@ -63,71 +62,26 @@
+     return pmm_manager->nr_free_pages();
+ }
+ 
+-//lab2 function1 2412565
+-static void page_init(void) {
+-    extern char end[];
+-
+-    uint64_t mem_base = get_memory_base();
+-    uint64_t mem_size = get_memory_size();
+-    if (mem_base != DRAM_BASE || mem_size == 0 ||
+-        mem_size > (uint64_t)-1 - mem_base) {
+-        panic("invalid physical memory range from DTB");
+-    }
+-
+-    uintptr_t mem_end = mem_base + mem_size; // exclusive
+-    if (mem_end > PHYSICAL_MEMORY_END || mem_end <= KERNEL_BEGIN_PADDR) {
+-        panic("physical memory is incompatible with kernel layout");
+-    }
+-    cprintf("physical memory: [0x%016lx, 0x%016lx)\n",
+-            (uintptr_t)mem_base, mem_end);
+-
+-    va_pa_offset = PHYSICAL_MEMORY_OFFSET;
+-    npage = PPN(mem_end);
+-    uintptr_t usable_end = ROUNDDOWN(mem_end, PGSIZE);
+-    uintptr_t kernel_end_pa = PADDR(end);
+-    if (kernel_end_pa < KERNEL_BEGIN_PADDR || kernel_end_pa > usable_end) {
+-        panic("kernel image exceeds physical memory");
+-    }
+-
+-    uintptr_t pages_va = ROUNDUP((uintptr_t)end, PGSIZE);
+-    uintptr_t pages_pa = PADDR(pages_va);
+-    size_t page_count = npage - nbase;
+-    if (page_count > (size_t)-1 / sizeof(struct Page) ||
+-        pages_pa > usable_end ||
+-        page_count * sizeof(struct Page) > usable_end - pages_pa) {
+-        panic("physical memory cannot hold page descriptors");
+-    }
+-
+-    pages = (struct Page *)pages_va;
+-    for (size_t i = 0; i < page_count; i++) {
+-        pages[i].ref = 0;
+-        pages[i].flags = 0;
+-        pages[i].property = 0;
+-        SetPageReserved(&pages[i]);
+-    }
+-
+-    uintptr_t free_start = ROUNDUP(pages_pa + page_count * sizeof(struct Page),
+-                                   PGSIZE);
+-    if (free_start < usable_end) {
+-        init_memmap(pa2page(free_start), (usable_end - free_start) / PGSIZE);
+-    }
+-}
++//lab2 function1 YOUR CODE
+ 
+ /* pmm_init - initialize the physical memory management */
+ void pmm_init(void) {
++    //Physical Memory Management，物理内存管理
++    //pmm_init() 相当于整个物理内存管理模块的总负责人
++
+     // We need to alloc/free the physical memory (granularity is 4KB or other size).
+     // So a framework of physical memory manager (struct pmm_manager)is defined in pmm.h
+     // First we should init a physical memory manager(pmm) based on the framework.
+     // Then pmm can alloc/free the physical memory.
+     // Now the first_fit/best_fit/worst_fit/buddy_system pmm are available.
+-    init_pmm_manager();
++    init_pmm_manager();//先准备一个内存分配器
+ 
+     // detect physical memory space, reserve already used memory,
+     // then use pmm->init_memmap to create free page list
+-    page_init();
++    page_init(); //找出哪些物理页可以交给分配器
+ 
+     // use pmm->check to verify the correctness of the alloc/free function in a pmm
+-    check_alloc_page();
++    check_alloc_page();  //检查分配器能否正常工作
+ 
+     extern char boot_page_table_sv39[];
+     satp_virtual = (pte_t*)boot_page_table_sv39;

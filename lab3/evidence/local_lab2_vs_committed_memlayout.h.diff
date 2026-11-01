@@ -1,0 +1,17 @@
+--- committed_lab2/memlayout.h
++++ local_lab2/memlayout.h
+@@ -32,9 +32,14 @@
+  * that convert Page to other data types, such as physical address.
+  * */
+ struct Page {
++    //一个用于记录物理页状态的 C 结构体
+     int ref;                        // page frame's reference counter
++    //是页面引用计数，用来记录该页被引用的情况
++
+     uint64_t flags;                 // array of flags that describe the status of the page frame
++    //flags 是状态标志。比如 PG_reserved 标志表示页面被保留，不能交给普通物理页分配器使用。
+     unsigned int property;          // the num of free block, used in first fit pm manager
++    //当一个 Page 描述符表示空闲内存块的头部时，property 记录这一块包含多少个连续空闲页
+     list_entry_t page_link;         // free list link
+ };
+ 

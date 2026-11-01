@@ -1,0 +1,10 @@
+{
+  "only_two_sources_modified": [
+    "kern/mm/best_fit_pmm.c",
+    "kern/mm/pmm.c"
+  ],
+  "trap_files_identical_to_skeleton": true,
+  "best_fit_core_verbatim": true,
+  "course_checks_unchanged": true,
+  "interrupt_wrappers_unchanged": true
+}

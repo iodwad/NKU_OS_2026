@@ -1,0 +1,44 @@
+[
+  {
+    "argv": [
+      "bash",
+      "-lc",
+      "which riscv64-unknown-elf-gcc; which qemu-system-riscv64; which make; uname -a; riscv64-unknown-elf-gcc --version; make --version"
+    ],
+    "cwd": "/mnt/d/college_study_materials/junior_year_fall/OS/lab3/code",
+    "exit_code": 0,
+    "log": "environment.log"
+  },
+  {
+    "argv": [
+      "make",
+      "-j2"
+    ],
+    "cwd": "/mnt/d/college_study_materials/junior_year_fall/OS/lab3/code",
+    "exit_code": 2,
+    "log": "make-j2.log"
+  },
+  {
+    "argv": [
+      "make",
+      "-j2",
+      "obj/kern/mm/pmm.o",
+      "obj/kern/mm/best_fit_pmm.o"
+    ],
+    "cwd": "/mnt/d/college_study_materials/junior_year_fall/OS/lab3/code",
+    "exit_code": 0,
+    "log": "make-migrated-objects.log"
+  },
+  {
+    "argv": [
+      "make",
+      "-B",
+      "-j2",
+      "obj/kern/mm/pmm.o",
+      "obj/kern/mm/best_fit_pmm.o"
+    ],
+    "cwd": "/mnt/d/college_study_materials/junior_year_fall/OS/lab3/code",
+    "exit_code": 0,
+    "log": "make-migrated-forced.log"
+  }
+]

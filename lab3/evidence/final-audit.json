@@ -1,0 +1,15 @@
+{
+  "changed_vs_skeleton": [
+    "kern/mm/best_fit_pmm.c",
+    "kern/mm/pmm.c"
+  ],
+  "all_other_source_files_identical": true,
+  "qemu_run": false,
+  "grade_run": false,
+  "full_build_exit": 2,
+  "migrated_forced_compile_exit": 0,
+  "build_artifact_path": "/mnt/d/college_study_materials/junior_year_fall/OS/lab3/code/obj",
+  "archive_state": "archived_verified",
+  "cleanup_state": "retained_pending_audit",
+  "reason": "Keep partial build artifacts for diagnosis; no temporary clone or extraction directory created."
+}

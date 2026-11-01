@@ -1,0 +1,19 @@
+{
+  "created_utc": "2026-10-31T06:30:49.925557+00:00",
+  "workspace": "/mnt/d/college_study_materials/junior_year_fall/OS/lab3",
+  "source_url": "http://oslab.mobisys.top/lab2026/lab3.zip",
+  "attempts": [
+    {
+      "url": "http://oslab.mobisys.top/lab2026/lab3.zip",
+      "error": "Remote end closed connection without response"
+    },
+    {
+      "url": "https://oslab.mobisys.top/lab2026/lab3.zip",
+      "error": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1007)>"
+    }
+  ],
+  "selected_source": "GitHub imported skeleton (not verified identical to official ZIP)",
+  "skeleton_commit": "d0bb450d845bfd33b9e4584855d9194d93a9ab5c",
+  "lab2_commit": "ea3300cd028a0af8ddea475b093a2a8f9c7f10a8",
+  "archive_sha256": "d6a467b7b5094a617872ac793fcfc2738b937599753808819bc42d3a6035898e"
+}
