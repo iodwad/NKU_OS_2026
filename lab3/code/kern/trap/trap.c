@@ -81,7 +81,86 @@ void print_regs(struct pushregs *gpr) {
 }
 
 //lab3 function2 YOUR CODE
+#include <sbi.h>
 
+/* Provisional number of TICK_NUM reports before shutdown. */
+#define SHUTDOWN_AFTER 10
+
+static size_t trap_instruction_length(uintptr_t epc) {
+    extern char etext[];
+
+    /* The current kernel text is readable through the boot mapping. */
+    if ((epc & 1) != 0 || epc < KERNBASE ||
+        epc > (uintptr_t)etext - sizeof(uint16_t)) {
+        return 0;
+    }
+
+    uint16_t instruction = *(const uint16_t *)epc;
+    size_t length = (instruction & 3) == 3 ? 4 : 2;
+    return length <= (uintptr_t)etext - epc ? length : 0;
+}
+
+void interrupt_handler(struct trapframe *tf) {
+    static size_t tick_reports;
+    static const char *const interrupt_names[] = {
+        [IRQ_U_SOFT] = "User software interrupt",
+        [IRQ_S_SOFT] = "Supervisor software interrupt",
+        [IRQ_H_SOFT] = "Hypervisor software interrupt",
+        [IRQ_M_SOFT] = "Machine software interrupt",
+        [IRQ_U_TIMER] = "User timer interrupt",
+        [IRQ_S_TIMER] = "Supervisor timer interrupt",
+        [IRQ_H_TIMER] = "Hypervisor timer interrupt",
+        [IRQ_M_TIMER] = "Machine timer interrupt",
+        [IRQ_U_EXT] = "User external interrupt",
+        [IRQ_S_EXT] = "Supervisor external interrupt",
+        [IRQ_H_EXT] = "Hypervisor external interrupt",
+        [IRQ_M_EXT] = "Machine external interrupt",
+        [IRQ_COP] = "Coprocessor interrupt",
+        [IRQ_HOST] = "Host interrupt",
+    };
+    uintptr_t cause = tf->cause & ~((uintptr_t)1 << 63);
+
+    if (cause == IRQ_S_TIMER) {
+        clock_set_next_event();
+        ticks++;
+        if (ticks != 0 && ticks % TICK_NUM == 0) {
+            print_ticks();
+            tick_reports++;
+            if (tick_reports >= SHUTDOWN_AFTER) {
+                sbi_shutdown();
+            }
+        }
+        return;
+    }
+
+    if (cause < sizeof(interrupt_names) / sizeof(interrupt_names[0])) {
+        cprintf("%s\n", interrupt_names[cause]);
+    } else {
+        cprintf("Unknown interrupt: cause %lu\n", (unsigned long)cause);
+        print_trapframe(tf);
+    }
+}
+
+void exception_handler(struct trapframe *tf) {
+    switch (tf->cause) {
+        case CAUSE_ILLEGAL_INSTRUCTION:
+            cprintf("Illegal instruction at 0x%016lx\n", (unsigned long)tf->epc);
+            break;
+        case CAUSE_BREAKPOINT:
+            cprintf("Breakpoint at 0x%016lx\n", (unsigned long)tf->epc);
+            break;
+        default:
+            print_trapframe(tf);
+            return;
+    }
+
+    size_t length = trap_instruction_length(tf->epc);
+    if (length != 0) {
+        tf->epc += length;
+    } else {
+        print_trapframe(tf);
+    }
+}
 
 static inline void trap_dispatch(struct trapframe *tf) {
     if ((intptr_t)tf->cause < 0) {
