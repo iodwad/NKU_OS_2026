@@ -1,0 +1,18 @@
+{
+  "context": {
+    "trapped_epc": "0xffffffffc0201a18",
+    "opcode": "0x9002",
+    "instruction_bytes": 2,
+    "expected_return_epc": "0xffffffffc0201a1a",
+    "test_return_pass_marker": true,
+    "evidence": "Opcode read from the exact scored image; successful return confirmed by original testcase sentinel"
+  },
+  "illegal": {
+    "trapped_epc": "0xffffffffc02019c8",
+    "opcode": "0x7b",
+    "instruction_bytes": 4,
+    "expected_return_epc": "0xffffffffc02019cc",
+    "test_return_pass_marker": true,
+    "evidence": "Opcode read from the exact scored image; successful return confirmed by original testcase sentinel"
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "original-grade": {
+    "argv": [
+      "make",
+      "grade"
+    ],
+    "cwd": "/mnt/d/college_study_materials/junior_year_fall/OS/lab3/code",
+    "exit": 2,
+    "duration_seconds": 61.34,
+    "makeflags": "GRADE_TMP=/mnt/d/CodexTaskTemp/lab3-grade-compat-20261105-01a1965e-c35ad817/original-grade-copy",
+    "preserved_images": {
+      "CONTEXT": {
+        "directory": "/mnt/d/CodexTaskTemp/lab3-grade-compat-20261105-01a1965e-c35ad817/images/original-grade/context",
+        "image_sha256": "50e4f921f5e57047f207b481c79393fdfb294009a8c0f52c914f30a84e2b31dc"
+      },
+      "ILLEGAL": {
+        "directory": "/mnt/d/CodexTaskTemp/lab3-grade-compat-20261105-01a1965e-c35ad817/images/original-grade/illegal",
+        "image_sha256": "355597d00e46331c304bf3ff87f9b32949073b506b434dc2be60425bcccc8c5d"
+      },
+      "TIMER": {
+        "directory": "/mnt/d/CodexTaskTemp/lab3-grade-compat-20261105-01a1965e-c35ad817/images/original-grade/timer",
+        "image_sha256": "1f3575407c89a9934000d0be025d0d918ca34e37dff2e11187b3878a3d100ea3"
+      }
+    }
+  },
+  "acceptance-clean": {
+    "argv": [
+      "make",
+      "clean"
+    ],
+    "cwd": "/mnt/d/college_study_materials/junior_year_fall/OS/lab3/code",
+    "exit": 0,
+    "duration_seconds": 0.11,
+    "makeflags": "",
+    "preserved_images": {}
+  },
+  "acceptance-build": {
+    "argv": [
+      "make",
+      "-B",
+      "-j2"
+    ],
+    "cwd": "/mnt/d/college_study_materials/junior_year_fall/OS/lab3/code",
+    "exit": 0,
+    "duration_seconds": 2.36,
+    "makeflags": "",
+    "preserved_images": {}
+  },
+  "compat-grade": {
+    "argv": [
+      "make",
+      "grade"
+    ],
+    "cwd": "/mnt/d/college_study_materials/junior_year_fall/OS/lab3/code",
+    "exit": 0,
+    "duration_seconds": 40.66,
+    "makeflags": "GRADE_TMP=/mnt/d/CodexTaskTemp/lab3-grade-compat-20261105-01a1965e-c35ad817/compat-grade-copy",
+    "preserved_images": {
+      "CONTEXT": {
+        "directory": "/mnt/d/CodexTaskTemp/lab3-grade-compat-20261105-01a1965e-c35ad817/images/compat-grade/context",
+        "image_sha256": "50e4f921f5e57047f207b481c79393fdfb294009a8c0f52c914f30a84e2b31dc"
+      },
+      "ILLEGAL": {
+        "directory": "/mnt/d/CodexTaskTemp/lab3-grade-compat-20261105-01a1965e-c35ad817/images/compat-grade/illegal",
+        "image_sha256": "355597d00e46331c304bf3ff87f9b32949073b506b434dc2be60425bcccc8c5d"
+      },
+      "TIMER": {
+        "directory": "/mnt/d/CodexTaskTemp/lab3-grade-compat-20261105-01a1965e-c35ad817/images/compat-grade/timer",
+        "image_sha256": "1f3575407c89a9934000d0be025d0d918ca34e37dff2e11187b3878a3d100ea3"
+      }
+    }
+  },
+  "independent-context": {
+    "argv": [
+      "timeout",
+      "15s",
+      "qemu-system-riscv64",
+      "-machine",
+      "virt",
+      "-nographic",
+      "-bios",
+      "default",
+      "-kernel",
+      "/mnt/d/CodexTaskTemp/lab3-grade-compat-20261105-01a1965e-c35ad817/images/compat-grade/context/ucore.img",
+      "-serial",
+      "stdio",
+      "-monitor",
+      "none",
+      "-no-reboot"
+    ],
+    "cwd": "/mnt/d/college_study_materials/junior_year_fall/OS/lab3/code",
+    "exit": 0,
+    "duration_seconds": 11.12,
+    "makeflags": "",
+    "preserved_images": {}
+  },
+  "independent-illegal": {
+    "argv": [
+      "timeout",
+      "15s",
+      "qemu-system-riscv64",
+      "-machine",
+      "virt",
+      "-nographic",
+      "-bios",
+      "default",
+      "-kernel",
+      "/mnt/d/CodexTaskTemp/lab3-grade-compat-20261105-01a1965e-c35ad817/images/compat-grade/illegal/ucore.img",
+      "-serial",
+      "stdio",
+      "-monitor",
+      "none",
+      "-no-reboot"
+    ],
+    "cwd": "/mnt/d/college_study_materials/junior_year_fall/OS/lab3/code",
+    "exit": 0,
+    "duration_seconds": 11.27,
+    "makeflags": "",
+    "preserved_images": {}
+  },
+  "independent-timer": {
+    "argv": [
+      "timeout",
+      "15s",
+      "qemu-system-riscv64",
+      "-machine",
+      "virt",
+      "-nographic",
+      "-bios",
+      "default",
+      "-kernel",
+      "/mnt/d/CodexTaskTemp/lab3-grade-compat-20261105-01a1965e-c35ad817/images/compat-grade/timer/ucore.img",
+      "-serial",
+      "stdio",
+      "-monitor",
+      "none",
+      "-no-reboot"
+    ],
+    "cwd": "/mnt/d/college_study_materials/junior_year_fall/OS/lab3/code",
+    "exit": 0,
+    "duration_seconds": 11.1,
+    "makeflags": "",
+    "preserved_images": {}
+  }
+}

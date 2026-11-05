@@ -1,0 +1,54 @@
+{
+  "loader": {
+    "argv": [
+      "timeout",
+      "3s",
+      "qemu-system-riscv64",
+      "-machine",
+      "virt",
+      "-nographic",
+      "-bios",
+      "default",
+      "-device",
+      "loader,file=/mnt/d/CodexTaskTemp/lab3-grade-compat-20261105-01a1965e-c35ad817/images/original-grade/context/ucore.img,addr=0x80200000",
+      "-serial",
+      "stdio",
+      "-monitor",
+      "none",
+      "-no-reboot"
+    ],
+    "exit": 124,
+    "image_sha256": "50e4f921f5e57047f207b481c79393fdfb294009a8c0f52c914f30a84e2b31dc",
+    "handoff": [
+      "Domain0 Next Address      : 0x0000000000000000"
+    ],
+    "context_pass": false,
+    "kernel_started": false
+  },
+  "kernel": {
+    "argv": [
+      "timeout",
+      "3s",
+      "qemu-system-riscv64",
+      "-machine",
+      "virt",
+      "-nographic",
+      "-bios",
+      "default",
+      "-kernel",
+      "/mnt/d/CodexTaskTemp/lab3-grade-compat-20261105-01a1965e-c35ad817/images/original-grade/context/ucore.img",
+      "-serial",
+      "stdio",
+      "-monitor",
+      "none",
+      "-no-reboot"
+    ],
+    "exit": 124,
+    "image_sha256": "50e4f921f5e57047f207b481c79393fdfb294009a8c0f52c914f30a84e2b31dc",
+    "handoff": [
+      "Domain0 Next Address      : 0x0000000080200000"
+    ],
+    "context_pass": true,
+    "kernel_started": true
+  }
+}

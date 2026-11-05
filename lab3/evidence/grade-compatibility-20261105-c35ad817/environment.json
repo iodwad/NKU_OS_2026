@@ -1,0 +1,54 @@
+{
+  "tools": {
+    "qemu": {
+      "argv": [
+        "qemu-system-riscv64",
+        "--version"
+      ],
+      "exit": 0,
+      "stdout": "QEMU emulator version 6.2.0 (Debian 1:6.2+dfsg-2ubuntu6.31)\nCopyright (c) 2003-2021 Fabrice Bellard and the QEMU Project developers\n",
+      "stderr": ""
+    },
+    "gcc": {
+      "argv": [
+        "riscv64-unknown-elf-gcc",
+        "--version"
+      ],
+      "exit": 0,
+      "stdout": "riscv64-unknown-elf-gcc () 10.2.0\nCopyright (C) 2020 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+      "stderr": ""
+    },
+    "ld": {
+      "argv": [
+        "riscv64-unknown-elf-ld",
+        "--version"
+      ],
+      "exit": 0,
+      "stdout": "GNU ld () 2.35.1\nCopyright (C) 2020 Free Software Foundation, Inc.\nThis program is free software; you may redistribute it under the terms of\nthe GNU General Public License version 3 or (at your option) a later version.\nThis program has absolutely no warranty.\n",
+      "stderr": ""
+    },
+    "make": {
+      "argv": [
+        "make",
+        "--version"
+      ],
+      "exit": 0,
+      "stdout": "GNU Make 4.3\nBuilt for x86_64-pc-linux-gnu\nCopyright (C) 1988-2020 Free Software Foundation, Inc.\nLicense GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>\nThis is free software: you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law.\n",
+      "stderr": ""
+    },
+    "wsl": {
+      "argv": [
+        "uname",
+        "-a"
+      ],
+      "exit": 0,
+      "stdout": "Linux Andy 6.6.87.2-microsoft-standard-WSL2 #1 SMP PREEMPT_DYNAMIC Thu Jun  5 18:30:46 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux\n",
+      "stderr": ""
+    }
+  },
+  "firmware_path": "/usr/share/qemu/opensbi-riscv64-generic-fw_dynamic.bin",
+  "firmware_sha256": "64dd87c5e3f4c7fcdd3a2a1bd8025b1991b0170610e7217a2a033fd6280f94fc",
+  "original_makefile_sha256": "1f6da499dd2f18851429101aa600d2c7f944bdd5b4f0652d3231e3dad02e68a6",
+  "original_grader_sha256": "52a21695266a525bccdcf5bbff4867288f70bfae2b4bd37c47ab2e3369893140",
+  "local_git_head": "f4409165e66f4c0f79c00e72e2189ec80499da2d"
+}

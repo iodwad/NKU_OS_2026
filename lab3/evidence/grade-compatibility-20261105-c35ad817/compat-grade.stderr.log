@@ -1,0 +1,8 @@
+tar: .: time stamp 2026-11-05 19:19:27 is 0.737274662 s in the future
+gmake[1]: Warning: File 'Makefile' has modification time 1 s in the future
+gmake[1]: warning:  Clock skew detected.  Your build may be incomplete.
+gmake[1]: Warning: File 'Makefile' has modification time 1 s in the future
+gmake[1]: Warning: File 'obj/kern/test/test_lab3_context.d' has modification time 0.019 s in the future
+gmake[1]: warning:  Clock skew detected.  Your build may be incomplete.
+gmake[1]: Warning: File 'obj/kern/init/init.d' has modification time 0.089 s in the future
+gmake[1]: warning:  Clock skew detected.  Your build may be incomplete.
