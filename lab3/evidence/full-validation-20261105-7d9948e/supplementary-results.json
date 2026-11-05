@@ -1,0 +1,157 @@
+{
+  "context": {
+    "commands": {
+      "clean": {
+        "argv": [
+          "make",
+          "--quiet",
+          "--no-print-directory",
+          "clean"
+        ],
+        "exit": 0
+      },
+      "build": {
+        "argv": [
+          "make",
+          "--quiet",
+          "--no-print-directory",
+          "DEFS+=-DGRADE_LAB3_CONTEXT"
+        ],
+        "exit": 0
+      },
+      "run": {
+        "argv": [
+          "timeout",
+          "8s",
+          "qemu-system-riscv64",
+          "-machine",
+          "virt",
+          "-nographic",
+          "-bios",
+          "default",
+          "-kernel",
+          "bin/ucore.img",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-no-reboot"
+        ],
+        "exit": 124
+      }
+    },
+    "official_make_grade": false,
+    "matched_all": true,
+    "observed": [
+      "Domain0 Next Address      : 0x0000000080200000",
+      "check_alloc_page() succeeded!",
+      "Breakpoint at 0xffffffffc0201a18",
+      "[Test 1] Trap entry and breakpoint return: PASS (35/35)"
+    ],
+    "count_100_ticks": 7
+  },
+  "illegal": {
+    "commands": {
+      "clean": {
+        "argv": [
+          "make",
+          "--quiet",
+          "--no-print-directory",
+          "clean"
+        ],
+        "exit": 0
+      },
+      "build": {
+        "argv": [
+          "make",
+          "--quiet",
+          "--no-print-directory",
+          "DEFS+=-DGRADE_LAB3_ILLEGAL"
+        ],
+        "exit": 0
+      },
+      "run": {
+        "argv": [
+          "timeout",
+          "8s",
+          "qemu-system-riscv64",
+          "-machine",
+          "virt",
+          "-nographic",
+          "-bios",
+          "default",
+          "-kernel",
+          "bin/ucore.img",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-no-reboot"
+        ],
+        "exit": 124
+      }
+    },
+    "official_make_grade": false,
+    "matched_all": true,
+    "observed": [
+      "Domain0 Next Address      : 0x0000000080200000",
+      "check_alloc_page() succeeded!",
+      "Illegal instruction at 0xffffffffc02019c8",
+      "Supervisor software interrupt",
+      "Unknown interrupt: cause 15",
+      "  cause    0x00000014",
+      "[Test 2] handler fallback completed\\n[Test 2] Illegal instruction return: PASS (25/25)"
+    ],
+    "count_100_ticks": 7
+  },
+  "timer": {
+    "commands": {
+      "clean": {
+        "argv": [
+          "make",
+          "--quiet",
+          "--no-print-directory",
+          "clean"
+        ],
+        "exit": 0
+      },
+      "build": {
+        "argv": [
+          "make",
+          "--quiet",
+          "--no-print-directory",
+          "DEFS+=-DGRADE_LAB3_TIMER"
+        ],
+        "exit": 0
+      },
+      "run": {
+        "argv": [
+          "timeout",
+          "30s",
+          "qemu-system-riscv64",
+          "-machine",
+          "virt",
+          "-nographic",
+          "-bios",
+          "default",
+          "-kernel",
+          "bin/ucore.img",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-no-reboot"
+        ],
+        "exit": 0
+      }
+    },
+    "official_make_grade": false,
+    "matched_all": true,
+    "observed": [
+      "Domain0 Next Address      : 0x0000000080200000",
+      "check_alloc_page() succeeded!",
+      "[Test 3] Sustained supervisor timer: PASS (40/40, ticks=200)"
+    ],
+    "count_100_ticks": 10
+  }
+}

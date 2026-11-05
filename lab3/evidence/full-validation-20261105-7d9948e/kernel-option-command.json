@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "timeout",
+    "4s",
+    "qemu-system-riscv64",
+    "-machine",
+    "virt",
+    "-nographic",
+    "-bios",
+    "default",
+    "-kernel",
+    "bin/ucore.img",
+    "-serial",
+    "stdio",
+    "-monitor",
+    "none",
+    "-no-reboot",
+    "-d",
+    "int,guest_errors",
+    "-D",
+    "/mnt/d/CodexTaskTemp/lab3-audit-20261105-01a1965e-a96b31c4/repo/lab3/evidence/full-validation-20261105-7d9948e/kernel-option-trace.log"
+  ],
+  "exit": 124,
+  "diagnostic_only": true
+}

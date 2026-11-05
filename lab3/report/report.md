@@ -14,9 +14,9 @@
 
 | 成员 | 负责的练习/模块 |
 |---|---|
-| 张宸笛号—2412565 | |
-| 朱泽帅—2411560 | |
-| 马梓涵—2413902 | |
+| 张宸笛号—2412565 | 功能模块二：中断与异常处理 |
+| 朱泽帅—2411560 | 功能模块一：Trap 上下文恢复与 Trap 入口 |
+| 马梓涵—2413902 | 当前分工待核实 |
 
 实验报告如何分工：
 
@@ -41,6 +41,8 @@
 ---
 
 ## 二、实验环境
+
+本轮构建与验证在 WSL2 Ubuntu 22.04 运行，使用 RISC-V 交叉编译器 GCC 10.2.0、GNU ld 2.35.1、GNU Make 4.3 和 QEMU 6.2.0，QEMU 默认固件为 OpenSBI 0.9。基线为团队 `lab3` 提交 `7d9948ec8e284856ee2689489cec782c09b6005b`。版本与命令见 [环境记录](../evidence/full-validation-20261105-7d9948e/environment.json) 和 [执行记录](../evidence/full-validation-20261105-7d9948e/commands.json)。
 
 ### AI 工具使用情况
 
@@ -235,17 +237,58 @@ RISC-V 调用约定使用 `a0` 传递第一个指针参数，因此传入的是 
 
 ### 4.3 功能模块二：中断与异常处理
 
-团队提交 `0de568894a7787cca404ca1b524b23febc4e79b5` 在 [`kern/trap/trap.c`](../code/kern/trap/trap.c) 中实现了 `interrupt_handler()` 和 `exception_handler()`。`trap_dispatch()` 根据 `scause` 的最高位分派给两个处理函数。
+**负责人：2412565—张宸笛号**
 
-Supervisor Timer 中断先调用 `clock_set_next_event()`，再递增 `ticks`。每累计 100 ticks 输出一次统计，当前代码累计输出 10 次后调用 `sbi_shutdown()`。断点和非法指令处理会打印异常地址，检查 `epc` 的对齐和内核代码范围，再读取指令首半字，按 2 字节或 4 字节更新 `tf->epc`。无法安全判定长度时打印 Trap frame，保留原返回地址。
+#### 4.3.1 功能与接口理解
 
-以上行为来自源码核对。模块二的原始 Prompt、调试过程和运行结果待补充。
+`trap(tf)` 接收汇编入口保存的现场，`trap_dispatch()` 将 `cause` 解释为有符号整数，按 RV64 的第 63 位将中断和异常交给不同函数。[`trap.c`](../code/kern/trap/trap.c) 中的 `interrupt_handler(tf)` 负责定时器和中断诊断，`exception_handler(tf)` 负责实验要求的异常。`trap_instruction_length(epc)` 是内部辅助函数。模块二改写 `tf->epc` 后，模块一从同一帧恢复 `sepc`，`sret` 才会使用新的地址。
+
+#### 4.3.2 中断处理机制
+
+`interrupt_handler()` 清除 `cause` 的第 63 位，再以原因编号分类。S 模式时钟中断的编号为 `IRQ_S_TIMER=5`。处理函数先调用 `clock_set_next_event()`，通过 SBI 将下一事件设置为 `rdtime + timebase`，再递增 `ticks`。`TICK_NUM` 为 100，每达到一个正整数倍就调用已有的 `print_ticks()`。
+
+`SHUTDOWN_AFTER=10` 来自正式 Prompt 的暂定约定，源码也保留了暂定注释。它统计的是 `print_ticks()` 的调用次数，常规配置下对应第 1000 个 tick，随后调用 `sbi_shutdown()`。官方持续时钟用例要求到达 200 ticks，并未把 10 次统计规定为评分条件。原有 `DEBUG_GRADE` 条件分支仍由框架控制。
+
+其他已知编号按软件、时钟、外部中断等名称输出，其中 S 模式软件中断输出 `Supervisor software interrupt`。未知编号输出原因值与 Trap frame。两类分支不重新设置时钟、不累加 `ticks`。打印名称仅提供诊断，设备应答、清除待决位与中断控制器处理需要相应驱动。
+
+#### 4.3.3 异常处理机制
+
+非法指令和断点分别打印 `Illegal instruction at`、`Breakpoint at` 与触发地址。辅助函数要求 `epc` 按半字对齐，且首半字落在 `[KERNBASE, etext)`。读取首半字后，在本实验的 16/32 位编码范围内，低两位为 `11` 时按 4 字节处理，否则按 2 字节处理。完整指令仍须在内核文本范围内才会推进 `tf->epc`。这一区别使普通 `EBREAK`、压缩 `C.EBREAK` 和测试中的 4 字节非法指令不必使用同一固定偏移。
+
+地址不满足检查时，代码打印 Trap frame 并保留原 EPC。其他异常直接打印现场并返回。若同一条指令或取指条件保持不变，`sret` 后可能再次触发相同异常。这里的范围检查依赖当前内核文本映射可读，没有通用的用户地址或页表探测恢复机制。
+
+#### 4.3.4 SPEC 的编写
+
+两项规格的共同前置条件是 `tf` 指向有效 Trap frame。中断还依赖已初始化的时钟与有效的 `cause`。异常依赖保存的 `epc` 和异常编号。后置条件落在可核对的状态变化上，包括是否安排下次时钟、是否计数、是否更新 EPC，以及哪些字段保持原值。
+
+| 接口与条件 | Case 1 | Case 2 | Case 3 | Requirements 与实现对应 |
+|---|---|---|---|---|
+| `interrupt_handler()` | S 模式时钟重新安排事件并计数，周期输出，按真实统计次数检查关机 | 其他已知类型按编号打印，不计时 | 未知编号打印原因和现场，保留 EPC 与计数 | 清除最高位后比较编号，也允许课程测试直接传入 15。计时路径复用框架接口，200 ticks 由测试读取真实计数 |
+| `exception_handler()` | 非法指令输出地址，按编码和边界推进 EPC | 断点同样按 2 或 4 字节推进 EPC | 其余异常仅输出 Trap frame，保留现场 | 使用现有异常常量和固定输出子串。读指令前检查地址，只有可判定长度时才更新 `tf->epc` |
+
+关机阈值、诊断输出与返回行为分开写入约束，可避免通过硬编码测试字符串替代实际中断处理。把诊断和恢复分开，也能明确打印现场后是否仍可能返回到同一异常地址。
+
+#### 4.3.5 Prompt 的编写与 AI 协作过程
+
+张宸笛号提供的附件包含两阶段文本。第一阶段仅收集可直接用于实现的 RELY，包括真实宏、Trap frame、已有函数和评分输出，要求只读项目。第二阶段以四段式限制修改区、接口和行为，覆盖三类中断和三类异常，并规定真实编译及测试。两阶段按原顺序收录在 [原始 Prompt](./prompt.md)。现有附件可以确认这两份输入的内容，未提供逐轮模型回复或调试对话。
+
+#### 4.3.6 实现过程与实际问题
+
+团队提交 `0de568894a7787cca404ca1b524b23febc4e79b5` 增加了 `interrupt_handler()`、`exception_handler()`、`trap_instruction_length()` 及内部阈值，原有分发和返回接口保持不变。本轮将遗留的模块二占位注释改为学号 `2412565`。模块一实现期的完整内核曾因两个函数未定义而编译失败。当前完整源码已通过构建，缺少队友实现期间单独的编译失败与修复日志。
+
+本轮原版评分确实出现三组失败。启动诊断表明默认 OpenSBI 交接地址为 `0x0`，三个用例没有进入内核测试。使用相同测试源和镜像构建方式，将启动诊断参数改为 `-kernel` 后重新取得用例输出，详见第五章。没有把补充运行计入正式评分。`trap()` 上方的 `iret` 是历史注释，实际返回指令为 `sret`。
+
+#### 4.3.7 验证边界及实现局限
+
+断点、非法指令和持续时钟用例由真实 QEMU Trap 触发。回退用例则构造 `tf` 后直接调用处理函数，覆盖软件中断分类、未知中断和未知异常的诊断输出，未经过硬件入口和 `sret`。Context 测试比较选定的整数寄存器，不能扩展为所有 GPR 或浮点、向量状态的验证。
+
+当前实现依赖可读的内核文本、有效内核栈与已有 SBI 定时器。超出文本范围的 EPC、未知异常以及持续挂起的设备中断均没有通用恢复策略。已打印异常或中断名称只能证明到达了相应分支。
 
 ---
 
 ## 五、测试与验证
 
-本章分别记录迁移和模块一阶段的构建证据，以及模块二提交后的验证范围。**报告所依据的记录未包含模块二提交后的 QEMU/GDB 或 Lab3 `make grade` 结果。**
+本章区分早期编译与静态验证、当前完整内核构建、原版评分和补充启动诊断。评分分数以原版脚本输出为准。
 
 ### 5.1 Lab2 迁移源文件编译
 
@@ -261,7 +304,7 @@ Supervisor Timer 中断先调用 `clock_set_next_event()`，再递增 `ticks`。
 
 发布后 [`publication-checks.json`](https://github.com/iodwad/NKU_OS_2026/blob/9f292ecd0f239d3d44fe05f60156671f964f750f/lab3/evidence/module1/publication-checks.json) 记录历史脚本 15/16，原因是原脚本固定匹配 `jal trap`，而当前实现为 `call trap`；独立调用检查通过。此处应把“核验脚本的字面匹配失败”和“汇编功能检查失败”分开描述。相关证据为 [`publication-assemble.log`](https://github.com/iodwad/NKU_OS_2026/blob/9f292ecd0f239d3d44fe05f60156671f964f750f/lab3/evidence/module1/publication-assemble.log)、[`publication-objdump.log`](https://github.com/iodwad/NKU_OS_2026/blob/9f292ecd0f239d3d44fe05f60156671f964f750f/lab3/evidence/module1/publication-objdump.log)。
 
-### 5.4 完整内核构建及失败归因
+### 5.4 完整内核构建
 
 模块二提交前，实际执行完整内核构建时，`make` 退出码为 2，编译停在 `kern/trap/trap.c`，未进入链接。主要错误为：
 
@@ -271,20 +314,56 @@ trap.c:92: implicit declaration of function 'exception_handler'
 cc1: all warnings being treated as errors
 ```
 
-该日志记录了两个处理函数尚未实现时的失败。当前源码已包含两者，报告尚无对应版本的完整内核构建记录。历史输出及退出状态见 [`kernel-build.log`](../evidence/module1/kernel-build.log) 和 [`kernel-build.exit`](../evidence/module1/kernel-build.exit)。
+该日志记录了两个处理函数尚未实现时的失败。当前源码已包含两者，下面记录相同工具链下对最新提交的构建。历史输出及退出状态见 [`kernel-build.log`](../evidence/module1/kernel-build.log) 和 [`kernel-build.exit`](../evidence/module1/kernel-build.exit)。
 
-### 5.5 课程评分项目与后续运行验证范围
+在独立副本执行 `make -j2`，退出码为 **0**。输出包含 `+ ld bin/kernel` 及生成 `bin/ucore.img` 的 `objcopy` 命令。原始证据见 [标准输出](../evidence/full-validation-20261105-7d9948e/make.stdout.log)、[标准错误](../evidence/full-validation-20261105-7d9948e/make.stderr.log) 和 [退出码](../evidence/full-validation-20261105-7d9948e/make.exit)。运行验证以该提交的代码为基准，审阅版随后仅补了模块二学号注释。
 
-当前 [`tools/grade.sh`](../code/tools/grade.sh) 定义了三组评分项目：
+### 5.5 原版课程评分与补充运行
 
-| 评分项目 | 分值 | 需要验证的行为 | 当前状态 |
-|---|---:|---|---|
-| Trap 入口、寄存器恢复与断点返回 | 35 | `ebreak` 处理后正确恢复现场并继续执行 | 尚未运行 |
-| 非法指令及异常返回 | 25 | 处理非法指令、正确推进 `epc`，并覆盖回退分支 | 尚未运行 |
-| 持续 Supervisor Timer | 40 | 重设时钟事件、连续处理中断并累计至 200 ticks | 尚未运行 |
+原版 `make grade` 通过 `GRADE_TMP` 将临时注入目录定位到本次 D 盘隔离工作区。注入器、测试源、评分脚本和 Makefile 保持原样。三组测试各自编译并启动 QEMU，脚本均未找到通过标记，输出 **0/100**，顶层 make 退出码 **2**。原始 [评分输出](../evidence/full-validation-20261105-7d9948e/grade.stdout.log)、[标准错误](../evidence/full-validation-20261105-7d9948e/grade.stderr.log) 和 [退出码](../evidence/full-validation-20261105-7d9948e/grade.exit) 均已保留。标准错误还记录了 WSL 文件时间戳偏差警告，三组内核均完成链接。
 
-这些项目同时依赖模块二的处理逻辑。后续应在核对当前版本的完整内核构建后执行 `make grade`，保留原始终端输出；必要时用 QEMU/GDB 检查 `trap(tf)` 入口参数、`__trapret` 前后的寄存器、`sepc` 和 `sret` 返回位置。在实际执行前，本报告不填写分数、不提供虚构截图，也不把静态检查的 16/16 当作正式评分结果。
+| 官方测试 | 原版 `make grade` 结果 | 使用 `-kernel` 的补充观察 |
+|---|---:|---|
+| Trap 上下文和断点返回 | FAIL（0/35） | 断点输出和 Context PASS 标记均出现。见 [串口](../evidence/full-validation-20261105-7d9948e/supplementary-context-run.stdout.log) |
+| 非法指令及回退处理 | FAIL（0/25） | 非法指令返回、软件中断与未知原因的诊断均出现。见 [串口](../evidence/full-validation-20261105-7d9948e/supplementary-illegal-run.stdout.log) |
+| 持续 Supervisor Timer | FAIL（0/40） | 两次周期输出后出现 `ticks=200` 的 PASS 标记。见 [串口](../evidence/full-validation-20261105-7d9948e/supplementary-timer-run.stdout.log) |
+
+原评分命令用 `-device loader,file=bin/ucore.img,addr=0x80200000` 放置镜像。三组原始串口均显示 OpenSBI 的 `Domain0 Next Address` 为 `0x0`。受限 QEMU 追踪显示随后在 `0x0` 反复取指失败，早于内核的 DTB 初始化和 Trap 测试。追踪中较早的 `pmpaddr16` 探测在可启动的补充运行也出现。交接证据见 [原始串口](../evidence/full-validation-20261105-7d9948e/qemu-timer.serial.log)、[QEMU 追踪](../evidence/full-validation-20261105-7d9948e/diagnostic-qemu-trace.log) 和 [GDB 核对](../evidence/full-validation-20261105-7d9948e/diagnostic-gdb.stdout.log)。
+
+补充运行复用原版注入副本，对三组宏分别重新编译，并使用同一 QEMU 的 `-kernel bin/ucore.img` 进行交接。OpenSBI 此时报告入口 `0x80200000`，三组均出现对应测试标记和评分脚本所查的输出子串。内核启动还输出 `check_alloc_page() succeeded!`，表明这三个补充用例均经过了框架的内存分配自检。前两组出现标记后继续运行，8 秒超时退出码为 124。时钟组达到 200 ticks 后继续计时，串口共输出 10 次 `100 ticks`，QEMU 退出码为 0，与源码的暂定关机阈值一致。命令、退出码和标记见 [补充结果](../evidence/full-validation-20261105-7d9948e/supplementary-results.json)。补充运行没有产生新的正式评分。
 
 ### 5.6 阶段性结论与未覆盖范围
 
-Lab2 迁移的源文件已通过单独编译，模块一的 `RESTORE_ALL` 和 `__alltraps` 已完成静态布局与汇编对象核对。模块二已有处理函数，目前有源码可核对。当前版本的完整内核构建、实际 Trap 的上下文恢复、断点与非法指令返回，以及持续时钟中断的测试结果仍待补充。
+在当前基线下，完整内核能够编译、链接及生成镜像。官方评分受本机 QEMU/OpenSBI 启动交接阻塞，补充运行覆盖了评分源中的三个用例。Context 用例显式比较 `t0–t6`、`s0–s11`、`a1–a7`，共 26 个整数寄存器。它没有逐一比对 `ra`、`sp`、`gp`、`tp` 或 `a0`。课程测试的汇编例程写入被调用者保存的 `s` 寄存器后直接返回，未按普通 C 调用约定另存调用者原值。本次未观察到由此导致的测试失败，结论仍限于现有工具链和用例。
+
+非法指令用例使用 4 字节编码，回退路径使用人工 Trap frame。测试未穷举 16/32 位断点组合、不可读 EPC、缺页恢复、硬件设备应答、多核和浮点或向量状态。原版评分的启动参数兼容性仍需单独处理。
+
+---
+
+## 六、实验总结与收获
+
+### 6.1 实验知识与 OS 原理的联系
+
+| 实验机制 | 对应 OS 原理 | 本实验中的体现 |
+|---|---|---|
+| 中断与异常 | 异步事件与同步异常 | 定时器与当前指令无关，断点和非法指令由当前指令触发。两者使用统一 Trap 入口 |
+| RISC-V 特权级 | 硬件保护与特权切换 | OpenSBI 运行于 M 模式，实验内核在 S 模式处理委托给它的 Trap |
+| CSR 与 Trap frame | 硬件状态与软件保存的上下文 | `sepc`、`sstatus`、`scause` 和附加异常信息由硬件提供，汇编将它们与整数寄存器保存到栈上 |
+| 保存与恢复 | 异步执行点的透明性 | 入口保存现场，返回前最后恢复 `sp`，让此前的加载始终使用同一个 Trap frame 基址 |
+| `ret` 与 `sret` | 普通调用返回与特权返回 | C 函数先通过 `ret` 回到汇编。恢复 CSR 后，`sret` 使用 `sepc` 和状态位返回 |
+| 汇编调用 C | RISC-V ABI | `a0` 传入 Trap frame 地址。288 字节帧保持已有的 16 字节栈对齐 |
+| 定时器与 SBI | 固件接口与定时事件 | S 模式通过 SBI 设置下一次事件，连续中断来自每次重设而非计数输出 |
+| 中断保护 | 临界区与本核并发 | 物理页分配保存原 `SIE` 状态，再临时屏蔽中断，完成后恢复。跨核共享状态还需同步机制 |
+| 异常返回地址 | 异常的重试与跳过 | 实验选择跳过可判定长度的断点和非法指令，其他异常可能需要修复条件后重试 |
+
+### 6.2 OS 原理中重要但本实验未覆盖的内容
+
+进程或线程调度需要切换调度实体并保存其专有状态。本实验的 Trap 返回继续原执行流。U-mode 系统调用还需要入口选择、参数校验和独立内核栈。当前入口直接使用已有栈，无法据此推断用户态系统调用已经实现。
+
+多核中断涉及核间通知、每核状态和共享资源同步。嵌套中断及复杂重入还要求明确的栈和屏蔽策略。本实验只核对当前内核 Trap 和本核的中断保护。完整缺页处理需要检查访问权限、修复映射后按正确位置重试。更全面的设备中断也要识别中断源、应答设备并完成控制器流程。现有诊断输出保留了排查入口，未实现这些恢复协议。
+
+### 6.3 AI 协作与实验总结
+
+迁移时，Lab2 的已验证实现只用于补足缺失的物理页初始化与 Best-Fit。RELY 必须使用 Lab3 的地址映射和现有中断保护，直接覆盖旧文件会遗漏这些约束。模块一把 288 字节布局、`a0` 传参和 `sp` 最后恢复写进 SPEC，静态偏移检查和反汇编可以分别核对结构与指令。
+
+模块二先收集真实接口和测试字符串，再用四段式约束实现。需要分别检查输出分支、`epc` 修改和连续计时，单条提示文本无法覆盖三者。此次原版评分的 0/100 也说明，构建、固件交接、内核运行和测试判分应各自记录。保留三类输出后，能定位失败发生在内核启动之前，也能清楚区分补充运行与原版评分。

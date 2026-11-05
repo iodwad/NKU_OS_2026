@@ -80,7 +80,7 @@ void print_regs(struct pushregs *gpr) {
     cprintf("  t6       0x%08x\n", gpr->t6);
 }
 
-//lab3 function2 YOUR CODE
+//lab3 function2 2412565
 #include <sbi.h>
 
 /* Provisional number of TICK_NUM reports before shutdown. */

@@ -1,0 +1,6 @@
+ffffffffc0200000 T kern_entry
+ffffffffc0200054 T kern_init
+ffffffffc0200bd4 T __alltraps
+ffffffffc0201f80 T etext
+ffffffffc0206000 D boot_page_table_sv39
+ffffffffc0206000 D bootstacktop

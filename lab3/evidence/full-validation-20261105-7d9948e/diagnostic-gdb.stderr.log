@@ -1,0 +1,2 @@
+warning: No executable has been specified and target does not support
+determining executable automatically.  Try using the "file" command.

@@ -1,6 +1,6 @@
 # Lab3 实验原始 Prompt
 
-以下收录团队仓库保存的两份实际使用过的 Prompt，保留原文内容。模块二的原始 Prompt 在当前提交中无可核实的记录。
+以下收录团队保存的实际使用过的 Prompt。前两节来自仓库原始记录，第三节来自张宸笛号提供的原始附件。
 
 ## 一、Lab2 前置功能迁移 Prompt
 
@@ -612,4 +612,553 @@ x0 恒为零，不需要恢复。
 - 不执行 commit 或 push。
 
 完成后输出中文总结，说明两个接口的实现、遵守的关键约束、实际验证结果与尚未完成的运行测试，然后停止。
+````
+
+## 三、功能模块二：中断与异常处理（2412565—张宸笛号）
+
+来源为队友提供的原始附件 `prompt.md`，文件 SHA-256 为 `9c350e67f75e5a35d991bd4de1545724b8b7d5649138b581022741bb364f2301`。以下按附件顺序收录原文。
+
+### 第一阶段：只读 RELY 信息收集 Prompt
+
+````text
+请阅读当前操作系统实验项目的真实源代码，为 Lab3 功能模块二「中断与异常处理」编写四段式提示词中的 **[RELY] 部分**。
+
+## 一、任务背景
+
+本模块需要在 `kern/trap/trap.c` 中的 `//lab3 function2 YOUR CODE` 标记位置实现两个函数：
+
+```
+void interrupt_handler(struct trapframe *tf);
+void exception_handler(struct trapframe *tf);
+```
+
+功能包括：
+
+- 识别并处理 S 模式时钟中断，实现下一次时钟事件设置、`ticks` 计数、周期性输出以及达到规定次数后的系统关机。
+- 区分其他中断类型，对未知中断输出 Trap frame。
+- 处理非法指令异常和断点异常，输出规定信息，并根据实际指令长度正确调整 `tf->epc`。
+- 对其他异常使用 `print_trapframe(tf)` 输出调试信息。
+
+## 二、操作要求
+
+本次任务只收集上下文信息，不实现功能。
+
+1. 只读取项目文件，**禁止修改、创建或删除任何项目文件**。
+2. 不要实现 `interrupt_handler()` 或 `exception_handler()`。
+3. 不要凭经验猜测宏定义、函数签名或数据结构。
+4. 所有信息必须来自当前项目的实际代码。
+5. 优先收集与本模块直接相关的最小必要上下文，不要粘贴整个源文件。
+
+## 三、需要查找的内容
+
+请检查 `kern/trap/trap.c`、`kern/trap/trap.h`、`kern/driver/clock.c`、`kern/driver/clock.h`、`libs/sbi.h` 以及相关的 RISC-V 头文件。实际路径以项目为准。
+
+重点提取：
+
+**1. 宏定义和常量**
+
+查找 `IRQ_S_TIMER`、`CAUSE_ILLEGAL_INSTRUCTION`、`CAUSE_BREAKPOINT`、`TICK_NUM`、`SHUTDOWN_AFTER`，以及其他中断类型常量、Trap 原因掩码等。
+
+**2. 数据结构**
+
+找到 `struct trapframe` 的真实定义，重点说明 `cause`、`epc` 的字段类型和用途，以及异常处理可能需要的其他字段。
+
+**3. 已有函数和全局变量**
+
+查找以下接口的实际声明或定义：
+
+- `clock_set_next_event()`
+- `print_ticks()`
+- `print_trapframe()`
+- `ticks`
+- OpenSBI 提供的系统关机接口
+- 与中断和异常处理直接相关的其他已有函数
+
+**4. 现有处理流程**
+
+检查 `trap_dispatch()` 如何区分中断和异常，确认 `interrupt_handler()` 中应如何提取具体中断编号，以及 `exception_handler()` 如何识别异常编号。
+
+检查项目中是否已有用于判断 RISC-V 16 位压缩指令和 32 位普通指令长度的实现或宏。
+
+**5. 输出要求相关信息**
+
+查找项目已有的中断、异常输出字符串、测试代码或预期输出，确认是否存在严格的输出格式要求。
+
+
+
+````
+
+### 第二阶段：正式四段式实现 Prompt
+
+````text
+# Lab3 功能模块二：中断与异常处理
+
+[PROMPT]
+
+**任务**：
+
+修改操作系统实验项目中的 `kern/trap/trap.c` 文件，实现功能模块二：中断与异常处理功能。
+
+本模块负责对 Trap 入口传递的中断和异常进行分类和处理。
+
+`interrupt_handler()` 负责处理中断，包括时钟中断的持续触发、时钟计数、周期性统计信息输出以及达到规定次数后的系统关机。对于其他已知中断，需要完成类型区分和提示输出；对于无法识别的中断，需要输出完整的 Trap frame。
+
+`exception_handler()` 负责处理非法指令异常和断点异常，按照实验要求输出异常信息，并正确更新异常返回地址，使 Trap 返回后不会重复执行触发异常的指令。其他异常使用已有的 Trap frame 输出函数进行兜底处理。
+
+**操作要求**：
+
+1. 必须直接修改项目中的实际文件，而不是仅展示代码。
+2. 只允许修改 `kern/trap/trap.c` 中 `//lab3 function2 YOUR CODE` 标记对应的区域。
+3. 保留文件现有代码，不得删除或改动其他功能模块。
+4. 不得修改 `trap_dispatch()`、`trap()`、`print_ticks()`、`print_trapframe()` 等已有函数。
+5. 不得修改其他源文件、头文件、测试文件或 Makefile。
+6. 保持已有函数签名不变，优先使用框架提供的接口。
+7. 不得为了通过测试而绕过中断处理逻辑、硬编码测试结果或修改评分脚本。
+
+**输出要求**：
+
+直接进行文件操作，根据以下 `[RELY]`、`[GUARANTEE]` 和 `[SPECIFICATION]` 完成实现。
+
+以当前工程的真实代码为准。如果发现提示词中的信息与工程不一致，优先核对实际定义，并在最终说明中指出差异。
+
+完成后进行编译与测试，简要说明修改内容、测试结果及可能存在的问题。
+
+[RELY]
+
+## 1. 宏定义和常量
+
+`kern/trap/trap.c` 已定义：
+
+```
+#define TICK_NUM 100
+```
+
+`libs/riscv.h` 定义了以下中断编号：
+
+```
+#define IRQ_U_SOFT   0
+#define IRQ_S_SOFT   1
+#define IRQ_H_SOFT   2
+#define IRQ_M_SOFT   3
+
+#define IRQ_U_TIMER  4
+#define IRQ_S_TIMER  5
+#define IRQ_H_TIMER  6
+#define IRQ_M_TIMER  7
+
+#define IRQ_U_EXT    8
+#define IRQ_S_EXT    9
+#define IRQ_H_EXT    10
+#define IRQ_M_EXT    11
+
+#define IRQ_COP      12
+#define IRQ_HOST     13
+```
+
+相关异常编号：
+
+```
+#define CAUSE_MISALIGNED_FETCH    0x0
+#define CAUSE_FAULT_FETCH         0x1
+#define CAUSE_ILLEGAL_INSTRUCTION 0x2
+#define CAUSE_BREAKPOINT          0x3
+#define CAUSE_MISALIGNED_LOAD     0x4
+#define CAUSE_FAULT_LOAD          0x5
+#define CAUSE_MISALIGNED_STORE    0x6
+#define CAUSE_FAULT_STORE         0x7
+#define CAUSE_USER_ECALL          0x8
+#define CAUSE_SUPERVISOR_ECALL    0x9
+#define CAUSE_HYPERVISOR_ECALL    0xa
+#define CAUSE_MACHINE_ECALL       0xb
+```
+
+相关中断使能位：
+
+```
+#define MIP_STIP    (1 << IRQ_S_TIMER)
+#define SIP_STIP    MIP_STIP
+#define SSTATUS_SIE 0x00000002
+#define SSTATUS_SPP 0x00000100
+```
+
+当前项目没有提供专门提取 `scause` 中断标志和原因编号的掩码宏。
+
+当前项目也没有定义 `SHUTDOWN_AFTER`，源码与评分测试没有明确规定最终关机次数。
+
+如果确认不存在其他规定，可以在允许修改的代码区域内增加内部宏定义，暂定 `SHUTDOWN_AFTER` 为 `10`，并在最终说明中注明这是暂定值。
+
+## 2. 数据结构
+
+`kern/trap/trap.h` 中定义：
+
+```
+struct trapframe {
+    struct pushregs gpr;
+    uintptr_t status;
+    uintptr_t epc;
+    uintptr_t badvaddr;
+    uintptr_t cause;
+};
+```
+
+`libs/defs.h` 定义：
+
+```
+typedef long long int64_t;
+typedef unsigned long long uint64_t;
+typedef int64_t intptr_t;
+typedef uint64_t uintptr_t;
+typedef uintptr_t size_t;
+```
+
+各字段用途：
+
+- `gpr`：保存 32 个通用寄存器。
+- `status`：保存 `sstatus` 寄存器状态。
+- `epc`：保存 `sepc`，记录 Trap 相关的执行地址。
+- `badvaddr`：保存异常附加地址信息。
+- `cause`：保存 `scause`，用于识别中断或异常原因。
+
+本项目使用 64 位 RISC-V 环境，因此 `cause` 第 63 位表示中断标志，其余位表示原因编号。
+
+`kern/trap/trapentry.S` 在 Trap 返回时，会将 Trap frame 中的 `status`、`epc` 恢复到对应的 CSR，并通过 `sret` 返回。
+
+因此，对 `tf->epc` 的正确修改能够影响 Trap 返回后的执行位置。
+
+## 3. 已有函数和全局变量
+
+`kern/driver/clock.h` 声明：
+
+```
+extern volatile size_t ticks;
+
+void clock_init(void);
+void clock_set_next_event(void);
+```
+
+`kern/driver/clock.c` 定义：
+
+```
+volatile size_t ticks;
+static uint64_t timebase = 100000;
+```
+
+`clock_init()` 负责使能时钟中断、设置首次时钟事件以及初始化 `ticks`。
+
+`clock_set_next_event()` 调用 OpenSBI 定时器接口，以当前时间加 `timebase` 设置下一次时钟事件。
+
+`kern/trap/trap.c` 已有：
+
+```
+static void print_ticks() {
+    cprintf("%d ticks\n", TICK_NUM);
+#ifdef DEBUG_GRADE
+    cprintf("End of Test.\n");
+    panic("EOT: kernel seems ok.");
+#endif
+}
+```
+
+该函数已经实现规定的周期性输出，不得重复定义或修改。
+
+`kern/trap/trap.h` 提供：
+
+```
+void print_trapframe(struct trapframe *tf);
+void print_regs(struct pushregs *gpr);
+bool trap_in_kernel(struct trapframe *tf);
+```
+
+其中 `print_trapframe()` 可以输出完整的 Trap frame。
+
+`libs/sbi.h` 提供：
+
+```
+void sbi_set_timer(unsigned long long stime_value);
+void sbi_shutdown(void);
+```
+
+其中 `sbi_shutdown()` 是框架提供的系统关机接口。
+
+`libs/stdio.h` 提供：
+
+```
+int cprintf(const char *fmt, ...);
+```
+
+用于输出中断和异常提示信息。
+
+实现时应检查 `trap.c` 现有头文件包含情况，尽量直接使用已经可见的声明，不修改其他文件。
+
+## 4. Trap 分发机制
+
+`kern/trap/trap.c` 已经实现：
+
+```
+static inline void trap_dispatch(struct trapframe *tf) {
+    if ((intptr_t)tf->cause < 0) {
+        interrupt_handler(tf);
+    } else {
+        exception_handler(tf);
+    }
+}
+```
+
+现有 Trap 处理流程：
+
+```
+__alltraps
+    ↓
+保存 CPU 现场
+    ↓
+trap(tf)
+    ↓
+trap_dispatch(tf)
+    ↓
+判断 cause
+    ├── 中断 → interrupt_handler(tf)
+    └── 异常 → exception_handler(tf)
+    ↓
+恢复 CPU 现场
+    ↓
+sret
+```
+
+`trap_dispatch()` 已经实现中断和异常的初步分类，不需要修改。
+
+中断处理函数接收的是原始 `tf->cause`，因此必须正确提取中断原因编号，不能直接将包含最高位中断标志的值与 `IRQ_S_TIMER` 比较。
+
+在当前 64 位环境下，可通过清除第 63 位获取中断编号。
+
+异常处理函数可以根据 `tf->cause` 与 `CAUSE_*` 常量识别异常类型。
+
+## 5. RISC-V 指令编码
+
+`libs/riscv.h` 包含：
+
+```
+#define MATCH_EBREAK   0x100073
+#define MASK_EBREAK    0xffffffff
+
+#define MATCH_C_EBREAK 0x9002
+#define MASK_C_EBREAK  0xffff
+```
+
+普通 `EBREAK` 指令长度为 4 字节。
+
+压缩指令 `C.EBREAK` 长度为 2 字节。
+
+在本实验涉及的 16 位和 32 位指令范围内：
+
+- 指令低两位为二进制 `11`，表示 32 位指令。
+- 指令低两位不是 `11`，表示 16 位压缩指令。
+
+项目没有提供通用的指令长度判断函数。
+
+`tools/test_lab3.c` 中使用：
+
+```
+asm volatile(".word 0x0000007b");
+```
+
+触发非法指令异常，测试指令长度为 4 字节。
+
+`tools/test_lab3_context.S` 使用 `ebreak` 触发断点异常，并验证 Trap 返回后的寄存器状态。
+
+实现时必须结合实际编码确定指令长度，避免错误调整 `tf->epc`。
+
+## 6. 输出格式及测试依据
+
+`tools/grade.sh` 使用 `grep -F` 检查固定输出子串，主要包括：
+
+| 测试场景       | 必须包含的输出                  |
+| -------------- | ------------------------------- |
+| 非法指令异常   | `Illegal instruction at`        |
+| 断点异常       | `Breakpoint at`                 |
+| S 模式软件中断 | `Supervisor software interrupt` |
+| 未知中断 15    | `Unknown interrupt: cause 15`   |
+| 未处理异常 20  | `cause    0x00000014`           |
+| 时钟统计       | `100 ticks`                     |
+| 持续时钟测试   | `ticks=200`                     |
+
+其中 `ticks=200` 由测试代码在计数达到要求后输出，不应直接由中断处理函数硬编码打印。
+
+`print_trapframe()` 已有以下字段输出格式：
+
+```
+cprintf("  status   0x%08x\n", tf->status);
+cprintf("  epc      0x%08x\n", tf->epc);
+cprintf("  badvaddr 0x%08x\n", tf->badvaddr);
+cprintf("  cause    0x%08x\n", tf->cause);
+```
+
+测试还会直接调用：
+
+```
+interrupt_handler(tf);
+exception_handler(tf);
+```
+
+部分测试会构造人工 Trap frame，而不是通过真实硬件 Trap 入口触发。
+
+因此需要保证函数在收到有效的测试 Trap frame 时也能正确分类。
+
+[GUARANTEE]
+
+必须在 `kern/trap/trap.c` 中实现以下两个函数：
+
+```
+void interrupt_handler(struct trapframe *tf);
+void exception_handler(struct trapframe *tf);
+```
+
+**接口要求**：
+
+1. `interrupt_handler()` 接收当前 Trap frame，识别并处理对应的中断，正常完成后返回统一 Trap 返回流程。
+2. `exception_handler()` 接收当前 Trap frame，识别并处理异常，必要时正确更新 `tf->epc`，然后返回统一 Trap 返回流程。
+3. 严格保持两个函数的名称、参数类型、返回类型不变。
+4. 允许在功能模块二的标记区域增加必要的静态辅助函数、局部变量、静态计数变量以及内部宏定义。
+5. 不得修改现有公开接口。
+6. 不得修改其他功能模块或其他文件。
+7. 不得重新实现已有的 `clock_set_next_event()`、`print_ticks()`、`print_trapframe()` 或 `sbi_shutdown()`。
+
+[SPECIFICATION]
+
+## 1. interrupt_handler(struct trapframe *tf)
+
+**Pre-Condition**：
+
+- 系统已经进入中断处理流程。
+- `tf` 指向有效的 Trap frame。
+- `tf->cause` 保存当前中断原因。
+- 时钟模块已完成初始化，`ticks` 用于统计已处理的时钟中断次数。
+
+**Post-Condition**：
+
+- 正确识别具体中断类型。
+- 对时钟中断完成下一次时钟事件设置、计数、周期性输出和关机条件检查。
+- 对其他已知中断完成对应提示输出。
+- 对未知中断输出完整的调试信息。
+- 未触发关机时，正常返回已有 Trap 返回流程。
+
+**Case 1：S 模式时钟中断**
+
+当中断编号为 `IRQ_S_TIMER` 时：
+
+1. 调用 `clock_set_next_event()` 设置下一次时钟事件，保证时钟中断能够持续产生。
+2. 每次收到时钟中断，`ticks` 增加 1。
+3. 当 `ticks` 为 `TICK_NUM` 的正整数倍时，调用已有的 `print_ticks()` 输出统计信息。
+4. 每个统计周期只能输出一次。
+5. 累计统计输出次数达到 `SHUTDOWN_AFTER` 后，调用框架提供的 `sbi_shutdown()` 关闭系统。
+6. 未达到关机条件时，正常结束本次中断处理。
+
+**Case 2：其他已知中断**
+
+当中断编号属于 `libs/riscv.h` 中定义的其他中断类型时：
+
+1. 根据中断编号进行分类。
+2. 输出对应的中断类型提示信息。
+3. 对 S 模式软件中断，输出必须包含 `Supervisor software interrupt`。
+4. 不增加 `ticks`，不设置下一次时钟事件。
+5. 完成后返回正常处理流程。
+
+**Case 3：未知中断**
+
+当中断编号不属于已识别的类型时：
+
+1. 输出未知中断提示。
+2. 输出内容必须包含 `Unknown interrupt: cause` 和实际中断编号。
+3. 调用 `print_trapframe(tf)` 输出完整 Trap frame。
+4. 不修改 `tf->epc` 和 `ticks`。
+
+**Requirements**：
+
+- 必须正确去除 `tf->cause` 最高位的中断标志，使用实际中断编号进行分类。
+- 同时兼容测试直接使用原因编号 15 调用 `interrupt_handler()` 的情况。
+- 保证时钟中断能持续运行至少 200 次，以满足现有评分测试。
+- 系统关机条件必须基于真实统计次数，不能硬编码输出或提前关机。
+- `SHUTDOWN_AFTER` 若确实不存在，暂定为 10；不得将此暂定值宣称为实验手册指定值。
+- 保留原有 `print_ticks()` 的 `DEBUG_GRADE` 行为。
+- 不得引入与本模块无关的功能。
+
+## 2. exception_handler(struct trapframe *tf)
+
+**Pre-Condition**：
+
+- CPU 已经发生异常，Trap 现场已保存。
+- `tf` 指向有效的 Trap frame。
+- `tf->cause` 保存异常原因编号。
+- `tf->epc` 保存触发异常的指令地址。
+
+**Post-Condition**：
+
+- 正确区分非法指令异常、断点异常以及其他异常。
+- 对实验要求处理的异常输出规定的信息。
+- 根据实际指令长度正确调整 `tf->epc`。
+- 对其他异常输出完整 Trap frame。
+- 正常处理后能够通过已有的 Trap 返回流程继续执行。
+
+**Case 1：非法指令异常**
+
+当 `tf->cause` 为 `CAUSE_ILLEGAL_INSTRUCTION` 时：
+
+1. 识别为非法指令异常。
+2. 输出包含 `Illegal instruction at` 的异常提示，以及触发异常的指令地址。
+3. 根据触发异常的指令长度更新 `tf->epc`。
+4. 当前测试中的 `.word 0x0000007b` 长度为 4 字节，处理后必须跳过 4 字节。
+5. 如果支持 16 位非法压缩指令，也必须正确处理其长度。
+6. 完成后返回 Trap 返回流程，避免再次执行同一条非法指令。
+
+**Case 2：断点异常**
+
+当 `tf->cause` 为 `CAUSE_BREAKPOINT` 时：
+
+1. 识别为断点异常。
+2. 输出包含 `Breakpoint at` 的提示信息，以及断点指令地址。
+3. 根据实际指令编码判断断点指令长度。
+4. 普通 `EBREAK` 长度为 4 字节，压缩 `C.EBREAK` 长度为 2 字节。
+5. 按实际指令长度更新 `tf->epc`。
+6. 完成后返回，使程序从断点指令之后继续执行。
+
+**Case 3：其他异常**
+
+当异常原因不是非法指令异常或断点异常时：
+
+1. 调用已有的 `print_trapframe(tf)`。
+2. 输出完整的异常现场信息。
+3. 不实现实验未要求的异常恢复逻辑。
+4. 不随意修改 `tf->epc` 或其他现场字段。
+
+**Requirements**：
+
+- 使用项目已有的 `CAUSE_ILLEGAL_INSTRUCTION` 和 `CAUSE_BREAKPOINT` 常量判断异常类型。
+- 非法指令和断点异常的输出必须满足评分脚本要求的固定子串。
+- 必须正确处理 RISC-V 普通指令与压缩指令的长度差异。
+- 不得对所有异常统一执行固定的 `tf->epc += 4`。
+- 若需要读取触发异常的指令编码，应检查对应地址在当前运行环境中是否可安全读取，避免在异常处理过程中再次触发异常。
+- 保留 Trap frame 中不需要修改的寄存器状态。
+- 不修改已有 Trap 分发代码、Trap 入口汇编和返回机制。
+
+## 最终验证要求
+
+完成两个函数后：
+
+1. 检查代码是否只修改了 `kern/trap/trap.c` 的指定区域。
+2. 使用项目现有构建命令进行编译，确认没有编译错误。
+3. 使用项目现有测试方式（如 `make grade`）验证实现。
+4. 检查时钟中断能否持续触发，`ticks` 能否正常增长。
+5. 检查非法指令异常和断点异常能否正确输出信息并恢复执行。
+6. 检查未知中断、未处理异常是否正确输出 Trap frame。
+7. 检查是否发生异常循环、错误的 `epc` 更新或提前关机。
+8. 如果测试失败，只修复属于本功能模块允许修改范围内的问题，不得修改测试文件或其他模块来绕过问题。
+
+完成后简要报告：
+
+- 实际修改的文件与函数。
+- 主要实现逻辑。
+- 编译及测试结果。
+- 是否存在未通过的测试。
+- `SHUTDOWN_AFTER` 使用的实际值及其依据。
+
+如果测试无法运行，应明确说明原因，不得声称测试通过。
 ````

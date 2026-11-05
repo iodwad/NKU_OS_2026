@@ -1,0 +1,27 @@
+{
+  "make": {
+    "argv": [
+      "make",
+      "-j2"
+    ],
+    "cwd": "/mnt/d/CodexTaskTemp/lab3-audit-20261105-01a1965e-a96b31c4/repo/lab3/code",
+    "exit": 0,
+    "duration_seconds": 2.11,
+    "captured_serial_files": []
+  },
+  "grade": {
+    "argv": [
+      "make",
+      "grade",
+      "GRADE_TMP=/mnt/d/CodexTaskTemp/lab3-audit-20261105-01a1965e-a96b31c4/grade-copy"
+    ],
+    "cwd": "/mnt/d/CodexTaskTemp/lab3-audit-20261105-01a1965e-a96b31c4/repo/lab3/code",
+    "exit": 2,
+    "duration_seconds": 58.41,
+    "captured_serial_files": [
+      "CONTEXT",
+      "ILLEGAL",
+      "TIMER"
+    ]
+  }
+}

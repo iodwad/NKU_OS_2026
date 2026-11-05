@@ -1,0 +1,45 @@
+{
+  "base_commit": "7d9948ec8e284856ee2689489cec782c09b6005b",
+  "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+  "distribution": {
+    "NAME": "Ubuntu",
+    "ID": "ubuntu",
+    "PRETTY_NAME": "Ubuntu 22.04.5 LTS",
+    "VERSION_ID": "22.04",
+    "VERSION": "22.04.5 LTS (Jammy Jellyfish)",
+    "VERSION_CODENAME": "jammy",
+    "ID_LIKE": "debian",
+    "HOME_URL": "https://www.ubuntu.com/",
+    "SUPPORT_URL": "https://help.ubuntu.com/",
+    "BUG_REPORT_URL": "https://bugs.launchpad.net/ubuntu/",
+    "PRIVACY_POLICY_URL": "https://www.ubuntu.com/legal/terms-and-policies/privacy-policy",
+    "UBUNTU_CODENAME": "jammy"
+  },
+  "tools": {
+    "make": {
+      "exit": 0,
+      "stdout": "GNU Make 4.3\nBuilt for x86_64-pc-linux-gnu\nCopyright (C) 1988-2020 Free Software Foundation, Inc.\nLicense GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>\nThis is free software: you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law.\n",
+      "stderr": ""
+    },
+    "riscv64-unknown-elf-gcc": {
+      "exit": 0,
+      "stdout": "riscv64-unknown-elf-gcc () 10.2.0\nCopyright (C) 2020 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+      "stderr": ""
+    },
+    "riscv64-unknown-elf-ld": {
+      "exit": 0,
+      "stdout": "GNU ld () 2.35.1\nCopyright (C) 2020 Free Software Foundation, Inc.\nThis program is free software; you may redistribute it under the terms of\nthe GNU General Public License version 3 or (at your option) a later version.\nThis program has absolutely no warranty.\n",
+      "stderr": ""
+    },
+    "qemu-system-riscv64": {
+      "exit": 0,
+      "stdout": "QEMU emulator version 6.2.0 (Debian 1:6.2+dfsg-2ubuntu6.31)\nCopyright (c) 2003-2021 Fabrice Bellard and the QEMU Project developers\n",
+      "stderr": ""
+    },
+    "python3": {
+      "exit": 0,
+      "stdout": "Python 3.10.12\n",
+      "stderr": ""
+    }
+  }
+}

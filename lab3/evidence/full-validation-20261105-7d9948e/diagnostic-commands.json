@@ -1,0 +1,45 @@
+{
+  "entry-disassembly": {
+    "argv": [
+      "riscv64-unknown-elf-objdump",
+      "-d",
+      "--disassemble=kern_entry",
+      "bin/kernel"
+    ],
+    "exit": 0
+  },
+  "boot-symbols": {
+    "argv": [
+      "riscv64-unknown-elf-nm",
+      "-n",
+      "bin/kernel"
+    ],
+    "exit": 0
+  },
+  "diagnostic": {
+    "argv": [
+      "timeout",
+      "3s",
+      "qemu-system-riscv64",
+      "-machine",
+      "virt",
+      "-nographic",
+      "-bios",
+      "default",
+      "-device",
+      "loader,file=bin/ucore.img,addr=0x80200000",
+      "-serial",
+      "file:/mnt/d/CodexTaskTemp/lab3-audit-20261105-01a1965e-a96b31c4/repo/lab3/evidence/full-validation-20261105-7d9948e/diagnostic-boot.serial.log",
+      "-monitor",
+      "none",
+      "-no-reboot",
+      "-d",
+      "int,guest_errors",
+      "-D",
+      "/mnt/d/CodexTaskTemp/lab3-audit-20261105-01a1965e-a96b31c4/repo/lab3/evidence/full-validation-20261105-7d9948e/diagnostic-qemu-trace.log"
+    ],
+    "exit": 124,
+    "max_log_bytes": 65536,
+    "image": "Retained GRADE_LAB3_TIMER image from original make grade"
+  }
+}

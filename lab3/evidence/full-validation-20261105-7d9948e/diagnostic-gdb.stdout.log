@@ -1,0 +1,36 @@
+The target architecture is set to "riscv:rv64".
+0x0000000000001000 in ?? ()
+Hardware assisted breakpoint 1 at 0x80005fe8
+Hardware assisted breakpoint 2 at 0x80200000
+
+Breakpoint 1, 0x0000000080005fe8 in ?? ()
+pc             0x80005fe8	0x80005fe8
+ra             0x800077f2	0x800077f2
+sp             0x80017ea0	0x80017ea0
+a0             0x0	0
+a1             0x80000520	2147484960
+mstatus        0xa00000000	SD:0 VM:00 MXR:0 PUM:0 MPRV:0 XS:0 FS:0 MPP:0 HPP:0 SPP:0 MPIE:0 HPIE:0 SPIE:0 UPIE:0 MIE:0 HIE:0 SIE:0 UIE:0
+mepc           0x0	0
+mcause         0x0	0
+mtvec          0x80008828	2147518504
+stvec          0x0	0
+satp           0x0	0
+   0x80005fdc:	sw	a1,8(a5)
+   0x80005fde:	ld	a1,0(a2)
+   0x80005fe0:	add	a4,a3,zero
+   0x80005fe4:	csrrw	a1,mtvec,a1
+=> 0x80005fe8:	csrr	a0,pmpaddr16
+   0x80005fec:	csrw	mtvec,a1
+   0x80005ff0:	ld	a3,-120(s0)
+   0x80005ff4:	bnez	a3,0x80006dac
+   0x80200000:	auipc	t0,0x7
+   0x80200004:	mv	t0,t0
+   0x80200008:	sd	a0,0(t0)
+   0x8020000c:	auipc	t0,0x7
+   0x80200010:	addi	t0,t0,-4
+   0x80200014:	sd	a1,0(t0)
+   0x80200018:	lui	t0,0xc0206
+   0x8020001c:	addiw	t1,zero,-3
+0x80017ea0:	0x0000000000000000	0x0000000000000000
+0x80017eb0:	0x0000000000000000	0x0000000000000000
+[Inferior 1 (process 1) detached]
