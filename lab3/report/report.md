@@ -118,13 +118,15 @@ kern_init()
 
 ## 四、实验内容与实现
 
-本章沿用 Lab2 报告中“功能与接口理解—SPEC—Prompt—实现核对—问题记录”的组织方式。对已经完成的部分说明实际代码与证据；对尚未完成的模块不把预期行为写作实验结果。
+本章沿用 Lab2 报告中“功能与接口理解—SPEC—Prompt—实现核对—问题记录”的组织方式。模块二按当前源码说明处理流程，运行结果见第五章的验证范围。
 
 ### 4.1 Lab2 前置功能迁移：物理内存初始化与 Best-Fit
 
 #### 4.1.1 迁移目标与接口关系
 
 Lab3 依赖 Lab2 的物理内存管理基础。课程骨架在 `kern/mm/pmm.c` 和 `kern/mm/best_fit_pmm.c` 保留了 `lab2` 填写位置，而 `pmm_init()` 仍依赖 `page_init()`，物理页分配则依赖 `pmm_manager` 的回调。迁移使用的来源为团队仓库 `lab2` 分支提交 `ea3300cd028a0af8ddea475b093a2a8f9c7f10a8`，不是从已有 Lab3 工作分支复制其他同学的 Trap 实现。
+
+课程骨架下载失败后，工程采用团队仓库的导入提交 `d0bb450d845bfd33b9e4584855d9194d93a9ab5c`。下载错误及来源见 [来源记录](../evidence/source.json)，该导入版本与课程 ZIP 的一致性未经核验。迁移时使用的 [原始 Prompt](./prompt.md) 已完整保留。
 
 迁移范围如下：
 
@@ -143,7 +145,7 @@ Lab3 已为物理页分配接口增加 `local_intr_save/local_intr_restore`，�
 
 #### 4.1.3 迁移核对与验证边界
 
-迁移后的 `pmm.c` 与 `best_fit_pmm.c` 均经过独立强制编译，退出码为 0；原始记录见 [`make-migrated-forced.log`](../evidence/make-migrated-forced.log)。这一结果只能说明迁移代码在当前工具链与头文件下能够编译，**不能据此宣称 Lab3 已通过物理内存管理的运行时检查**。完整构建在模块二的 `trap.c` 处失败，见第五章。
+迁移后的 `pmm.c` 与 `best_fit_pmm.c` 均经过独立强制编译，退出码为 0；原始记录见 [`make-migrated-forced.log`](../evidence/make-migrated-forced.log)。这一结果只能说明迁移代码在当前工具链与头文件下能够编译，**不能据此宣称 Lab3 已通过物理内存管理的运行时检查**。迁移阶段的完整构建曾在 `trap.c` 处失败，见第 5.4 节。
 
 ### 4.2 功能模块一：Trap 上下文恢复与 Trap 入口
 
@@ -212,13 +214,13 @@ RISC-V 调用约定使用 `a0` 传递第一个指针参数，因此传入的是 
 | `RESTORE_ALL` | `sp` 指向有效 Trap frame，`trap()` 已正常返回 | 恢复原整数现场及 `sstatus`、`sepc`；当处理函数修改 `tf->epc` 时使用更新值 | 偏移与 `SAVE_ALL` 一致，临时寄存器最终恢复，x2 最后恢复，不重复执行 `sret` |
 | `__alltraps` | 已进入入口，有效内核栈可供 `SAVE_ALL` 使用 | 保存现场并把其地址传给 `trap(tf)`；正常返回后进入 `__trapret` | 首个参数使用 `a0`，维持 16 字节对齐，保护原始 `a0`、`ra`，不改变固定接口 |
 
-在规格中将正常返回与处理函数修改 `epc` 的情况分开，是为了防止实现只恢复 Trap 发生时的旧地址；特别明确 `sp` 的恢复顺序，是为了避免在还需要读取 Trap frame 时破坏内存基地址。完整的 Pre-Condition、Post-Condition、Case 与 Requirements 见 [功能模块一原始 Prompt](./prompt_lab3_module1.md)。
+在规格中将正常返回与处理函数修改 `epc` 的情况分开，是为了防止实现只恢复 Trap 发生时的旧地址；特别明确 `sp` 的恢复顺序，是为了避免在还需要读取 Trap frame 时破坏内存基地址。完整的 Pre-Condition、Post-Condition、Case 与 Requirements 见 [功能模块一原始 Prompt](./prompt.md)。
 
 #### 4.2.6 Prompt 的编写与 AI 协作过程
 
-本题按照课程要求使用同一份四段式提示词，完整原文保存在 [`prompt_lab3_module1.md`](./prompt_lab3_module1.md)。`[PROMPT]` 限定 `trapentry.S` 中两个 `lab3 function1` 标记位置，要求直接修改文件并保留其他代码；`[RELY]` 提供真实 `LOAD/STORE/REGBYTES` 宏、`SAVE_ALL` 的特殊保存关系、`trapframe` 字段和 `trap()` 接口；`[GUARANTEE]` 只列 `RESTORE_ALL` 和 `__alltraps` 两个交付功能；`[SPECIFICATION]` 规定 CSR、通用寄存器和 `sp` 的恢复状态、传参、栈对齐及不得修改的边界。
+本题按照课程要求使用同一份四段式提示词，完整原文保存在 [功能模块一原始 Prompt](./prompt.md)。`[PROMPT]` 限定 `trapentry.S` 中两个 `lab3 function1` 标记位置，要求直接修改文件并保留其他代码；`[RELY]` 提供真实 `LOAD/STORE/REGBYTES` 宏、`SAVE_ALL` 的特殊保存关系、`trapframe` 字段和 `trap()` 接口；`[GUARANTEE]` 只列 `RESTORE_ALL` 和 `__alltraps` 两个交付功能；`[SPECIFICATION]` 规定 CSR、通用寄存器和 `sp` 的恢复状态、传参、栈对齐及不得修改的边界。
 
-选择以**一个模块、一份 Prompt**完成两处汇编填空，是因为参数传递与恢复共享一个现场布局，单独生成其中一个功能可能遗漏对另一个功能的依赖。AI 生成后没有直接将“编译成功”视为闭环正确，而是保留源文件前后差异、静态核对、汇编对象和反汇编输出，详见 [`module1_record.md`](./module1_record.md)。
+选择以**一个模块、一份 Prompt**完成两处汇编填空，是因为参数传递与恢复共享一个现场布局，单独生成其中一个功能可能遗漏对另一个功能的依赖。AI 生成后没有直接将“编译成功”视为闭环正确，而是保留源文件前后差异、静态核对、汇编对象和反汇编输出，核对过程见 [4.2.7](#427-ai-生成及核验过程中实际遇到的问题)，汇编与发布证据见 [5.3](#53-模块一汇编编译反汇编与发布核对)。
 
 #### 4.2.7 AI 生成及核验过程中实际遇到的问题
 
@@ -227,19 +229,23 @@ RISC-V 调用约定使用 `a0` 传递第一个指针参数，因此传入的是 
 1. **原始骨架未填写。** 首次对空白骨架执行静态检查为 9/16，通过项不涉及尚缺失的两项功能。这说明任务尚未实现，不应描述成 AI 生成后的 Bug。填入模块一代码后，原版本静态检查达到 16/16。
 2. **验证命令的退出码保存错误。** 首次 shell 包装脚本出现 `exit: : numeric argument required`，属于退出码变量传递问题。随后改用 Python 的 `subprocess.returncode` 保存实际子进程退出状态，不需要修改内核汇编。
 3. **发布版本的测试脚本与指令写法不匹配。** 最初检查脚本匹配 `jal trap`，后续发布代码采用 `call trap`，使历史脚本出现 15/16。重新汇编退出码为 0，反汇编中确认 `R_RISCV_CALL trap` 重定位；对当前调用形式的独立检查通过。该不匹配来自验证脚本对指令写法的过度限定，不能简单认定为 Trap 入口功能错误。
-4. **完整内核编译受另一模块阻塞。** `trap.c` 中尚未定义 `interrupt_handler`、`exception_handler`，在 `-Werror` 下出现隐式声明错误，整体 `make` 退出码为 2。此次保留模块二占位，没有通过添加空处理函数或修改评分脚本绕开。
+4. **模块一实现阶段的完整内核构建失败。** 当时的 `trap.c` 尚未定义 `interrupt_handler` 和 `exception_handler`，隐式声明在 `-Werror` 下导致 `make` 退出码为 2。该日志对应模块二处理函数提交前的版本。
 
 原始日志分别见 [`static-before.log`](../evidence/module1/static-before.log)、[`static-after.log`](../evidence/module1/static-after.log)、[`publication-checks.json`](https://github.com/iodwad/NKU_OS_2026/blob/9f292ecd0f239d3d44fe05f60156671f964f750f/lab3/evidence/module1/publication-checks.json) 和 [`kernel-build.log`](../evidence/module1/kernel-build.log)。
 
-### 4.3 功能模块二：中断与异常处理（待小组后续补全）
+### 4.3 功能模块二：中断与异常处理
 
-目前仓库 [`kern/trap/trap.c`](../code/kern/trap/trap.c) 仍有 `//lab3 function2 YOUR CODE`，`trap_dispatch()` 已预留 `interrupt_handler(tf)` 和 `exception_handler(tf)` 的调用。按当前源码，功能模块二需要识别中断原因、重新设置时钟事件、维护 `ticks`，并对断点和非法指令等异常处理返回地址。**本节尚无可核验的具体实现、Prompt、Bug 修复或运行结果。** 后续应由该模块负责人补充对应的功能理解、四段式 SPEC 与 Prompt、实际代码、问题记录，并与第五章的运行测试对应；在此之前不将这些预期行为写为已完成。
+团队提交 `0de568894a7787cca404ca1b524b23febc4e79b5` 在 [`kern/trap/trap.c`](../code/kern/trap/trap.c) 中实现了 `interrupt_handler()` 和 `exception_handler()`。`trap_dispatch()` 根据 `scause` 的最高位分派给两个处理函数。
+
+Supervisor Timer 中断先调用 `clock_set_next_event()`，再递增 `ticks`。每累计 100 ticks 输出一次统计，当前代码累计输出 10 次后调用 `sbi_shutdown()`。断点和非法指令处理会打印异常地址，检查 `epc` 的对齐和内核代码范围，再读取指令首半字，按 2 字节或 4 字节更新 `tf->epc`。无法安全判定长度时打印 Trap frame，保留原返回地址。
+
+以上行为来自源码核对。模块二的原始 Prompt、调试过程和运行结果待补充。
 
 ---
 
 ## 五、测试与验证
 
-本章沿用 Lab2 报告“按验证对象分节、区分结果与证据”的组织方式。首先记录已执行的构建与检查，再明确尚未满足条件的完整内核和 QEMU 测试。**本阶段没有运行 QEMU/GDB，也没有取得 Lab3 `make grade` 分数。**
+本章分别记录迁移和模块一阶段的构建证据，以及模块二提交后的验证范围。**报告所依据的记录未包含模块二提交后的 QEMU/GDB 或 Lab3 `make grade` 结果。**
 
 ### 5.1 Lab2 迁移源文件编译
 
@@ -257,7 +263,7 @@ RISC-V 调用约定使用 `a0` 传递第一个指针参数，因此传入的是 
 
 ### 5.4 完整内核构建及失败归因
 
-实际执行完整内核构建时，`make` 退出码为 2，编译停在 `kern/trap/trap.c`，未进入链接。主要错误为：
+模块二提交前，实际执行完整内核构建时，`make` 退出码为 2，编译停在 `kern/trap/trap.c`，未进入链接。主要错误为：
 
 ```text
 trap.c:89: implicit declaration of function 'interrupt_handler'
@@ -265,7 +271,7 @@ trap.c:92: implicit declaration of function 'exception_handler'
 cc1: all warnings being treated as errors
 ```
 
-这与模块二处理函数仍未实现相符。该失败说明**当前整体 Lab3 尚不能宣称正确编译**，但不能仅据此否定已成功单独汇编的模块一。原始输出保留于 [`kernel-build.log`](../evidence/module1/kernel-build.log) 与 `kernel-build.exit`。
+该日志记录了两个处理函数尚未实现时的失败。当前源码已包含两者，报告尚无对应版本的完整内核构建记录。历史输出及退出状态见 [`kernel-build.log`](../evidence/module1/kernel-build.log) 和 [`kernel-build.exit`](../evidence/module1/kernel-build.exit)。
 
 ### 5.5 课程评分项目与后续运行验证范围
 
@@ -277,8 +283,8 @@ cc1: all warnings being treated as errors
 | 非法指令及异常返回 | 25 | 处理非法指令、正确推进 `epc`，并覆盖回退分支 | 尚未运行 |
 | 持续 Supervisor Timer | 40 | 重设时钟事件、连续处理中断并累计至 200 ticks | 尚未运行 |
 
-这些项目同时依赖模块二的正确实现。后续应在完整内核能链接后执行 `make grade`，保留原始终端输出；必要时用 QEMU/GDB 检查 `trap(tf)` 入口参数、`__trapret` 前后的寄存器、`sepc` 和 `sret` 返回位置。在实际执行前，本报告不填写分数、不提供虚构截图，也不把静态检查的 16/16 当作正式评分结果。
+这些项目同时依赖模块二的处理逻辑。后续应在核对当前版本的完整内核构建后执行 `make grade`，保留原始终端输出；必要时用 QEMU/GDB 检查 `trap(tf)` 入口参数、`__trapret` 前后的寄存器、`sepc` 和 `sret` 返回位置。在实际执行前，本报告不填写分数、不提供虚构截图，也不把静态检查的 16/16 当作正式评分结果。
 
 ### 5.6 阶段性结论与未覆盖范围
 
-当前证据能够支持三项结论：Lab2 必需代码完成最小迁移且对应源文件可编译；模块一的 `RESTORE_ALL`、`__alltraps` 已补齐且静态布局与汇编对象核对通过；完整内核构建仍受模块二缺失影响。尚未直接验证一次实际 Trap 的上下文恢复、断点与非法指令后的返回，以及持续时钟中断。因此本阶段的结论限定为**模块一代码与编译层面的完成**，不外推为整个 Lab3 的功能通过。
+Lab2 迁移的源文件已通过单独编译，模块一的 `RESTORE_ALL` 和 `__alltraps` 已完成静态布局与汇编对象核对。模块二已有处理函数，目前有源码可核对。当前版本的完整内核构建、实际 Trap 的上下文恢复、断点与非法指令返回，以及持续时钟中断的测试结果仍待补充。
