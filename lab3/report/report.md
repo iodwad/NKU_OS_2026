@@ -318,19 +318,65 @@ cc1: all warnings being treated as errors
 
 在独立副本执行 `make -j2`，退出码为 **0**。输出包含 `+ ld bin/kernel` 及生成 `bin/ucore.img` 的 `objcopy` 命令。原始证据见 [标准输出](../evidence/full-validation-20261105-7d9948e/make.stdout.log)、[标准错误](../evidence/full-validation-20261105-7d9948e/make.stderr.log) 和 [退出码](../evidence/full-validation-20261105-7d9948e/make.exit)。运行验证以该提交的代码为基准，审阅版随后仅补了模块二学号注释。
 
+**本地同步版本的重新构建截图。** 在同步远程功能代码并保留原有中文注释后，另执行 `make -B -j2; echo "MAKE_EXIT=$?"` 强制编译。截图中可见完整编译序列、`+ ld bin/kernel`、`riscv64-unknown-elf-objcopy ... bin/ucore.img`，以及 `MAKE_EXIT=0`。这与前述隔离环境的编译成功记录相互印证，但它本身只证明构建成功，不替代 Trap 的动态运行验证。
+
+![图1 Lab3 完整内核编译和镜像生成](../evidence/figures/fig1_build.png)
+
+*图1：同步后的本地 Lab3 在 WSL 中强制重新构建。内核完成链接并生成 `ucore.img`，命令返回 `MAKE_EXIT=0`。*
+
 ### 5.5 原版课程评分与补充运行
 
-原版 `make grade` 通过 `GRADE_TMP` 将临时注入目录定位到本次 D 盘隔离工作区。注入器、测试源、评分脚本和 Makefile 保持原样。三组测试各自编译并启动 QEMU，脚本均未找到通过标记，输出 **0/100**，顶层 make 退出码 **2**。原始 [评分输出](../evidence/full-validation-20261105-7d9948e/grade.stdout.log)、[标准错误](../evidence/full-validation-20261105-7d9948e/grade.stderr.log) 和 [退出码](../evidence/full-validation-20261105-7d9948e/grade.exit) 均已保留。标准错误还记录了 WSL 文件时间戳偏差警告，三组内核均完成链接。
+#### 5.5.1 原版 `make grade`：评分结果及其含义
 
-| 官方测试 | 原版 `make grade` 结果 | 使用 `-kernel` 的补充观察 |
-|---|---:|---|
-| Trap 上下文和断点返回 | FAIL（0/35） | 断点输出和 Context PASS 标记均出现。见 [串口](../evidence/full-validation-20261105-7d9948e/supplementary-context-run.stdout.log) |
-| 非法指令及回退处理 | FAIL（0/25） | 非法指令返回、软件中断与未知原因的诊断均出现。见 [串口](../evidence/full-validation-20261105-7d9948e/supplementary-illegal-run.stdout.log) |
-| 持续 Supervisor Timer | FAIL（0/40） | 两次周期输出后出现 `ticks=200` 的 PASS 标记。见 [串口](../evidence/full-validation-20261105-7d9948e/supplementary-timer-run.stdout.log) |
+按课程原有流程执行 `make grade`。评分脚本通过 `GRADE_TMP` 创建注入测试副本，为三组用例分别清理和编译镜像，再使用 `-device loader,file=bin/ucore.img,addr=0x80200000` 启动 QEMU。脚本与测试断言未修改。三个用例均未检出要求的通过标记，官方流程实际输出 **`Total Score: 0/100`**，顶层 `make` 退出码为 **2**。原始证据见 [评分标准输出](../evidence/full-validation-20261105-7d9948e/grade.stdout.log)、[标准错误](../evidence/full-validation-20261105-7d9948e/grade.stderr.log)及[退出码](../evidence/full-validation-20261105-7d9948e/grade.exit)。
 
-原评分命令用 `-device loader,file=bin/ucore.img,addr=0x80200000` 放置镜像。三组原始串口均显示 OpenSBI 的 `Domain0 Next Address` 为 `0x0`。受限 QEMU 追踪显示随后在 `0x0` 反复取指失败，早于内核的 DTB 初始化和 Trap 测试。追踪中较早的 `pmpaddr16` 探测在可启动的补充运行也出现。交接证据见 [原始串口](../evidence/full-validation-20261105-7d9948e/qemu-timer.serial.log)、[QEMU 追踪](../evidence/full-validation-20261105-7d9948e/diagnostic-qemu-trace.log) 和 [GDB 核对](../evidence/full-validation-20261105-7d9948e/diagnostic-gdb.stdout.log)。
+![图2 原版 make grade 最终结果 0/100](../evidence/figures/fig2_official_grade.png)
 
-补充运行复用原版注入副本，对三组宏分别重新编译，并使用同一 QEMU 的 `-kernel bin/ucore.img` 进行交接。OpenSBI 此时报告入口 `0x80200000`，三组均出现对应测试标记和评分脚本所查的输出子串。内核启动还输出 `check_alloc_page() succeeded!`，表明这三个补充用例均经过了框架的内存分配自检。前两组出现标记后继续运行，8 秒超时退出码为 124。时钟组达到 200 ticks 后继续计时，串口共输出 10 次 `100 ticks`，QEMU 退出码为 0，与源码的暂定关机阈值一致。命令、退出码和标记见 [补充结果](../evidence/full-validation-20261105-7d9948e/supplementary-results.json)。补充运行没有产生新的正式评分。
+*图2：原版 `make grade` 的终端输出末段，可见非法指令测试 `0/25`、时钟测试 `0/40` 及最终 `Total Score: 0/100`。截图未覆盖首项 `0/35`，该项结果以完整评分日志为准。*
+
+这张图**不能直接证明三个处理模块的逻辑均失败**。结合后述串口及启动诊断，原评分运行在本机 QEMU 6.2/OpenSBI 0.9 环境下尚未进入内核测试入口。`0/100` 是原版评分的真实输出，但不是三个用例被完整执行后的功能性零分结论。
+
+#### 5.5.2 相同测试源的 `-kernel` 补充运行
+
+为区分启动交接与功能实现，保留课程注入的测试源和相应 `GRADE_LAB3_*` 宏，分别重新编译三组镜像，改用 `qemu-system-riscv64 -machine virt -nographic -bios default -kernel bin/ucore.img -serial stdio -monitor none -no-reboot` 运行。以下三组均从内核实际输出中获得相应通过标记；**这些标记属于补充运行，不作为原版 `make grade` 得分**。
+
+| 用例（原版权重） | 原版 `make grade` | 本次 `-kernel` 补充运行 | 对应原始证据 |
+|---|---:|---|---|
+| Trap 上下文保存、断点及返回（35） | FAIL，0/35 | 触发 `Breakpoint at`，输出 `[Test 1] ... PASS (35/35)` | [串口日志](../evidence/full-validation-20261105-7d9948e/supplementary-context-run.stdout.log) |
+| 非法指令与回退处理（25） | FAIL，0/25 | 输出非法指令地址、处理回退分支并出现 `[Test 2] ... PASS (25/25)` | [串口日志](../evidence/full-validation-20261105-7d9948e/supplementary-illegal-run.stdout.log) |
+| Supervisor Timer 持续中断（40） | FAIL，0/40 | 到达 `ticks=200` 并输出 `[Test 3] ... PASS (40/40)`，最终退出码为 0 | [串口日志](../evidence/full-validation-20261105-7d9948e/supplementary-timer-run.stdout.log) |
+
+**Trap 上下文与断点。** 第一组启动地址为 `0x80200000`，先输出 `check_alloc_page() succeeded!`，随后发生 `Breakpoint at 0xffffffffc0201a18`，最终输出 `[Test 1] Trap entry and breakpoint return: PASS (35/35)`。这说明测试中的断点 Trap 能进入处理路径、调整返回位置并到达寄存器比对后的通过分支；并不意味着全部体系结构寄存器都已穷举验证。
+
+![图3 Trap 上下文与断点返回补充测试](../evidence/figures/fig3_context_breakpoint.png)
+
+*图3：使用 `-kernel` 启动的 Context 用例，出现断点地址及 `PASS (35/35)`。末尾的 `Terminated` 来自 `timeout 5s` 主动终止持续运行的 QEMU，不表示测试断言失败。*
+
+**非法指令与回退分支。** 第二组触发 `Illegal instruction at 0xffffffffc02019c8`，并输出 `[Test 2] Illegal instruction return: PASS (25/25)`。该场景验证 4 字节非法指令后可以继续执行，课程注入代码还直接构造 Trap frame 调用部分回退处理函数；不能据此推断所有未知异常均可恢复。截图中 `handler fallback completed
+[Test 2]` 之间的字面量 `
+` 来自测试代码本身的输出写法，而非截图拼接。
+
+![图4 非法指令和回退处理补充测试](../evidence/figures/fig4_illegal_instruction.png)
+
+*图4：使用 `-kernel` 启动的非法指令用例，显示触发地址及 `PASS (25/25)`。本次运行同样被 `timeout 5s` 终止，测试通过标记已在超时前出现。*
+
+**持续时钟。** 第三组显示周期性的 `100 ticks` 输出，并到达 `[Test 3] Sustained supervisor timer: PASS (40/40, ticks=200)`。计数到 200 之后中断继续运行，累计十次周期输出后 QEMU 以 `QEMU_EXIT=0` 退出，与当前实现 `SHUTDOWN_AFTER=10` 和 SBI 关机调用的预期一致。200 tick 是测试检查点，十次输出后的关机阈值是当前代码采用的暂定设计值，不应视为课程明确规定的阈值。
+
+![图5 Supervisor Timer 持续中断与正常关机](../evidence/figures/fig5_timer.png)
+
+*图5：`-kernel` 时钟补充测试显示达到 200 ticks、测试通过标记、多次 `100 ticks` 及最终 `QEMU_EXIT=0`，支持持续定时与正常关机的判断。*
+
+本轮截图来自与最新远程功能实现同步、保留个人注释的本地工作区。先前隔离审计中三组运行的具体命令、退出码与关键输出也保存在 [补充运行记录](../evidence/full-validation-20261105-7d9948e/supplementary-results.json)。前两组在通过标记出现后继续运行，由 `timeout` 终止；时钟组结束于正常关机。这些退出方式必须与测试标记分别解释。
+
+#### 5.5.3 OpenSBI 启动交接对比与失败归因
+
+使用相同的 `bin/ucore.img`，在本机 QEMU/OpenSBI 下对比两种命令行：`-device loader,file=bin/ucore.img,addr=0x80200000` 将镜像放置到指定内存位置，但本次环境下固件报告 `Domain0 Next Address = 0x0`；`-kernel bin/ucore.img` 则使固件报告 `Domain0 Next Address = 0x80200000`。前者未进入内核测试，后者能够继续输出内存初始化、异常和时钟测试结果。原评分的 QEMU/GDB 诊断见 [启动串口](../evidence/full-validation-20261105-7d9948e/qemu-timer.serial.log)、[QEMU 追踪](../evidence/full-validation-20261105-7d9948e/diagnostic-qemu-trace.log)及[GDB 记录](../evidence/full-validation-20261105-7d9948e/diagnostic-gdb.stdout.log)。
+
+![图6 OpenSBI 两种启动方式的交接地址对比](../evidence/figures/fig6_boot_comparison.png)
+
+*图6：在同一 QEMU/OpenSBI 环境下，对比 `-device loader`（上，交接地址 `0x0`）与 `-kernel`（下，交接地址 `0x80200000`）。截图中的 `Terminated` 是各自的三秒超时终止，不是额外的内核故障。*
+
+因此，**原版评分失败的直接阻塞发生在内核启动交接阶段**，不能把 `0/100` 直接归结为 Trap 模块实现错误。该结论限定于本次 QEMU 6.2/OpenSBI 0.9 组合；尚未在课程指定的其他仿真器配置中验证原版启动行为，也没有修改官方 `grade.sh`。三组补充运行表明当前代码在可启动条件下通过了对应检查，但**正式评分结果仍然是 0/100，而非 100/100**。
 
 ### 5.6 阶段性结论与未覆盖范围
 
