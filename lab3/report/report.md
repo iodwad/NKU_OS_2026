@@ -128,30 +128,32 @@ kern_init()
 
 ### 4.1 Lab2 前置功能迁移：物理内存初始化与 Best-Fit
 
-#### 4.1.1 迁移目标与接口关系
+#### 4.1.1 迁移内容
 
-Lab3 依赖 Lab2 的物理内存管理基础。课程骨架在 `kern/mm/pmm.c` 和 `kern/mm/best_fit_pmm.c` 保留了 `lab2` 填写位置，而 `pmm_init()` 仍依赖 `page_init()`，物理页分配则依赖 `pmm_manager` 的回调。迁移使用的来源为团队仓库 `lab2` 分支提交 `ea3300cd028a0af8ddea475b093a2a8f9c7f10a8`，不是从已有 Lab3 工作分支复制其他同学的 Trap 实现。
+Lab3 需要在物理内存管理的基础上实现中断和异常处理，而提供的代码框架中还保留着 Lab2 的待填写部分。因此，我们先把 Lab2 已完成的 `page_init()` 和 Best-Fit 算法迁移到 Lab3 中，让内核能够正常初始化和分配物理页。
 
-课程骨架下载失败后，工程采用团队仓库的导入提交 `d0bb450d845bfd33b9e4584855d9194d93a9ab5c`。下载错误及来源见 [来源记录](../evidence/source.json)，该导入版本与课程 ZIP 的一致性未经核验。迁移时使用的 [原始 Prompt](./prompt.md) 已完整保留。
+这部分主要涉及两个文件：
 
-迁移范围如下：
+| 文件 | 主要修改 |
+|---|---|
+| `kern/mm/pmm.c` | 补全 `page_init()`，并将 `pmm_manager` 指向 `best_fit_pmm_manager` |
+| `kern/mm/best_fit_pmm.c` | 补全空闲链表管理、空闲页统计及 Best-Fit 的初始化、分配、释放等函数 |
 
-| 目标文件 | 迁移内容 | 保留的 Lab3 原有内容 |
-|---|---|---|
-| [`kern/mm/pmm.c`](../code/kern/mm/pmm.c) | `page_init()`；将 `pmm_manager` 绑定到已完成的 Best-Fit | `alloc_pages()`、`free_pages()`、`nr_free_pages()` 中的中断状态保存与恢复 |
-| [`kern/mm/best_fit_pmm.c`](../code/kern/mm/best_fit_pmm.c) | `free_area`、`free_list/nr_free`、五个核心函数与 `best_fit_pmm_manager` | 骨架已提供的 `basic_check()`、`best_fit_check()` |
+`page_init()` 负责确定哪些物理页可以使用。它根据 DTB 中的内存信息，排除内核和页描述符数组占用的空间，再把剩余的可用整页交给物理内存管理器。Best-Fit 则负责从这些空闲页中选择合适的内存块：分配时找到满足需求的最小空闲块，必要时拆分；释放时把页面放回空闲链表，并合并相邻的空闲块。
 
-`page_init()` 使用 DTB 提供的物理内存范围，在排除内核镜像与页描述符数组后登记可用整页。Best-Fit 则在足够大的空闲块中选取最小者，分配时按需拆分，释放时尝试合并相邻空闲块。两者分别负责可分配范围的建立和空闲块的选取，不能相互代替。
+#### 4.1.2 迁移时的调整
 
-#### 4.1.2 迁移过程中的兼容性处理
+迁移时主要处理了两处差异。
 
-Lab2 与 Lab3 的部分映射常量不同：旧 `page_init()` 使用的 `KERNEL_BEGIN_PADDR` 和 `PHYSICAL_MEMORY_END` 未在 Lab3 相应头文件中定义。本次没有整体覆盖 Lab3 的 `memlayout.h`，而是依据现有的 `KERNBASE`、`KERNTOP`、`PHYSICAL_MEMORY_OFFSET` 在 `page_init()` 内计算等价物理边界。当前映射下分别为 `0x80200000` 和 `0x88000000`。DTB 范围验证、地址溢出检查、页描述符容量检查以及页面对齐逻辑均保留。
+第一处是内存地址常量。Lab2 的 `page_init()` 使用了 `KERNEL_BEGIN_PADDR` 和 `PHYSICAL_MEMORY_END`，但 Lab3 中没有这两个定义。我们利用 Lab3 已有的 `KERNBASE`、`KERNTOP` 和 `PHYSICAL_MEMORY_OFFSET` 计算对应的物理地址边界，当前分别为 `0x80200000` 和 `0x88000000`，同时保留原来的 DTB 范围检查、溢出检查、页描述符容量检查和页面对齐处理。
 
-Lab3 已为物理页分配接口增加 `local_intr_save/local_intr_restore`，因此不能把 Lab2 的 `pmm.c` 整文件覆盖过去，否则会丢失本实验新增的中断保护。Best-Fit 中也只迁移缺失的算法部分，避免重复定义课程检查函数。相关前后差异见 [`evidence/migration.patch`](../evidence/migration.patch)。
+第二处是中断保护。Lab3 的 `alloc_pages()`、`free_pages()` 和 `nr_free_pages()` 已加入 `local_intr_save`、`local_intr_restore`，用于在访问内存管理数据时保存、关闭和恢复中断状态。因此，我们只迁移 `pmm.c` 中缺少的部分，保留这些接口中的中断保护代码。`best_fit_pmm.c` 也采用同样的做法，保留框架已有的 `basic_check()` 和 `best_fit_check()`，避免重复定义。
 
-#### 4.1.3 迁移核对与验证边界
+#### 4.1.3 迁移检查
 
-迁移后的 `pmm.c` 与 `best_fit_pmm.c` 均经过独立强制编译，退出码为 0；原始记录见 [`make-migrated-forced.log`](../evidence/make-migrated-forced.log)。这一结果只能说明迁移代码在当前工具链与头文件下能够编译，**不能据此宣称 Lab3 已通过物理内存管理的运行时检查**。迁移阶段的完整构建曾在 `trap.c` 处失败，见第 5.4 节。
+完成迁移后，我们分别强制编译了 `pmm.c` 和 `best_fit_pmm.c`，两个文件都编译通过，说明迁移后的代码能够与 Lab3 的头文件和接口配合使用。具体修改见 [`migration.patch`](../evidence/migration.patch)，编译记录见 [`make-migrated-forced.log`](../evidence/make-migrated-forced.log)。
+
+迁移阶段的完整构建仍在 `trap.c` 处报错，当时还不能进行完整的运行测试。后续补全 Trap 相关代码后的测试结果放在第五章说明。
 
 ### 4.2 功能模块一：Trap 上下文恢复与 Trap 入口
 
