@@ -242,3 +242,78 @@ SPEC 还要求复用原有地址转换、引用计数和 TLB 接口，不改变�
 | `[RELY]` | 提供 `get_pte()`、`pte_create()`、`pte2page()`、`page2ppn()`、引用计数、物理页释放和 TLB 接口，以及实际 PTE 编码 |
 | `[GUARANTEE]` | 列出两个函数的原型，说明成功返回、失败返回和删除行为 |
 | `[SPECIFICATION]` | 写清首次映射、同页更新、异页替换、重复删除和内存不足时应有的结果 |
+
+### 4.2 进程管理初始化与内核线程首次运行
+
+**负责人：2411560—朱泽帅**
+
+#### 4.2.1 模块功能描述
+
+`kern_init()` 完成物理内存、异常入口和虚拟内存初始化后调用 `proc_init()`。这一阶段要把正在执行的启动线程纳入进程管理，并创建一个等待调度的内核线程。B 组在 [`proc.c`](../code/kern/process/proc.c) 的 `LAB4 function2 2411560` 标记下实现五个函数。PCB 和寄存器上下文定义在 [`proc.h`](../code/kern/process/proc.h)，首次恢复复用 Lab3 的 [`trapentry.S`](../code/kern/trap/trapentry.S) 和 Lab4 的 [线程入口汇编](../code/kern/process/entry.S)。
+
+```text
+proc_init()
+  ├─ alloc_proc() → idleproc（PID 0，沿用 bootstack）
+  └─ kernel_thread(init_main, "Hello world!!", 0)
+       └─ do_fork() [C] → alloc_proc() → setup_kstack()
+                        → copy_mm() → copy_thread()
+                        → 分配 PID、登记 PCB、wakeup_proc()
+     取得 PID 后，find_proc(pid) → initproc（PID 1）
+```
+
+`proc_init()` 返回时，启动线程仍是 `current`。init 的预期状态为 `PROC_RUNNABLE`，它有独立内核栈和首次执行现场，由后续调度决定何时开始运行。
+
+#### 4.2.2 功能说明：设计原理及核心函数理解
+
+**（1）`alloc_proc()`。** 用 `kmalloc(sizeof(*proc))` 分配整个 PCB，失败时返回 `NULL`。分配成功后对整块内存清零，再设置 `state = PROC_UNINIT`、`pid = -1` 和 `pgdir = boot_pgdir_pa`。PID 为 `-1` 表示还未取得正式编号。两个链表节点初始化为自环，便于后续登记。普通子线程取得内核栈和有效现场后，由 `do_fork()` 完成登记和唤醒。
+
+**（2）`proc_init()`。** 初始化全局进程链表 `proc_list` 及每个 PID 哈希桶。idle 沿用 `bootstack`，PID 为 0，并设置 `need_resched = 1`。它计入 `nr_process`，由调度器作为后备线程使用。创建 init 前先设置 `current = idleproc`，使 `do_fork()` 能取得正确的父线程。创建成功后用返回的 PID 查找 PCB，断言它存在且 PID 为 1，再设名为 `init`。idle 的 PCB 分配失败、init 创建失败都由 `panic()` 终止启动。
+
+**（3）`kernel_thread()`。** 用局部 trapframe 保存目标函数 `fn`、参数 `arg` 和第一次恢复地址。汇编入口 `kernel_thread_entry` 执行 `move a0, s1` 和 `jalr s0`，因此函数地址放在 `s0`，参数放在 `s1`，`epc` 存放的是汇编入口地址。构造的 `sstatus` 清除 `SIE`，并设置 `SPP` 和 `SPIE`，使恢复现场期间中断保持关闭，`sret` 返回 S 模式时恢复中断使能。调用 `do_fork(clone_flags | CLONE_VM, 0, &tf)` 后，直接返回子线程 PID 或错误码。局部 `tf` 的有效期到本次调用返回为止，子线程必须在此之前获得自己的副本。
+
+**（4）`copy_mm()`。** 内核线程没有独立的用户地址空间管理对象，`mm` 设为 `NULL`，根页表物理地址仍取 `boot_pgdir_pa`。实际写入 Sv39 `satp` 的步骤由 `proc_run()` 完成。Lab4 没有提供完整的用户地址空间复制、共享和回收机制，所以遇到非空的 `current->mm` 时返回 `-E_INVAL`，由调用方回滚已申请的资源。
+
+**（5）`copy_thread()`。** 在子线程内核栈高地址端保存独立的 trapframe。栈大小为 8192 字节，RV64 trapframe 大小为 288 字节，所以 `child_tf = kstack + 7904`。栈基址按页对齐，`7904` 是 16 的倍数。设置子线程返回值 `a0 = 0` 后，分别准备两个恢复阶段需要的栈指针。
+
+| 恢复阶段 | 使用的现场 | 本实现设置 |
+|---|---|---|
+| `switch_to()` 恢复调度上下文 | `context.ra` 和 `context.sp` | `ra` 指向 `forkret()`，`sp` 指向 `child_tf` |
+| `__trapret` 恢复首次执行现场 | `tf->epc`、`tf->gpr.sp` 及其他寄存器 | `epc` 指向 `kernel_thread_entry`。初始栈参数为 0 时，用 `child_tf` 作为恢复后的 `sp`，运行栈从该处向低地址增长 |
+
+第一次切入时，`forkret()` 通过 `current->tf` 找到 trapframe，`forkrets` 将它交给 `__trapret`。第二阶段恢复 `tf->gpr.s0`、`tf->gpr.s1` 后，入口汇编才能调用 `fn(arg)`。对于 init，这一调用是 `init_main("Hello world!!")`。
+
+#### 4.2.3 SPEC 与 Prompt 设计
+
+##### SPEC 的形成
+
+五个函数由同一条创建路径串接，规格按各自的输入、输出和资源归属编写。最容易在交接时出错的是栈由谁分配、现场在什么时候复制、页表字段使用哪种地址，因此将这些条件列入验收。
+
+| 函数 | 前置条件 | 需要满足的结果 |
+|---|---|---|
+| `alloc_proc()` | 内核动态内存分配可用 | 返回处于 `PROC_UNINIT` 的 PCB 或 `NULL` |
+| `proc_init()` | 内存及 Trap 初始化已完成 | 先建立链表和哈希表，再设置 PID 0 的 idle，最后创建并查得 PID 1 的 init |
+| `kernel_thread()` | `current` 有效，线程入口和参数已确定 | 构造符合 RV64 入口约定的临时 trapframe，转交 `do_fork()` |
+| `copy_mm()` | 子线程 PCB 已分配 | 内核线程使用启动根页表的物理地址，遇到非空父 `mm` 时明确报错 |
+| `copy_thread()` | 子线程拥有已分配的内核栈，源 trapframe 有效 | 新线程持有自己的现场，两个阶段均能取得有效的栈指针 |
+
+##### 实现 Prompt
+
+本模块使用一份四段式实现 Prompt。`[PROMPT]` 指定 B 组代码范围和验收方式。`[RELY]` 提供 PCB、trapframe、入口汇编、页表地址及现有测试断言。`[GUARANTEE]` 固定五个函数的签名和职责。`[SPECIFICATION]` 分别列出前置条件、结果和边界情形，包括分配失败、零栈参数及父线程拥有用户地址空间时的处理。原始输入见 [B 组实现 Prompt](./prompts/2411560/Process_Initialization_Implementation_Prompt.md)。
+
+#### 4.2.4 实现迭代过程
+
+先核对 `proc.h`、`trap.h` 和 `RESTORE_ALL` 的字段顺序，再检查 `proc_run()` 写 `satp` 时对 `pgdir` 的用法。实现时让 `alloc_proc()` 和 `copy_mm()` 都按物理地址约定设置根页表，并按 `kernel_thread_entry` 的寄存器使用顺序填充 trapframe。
+
+单文件编译前专门检查了 `esp == 0` 的路径。创建内核线程时传入的 0 表示由 `copy_thread()` 选择初始栈，`RESTORE_ALL` 会直接从 `gpr.sp` 加载寄存器，所以这个字段必须填入有效地址。采用 `child_tf` 后，恢复完成的线程可以在其下方使用内核栈。另一个交接细节是 `set_proc_name()` 固定从源地址读取 `PROC_NAME_LEN` 字节，因此两个名称都放在足长的静态字符数组中。
+
+#### 4.2.5 测试设计与验证
+
+五个函数的实现提交为 [`9571469`](https://github.com/iodwad/NKU_OS_2026/commit/957146972d049c5cb9a7695d70c7596724eb7581)。以下结果来自 B 组交付时在 WSL2 Ubuntu 22.04 下的实际编译和反汇编。
+
+| 检查 | 实测结果 |
+|---|---|
+| 编译 `proc.c` 对象文件 | 使用真实 Makefile 和 RV64 交叉工具链，目标退出码为 0。加入 `-fkeep-static-functions` 保留暂时没有调用方的静态函数。 |
+| `riscv64-unknown-elf-objdump -dr proc.o` | 退出码为 0。对象文件包含五个函数，反汇编可见 7904 字节栈偏移、子线程 `a0` 清零、零栈参数分支以及 `context.ra/sp` 写入。 |
+| 完整 `make -j4` | 修改前后退出码均为 2。修改前缺少 `proc_init` 和 `cpu_idle`，修改后 `proc.c` 编译完成，链接仍缺少 C 组的 `do_fork` 和 `cpu_idle`。 |
+
+仓库提供的 [`test_lab4_process_create()` 和 `test_lab4_schedule()`](../code/tools/test_lab4.c) 分别检查 idle/init 的 PID、状态和执行现场，以及两个内核线程能否以不同参数被调度运行。[评分脚本](../code/tools/grade.sh) 还会检查 init 的串口输出。B 组交付时完整内核仍缺少链接符号，所以未执行 QEMU 和 `make grade`，上述运行时检查留待 A/B/C 集成验证。
