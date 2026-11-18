@@ -218,8 +218,111 @@ init_main(void *arg)
     return 0;
 }
 
-//LAB4 function2 YOUR CODE
+//LAB4 function2 2411560
 
+static struct proc_struct *
+alloc_proc(void)
+{
+    struct proc_struct *proc = kmalloc(sizeof(*proc));
+    if (proc == NULL)
+    {
+        return NULL;
+    }
+
+    memset(proc, 0, sizeof(*proc));
+    proc->state = PROC_UNINIT;
+    proc->pid = -1;
+    proc->pgdir = boot_pgdir_pa;
+    list_init(&proc->list_link);
+    list_init(&proc->hash_link);
+    return proc;
+}
+
+static int
+copy_mm(uint32_t clone_flags, struct proc_struct *proc)
+{
+    // Lab4 has no user address-space sharing or copying lifecycle.
+    (void)clone_flags;
+    if (current->mm != NULL)
+    {
+        return -E_INVAL;
+    }
+
+    proc->mm = NULL;
+    proc->pgdir = boot_pgdir_pa;
+    return 0;
+}
+
+static void
+copy_thread(struct proc_struct *proc, uintptr_t esp, struct trapframe *tf)
+{
+    static_assert(sizeof(struct trapframe) == 36 * sizeof(uintptr_t));
+    static_assert((KSTACKSIZE - sizeof(struct trapframe)) % 16 == 0);
+
+    struct trapframe *child_tf =
+        (struct trapframe *)(proc->kstack + KSTACKSIZE) - 1;
+    *child_tf = *tf;
+    child_tf->gpr.a0 = 0;
+
+    // The trap return restores sp from the frame. Keep a kernel thread's
+    // downward-growing call stack below its saved frame.
+    child_tf->gpr.sp = esp == 0 ? (uintptr_t)child_tf : esp;
+    proc->tf = child_tf;
+    proc->context.ra = (uintptr_t)forkret;
+    proc->context.sp = (uintptr_t)child_tf;
+}
+
+int
+kernel_thread(int (*fn)(void *), void *arg, uint32_t clone_flags)
+{
+    struct trapframe tf;
+    memset(&tf, 0, sizeof(tf));
+    tf.gpr.s0 = (uintptr_t)fn;
+    tf.gpr.s1 = (uintptr_t)arg;
+    tf.epc = (uintptr_t)kernel_thread_entry;
+    // sret starts in S mode and restores SIE from SPIE.
+    tf.status = (read_csr(sstatus) & ~SSTATUS_SIE) | SSTATUS_SPP | SSTATUS_SPIE;
+    return do_fork(clone_flags | CLONE_VM, 0, &tf);
+}
+
+void
+proc_init(void)
+{
+    // set_proc_name reads PROC_NAME_LEN bytes from its source.
+    static const char idle_name[PROC_NAME_LEN + 1] = "idle";
+    static const char init_name[PROC_NAME_LEN + 1] = "init";
+
+    list_init(&proc_list);
+    for (size_t i = 0; i < HASH_LIST_SIZE; i++)
+    {
+        list_init(&hash_list[i]);
+    }
+
+    idleproc = alloc_proc();
+    if (idleproc == NULL)
+    {
+        panic("cannot allocate idleproc");
+    }
+
+    idleproc->pid = 0;
+    idleproc->state = PROC_RUNNABLE;
+    idleproc->kstack = (uintptr_t)bootstack;
+    idleproc->need_resched = 1;
+    set_proc_name(idleproc, idle_name);
+    // The boot thread counts as a process but is the scheduler's fallback.
+    nr_process = 1;
+    current = idleproc;
+
+    int pid = kernel_thread(init_main, "Hello world!!", 0);
+    if (pid <= 0)
+    {
+        panic("cannot create initproc: %d", pid);
+    }
+
+    initproc = find_proc(pid);
+    assert(initproc != NULL && initproc->pid == 1);
+    set_proc_name(initproc, init_name);
+}
 
 //LAB4 function3 2413902
 
