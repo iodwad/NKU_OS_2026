@@ -317,3 +317,83 @@ proc_init()
 | 完整 `make -j4` | 修改前后退出码均为 2。修改前缺少 `proc_init` 和 `cpu_idle`，修改后 `proc.c` 编译完成，链接仍缺少 C 组的 `do_fork` 和 `cpu_idle`。 |
 
 仓库提供的 [`test_lab4_process_create()` 和 `test_lab4_schedule()`](../code/tools/test_lab4.c) 分别检查 idle/init 的 PID、状态和执行现场，以及两个内核线程能否以不同参数被调度运行。[评分脚本](../code/tools/grade.sh) 还会检查 init 的串口输出。B 组交付时完整内核仍缺少链接符号，所以未执行 QEMU 和 `make grade`，上述运行时检查留待 A/B/C 集成验证。
+
+### 4.3 内核线程创建、调度与上下文切换
+
+**负责人（2412565—张宸笛号）**
+
+#### 4.3.1 模块功能描述
+
+上一节的 `kernel_thread()` 已经准备好入口函数、参数和临时 trapframe。接下来由 `do_fork()` 把新线程登记到进程表。`proc_init()` 返回后，启动线程进入 `cpu_idle()`，由 `schedule()` 选中 `initproc`，再经 `proc_run()` 和 `switch_to()` 切到它的执行现场。[进程管理源码](../code/kern/process/proc.c) · [调度器源码](../code/kern/schedule/sched.c) · [切换汇编](../code/kern/process/switch.S)
+
+```text
+kernel_thread() → do_fork() → 准备内核栈和执行现场 → 登记并唤醒 initproc
+cpu_idle() → schedule() → proc_run() → switch_to()
+  → forkret() → forkrets → __trapret → kernel_thread_entry → init_main()
+```
+
+#### 4.3.2 功能说明与核心函数
+
+**（1）`do_fork()`。** 先检查进程数，接着分配 PCB 和独立内核栈，再调用 `copy_mm()`、`copy_thread()`。临时 trapframe 复制到子线程的栈上以后，子线程便有了自己的首次运行现场。父线程从 `do_fork()` 得到子线程 PID，子线程第一次恢复时的 `a0` 由 `copy_thread()` 设为 0。
+
+准备完成后，`do_fork()` 在关中断期间分配 PID，将 `parent` 设为 `current`，把 PCB 登记到 `proc_list` 和 PID 哈希表，再增加 `nr_process`。最后调用 `wakeup_proc()`，让子线程进入 `PROC_RUNNABLE` 状态。失败的分支都发生在登记之前，因此只需要释放本次已经申请到的资源。
+
+| 创建失败的位置 | 返回值 | 资源处理 |
+|---|---|---|
+| 进程数达到 `MAX_PROCESS` | `-E_NO_FREE_PROC` | 直接返回 |
+| PCB 分配失败 | `-E_NO_MEM` | 直接返回 |
+| 内核栈分配失败 | `setup_kstack()` 的错误码 | 释放 PCB |
+| 地址空间准备失败 | `copy_mm()` 的错误码 | 先释放内核栈，再释放 PCB |
+
+**（2）`cpu_idle()`。** 循环检查 `current->need_resched`，标记置位时调用 `schedule()`。`proc_init()` 已经把 idle 的标记设为 1，所以启动线程第一次进入空闲循环就会调度。
+
+**（3）`schedule()`。** 先保存本核的中断状态并关闭中断，再清除当前线程的重调度标记。idle 从链表的第一个有效节点开始找，普通线程从自己的下一个节点开始找。遍历到表尾后绕回，跳过链表头，只选 `PROC_RUNNABLE`。如果只有当前线程就绪，绕一圈后会再次选中它。没有就绪的普通线程时选 `idleproc`。选中后给目标的 `runs` 加一，目标与当前线程不同时调用 `proc_run()`。
+
+**（4）`switch_to()`。** `a0` 指向旧线程的 `context`，`a1` 指向新线程的 `context`。汇编用 `sd` 保存旧线程的 `ra`、`sp`、`s0`–`s11`，再用 `ld` 恢复新线程的同一组寄存器。`ret` 根据恢复后的 `ra` 决定从哪里继续。运行过的线程回到上一次切换的位置，第一次运行的线程进入 `copy_thread()` 设置的 `forkret()`。[`struct context` 的定义](../code/kern/process/proc.h) · [首次恢复入口](../code/kern/trap/trapentry.S)
+
+#### 4.3.3 SPEC 与 Prompt 设计
+
+##### SPEC 的形成
+
+我们先核对函数之间的接口，再按各函数的前置条件和执行结果写规格。线程创建要写清登记时机和失败时的清理顺序，调度要写清从哪里开始找，以及找不到就绪线程时怎么处理。
+
+| 函数 | 前置条件 | 需要满足的结果 |
+|---|---|---|
+| `do_fork()` | 进程管理已初始化，调用者提供有效的 trapframe | 成功返回 PID，子线程可被查到和调度。失败时释放本次取得的资源 |
+| `cpu_idle()` | 启动线程已成为 `idleproc` | 持续检查重调度标记，标记置位时调用调度器 |
+| `schedule()` | 当前线程是 idle 或已登记的普通线程 | 按链表顺序选就绪线程，必要时回退 idle，并在调用返回时恢复原中断状态 |
+| `switch_to()` | 旧现场可以写入，目标现场已准备好 | 保存旧线程的寄存器，从目标线程恢复出的返回地址继续执行 |
+
+##### 实现 Prompt
+
+四个函数各用一份提示词。`[RELY]` 从仓库摘录各函数所需的宏、字段和接口，`[GUARANTEE]` 列出函数签名和职责，`[SPECIFICATION]` 按上表写前置条件和预期结果，并补上分配失败、调度回退和首次切换等分支。[`do_fork()` 提示词](./prompts/2412565/Do_Fork_Implementation_Prompt.md) · [`cpu_idle()` 提示词](./prompts/2412565/Cpu_Idle_Implementation_Prompt.md) · [`schedule()` 提示词](./prompts/2412565/Schedule_Implementation_Prompt.md) · [`switch_to()` 提示词](./prompts/2412565/Switch_To_Implementation_Prompt.md)
+
+#### 4.3.4 实现迭代过程
+
+实现时先核对 `copy_thread()` 对子线程内核栈的要求，再把 PID 分配和进程表登记放到现场准备之后。接着用空链表和只有当前线程就绪两种情况检查遍历的终止位置。汇编部分按照 `proc.h` 的字段顺序写偏移，RV64 上每个字段占 8 字节，`ra` 和 `sp` 分别位于偏移 0 和 8，`s0` 到 `s11` 依次位于偏移 16 到 104。
+
+第一次运行 `make grade` 时，内核已经编译成功，但评分没有收到串口输出。手动连接 QEMU 后看到 GDB 无法识别目标架构，因此在 Makefile 的默认 GDB 命令中加上内核 ELF `bin/kernel`。GDB 从 ELF 取得 RV64 架构信息后，评分脚本可以继续运行 QEMU。[Makefile](../code/Makefile)
+
+#### 4.3.5 测试设计与验证
+
+| 检查 | 实测结果 |
+|---|---|
+| `make -j4` | RV64 内核编译和链接成功 |
+| `make qemu` | 串口输出 `this initproc, pid = 1, name = "init"` 和 `To U: "Hello world!!".` |
+| `make grade` | PMM、Process Create、Schedule 三项通过，总分 **30/30** |
+| 创建失败补测 | 在临时副本中触发进程数上限、PCB 和内核栈分配失败，以及 `copy_mm()` 失败，核对了错误码、释放操作和进程登记状态 |
+| 调度与汇编补测 | 在 QEMU 中检查空链表回退、跳过阻塞线程、当前线程唯一就绪及切换后的中断恢复。用编译器与 `objdump` 对照了 14 个寄存器字段的访存偏移 |
+
+进程创建用例检查了 idle 和 init 的 PID、父进程和初始现场。调度用例用不同参数创建两个内核线程，让它们主动调用 `schedule()`，再检查两个线程都执行过各自的入口。[测试源码](../code/tools/test_lab4.c) · [评分脚本](../code/tools/grade.sh)
+
+---
+
+## 五、Challenge
+
+### 5.1 本地中断的保存与恢复
+
+**负责人（2412565—张宸笛号）**
+
+`sstatus` 的第 1 位是 `SIE`，掩码为 `0x2`，用于控制 S 模式中断使能。`local_intr_save(intr_flag)` 先用 `csrr` 读取 `sstatus`。如果 `SIE` 为 1，`intr_disable()` 就通过 `csrrc` 清除这一位，保存值为 1。如果原先的 `SIE` 为 0，保存值就是 0。离开临界区时，`local_intr_restore(intr_flag)` 根据保存值处理。保存值为 1 时，通过 `intr_enable()` 中的 `csrrs` 重新开启中断。保存值为 0 时，保持关闭。[保存与恢复宏](../code/kern/sync/sync.h) · [中断开关实现](../code/kern/driver/intr.c) · [CSR 宏定义](../code/libs/riscv.h)
+
+以一次开着中断进入的调度为例，`schedule()` 保存 1 并关闭中断，里面的 `proc_run()` 此时保存的是 0。原线程切回来后，`proc_run()` 先按 0 恢复，仍然处在关中断状态。随后 `schedule()` 按 1 恢复，才重新开启中断。这段保护作用于当前 CPU，多核共同访问进程结构时还需要锁等同步机制。
