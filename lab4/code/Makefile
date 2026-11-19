@@ -27,7 +27,7 @@ endif
 HOSTCC		:= gcc
 HOSTCFLAGS	:= -Wall -O2
 
-GDB		:= $(GCCPREFIX)gdb
+GDB		= $(GCCPREFIX)gdb $(kernel)
 
 CC		:= $(GCCPREFIX)gcc
 CFLAGS  := -mcmodel=medany -O2 -std=gnu99 -Wno-unused
