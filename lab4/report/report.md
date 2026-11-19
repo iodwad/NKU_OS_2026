@@ -386,14 +386,66 @@ cpu_idle() → schedule() → proc_run() → switch_to()
 
 进程创建用例检查了 idle 和 init 的 PID、父进程和初始现场。调度用例用不同参数创建两个内核线程，让它们主动调用 `schedule()`，再检查两个线程都执行过各自的入口。[测试源码](../code/tools/test_lab4.c) · [评分脚本](../code/tools/grade.sh)
 
----
+### 4.4 Challenge
 
-## 五、Challenge
-
-### 5.1 本地中断的保存与恢复
+#### 4.4.1 本地中断的保存与恢复
 
 **负责人（2412565—张宸笛号）**
 
 `sstatus` 的第 1 位是 `SIE`，掩码为 `0x2`，用于控制 S 模式中断使能。`local_intr_save(intr_flag)` 先用 `csrr` 读取 `sstatus`。如果 `SIE` 为 1，`intr_disable()` 就通过 `csrrc` 清除这一位，保存值为 1。如果原先的 `SIE` 为 0，保存值就是 0。离开临界区时，`local_intr_restore(intr_flag)` 根据保存值处理。保存值为 1 时，通过 `intr_enable()` 中的 `csrrs` 重新开启中断。保存值为 0 时，保持关闭。[保存与恢复宏](../code/kern/sync/sync.h) · [中断开关实现](../code/kern/driver/intr.c) · [CSR 宏定义](../code/libs/riscv.h)
 
 以一次开着中断进入的调度为例，`schedule()` 保存 1 并关闭中断，里面的 `proc_run()` 此时保存的是 0。原线程切回来后，`proc_run()` 先按 0 恢复，仍然处在关中断状态。随后 `schedule()` 按 1 恢复，才重新开启中断。这段保护作用于当前 CPU，多核共同访问进程结构时还需要锁等同步机制。
+
+---
+
+## 五、测试与验证
+
+小组在仓库的 `lab4/code` 目录执行 `make grade`。评分流程在临时目录 `/tmp/lab4_grade` 中复制源码并注入测试，交叉编译生成 `bin/ucore.img`，随后通过 QEMU 运行内核并检查串口输出。图 1 记录了这次联合测试的结果，三项检查均为 `OK`，总分 **30/30**。这里的联合测试发生在 4.2.5 所述的 B 组单文件编译之后。[Makefile](../code/Makefile) · [测试注入脚本](../code/tools/inject.py) · [评分脚本](../code/tools/grade.sh)
+
+![图1 Lab4 make grade 终端截图，PMM、Process Create、Schedule 均为 OK，总分 30/30](./images/lab4_make_grade.png)
+
+**图 1　Lab4 的 `make grade` 结果，三项检查各 10 分，总分 30/30。**
+
+| 评分项 | 测试插入位置 | 结果 |
+|---|---|---:|
+| `check PMM` | `pmm_init()` 末尾 | `OK`，10/10 |
+| `check Process Create` | `proc_init()` 末尾 | `OK`，10/10 |
+| `check Schedule` | `init_main()` 开头，评分还检查随后输出的 init 信息 | `OK`，10/10 |
+
+### 5.1 页映射操作验证
+
+`test_lab4_pmm_basic()` 分配三个物理页，依次检查首次映射、替换物理页、同页重新映射和删除。替换后，同一物理页被两处地址引用，引用计数为 2，原物理页的引用计数降为 0，目标 PTE 中原有的 `PTE_U` 和 `PTE_W` 被清除。同页重新映射时，测试核对引用计数和空闲页数保持不变。删除全部映射，并对其中一个地址再删除一次，三个物理页的引用计数最终均为 0。[测试源码](../code/tools/test_lab4.c)
+
+### 5.2 内核线程创建验证
+
+`test_lab4_process_create()` 在 `proc_init()` 结束时检查两个 PCB。PID 0 的 `idleproc` 仍是 `current`，沿用 `bootstack`，没有父线程和独立的 `mm`，也没有为它构造首次运行的 trapframe。PID 1 的 `initproc` 以 idle 为父线程，同样使用内核地址空间，且 `context.ra` 和 `context.sp` 均非零。两个线程都处于 `PROC_RUNNABLE`。这些断言检查了进程初始化和子线程登记完成后的状态。[测试源码](../code/tools/test_lab4.c)
+
+### 5.3 调度与首次执行验证
+
+`test_lab4_schedule()` 创建两个测试线程，传入参数 1 和 2，重复调用 `schedule()`。两个线程执行时，根据参数分支设置各自的观察标志，再主动让出 CPU。测试最后断言两个标志都已置位。评分脚本还匹配 `[Test Schedule] PASS`、`this initproc, pid = 1, name = "init"` 以及 `init_main()` 的两行问候输出。结合这些检查，图 1 的调度结果涵盖了从启动线程切换到 init 的首次恢复，以及测试线程间的主动调度。[测试源码](../code/tools/test_lab4.c) · [评分脚本](../code/tools/grade.sh)
+
+截图记录的是这次 `make grade` 的汇总输出，未记录具体提交 SHA。这三项评分检查覆盖基本的页映射、线程创建和主动调度，完整的线程退出回收、用户地址空间及时间片抢占超出本次评分范围。
+
+---
+
+## 六、实验总结与收获
+
+### 对操作系统的理解
+
+本实验用 Lab2 的物理页分配和 Lab3 的 Trap 恢复支持线程创建与切换。内核先通过已有的分配接口为新线程准备 PCB 和内核栈，再构造它第一次运行时需要的寄存器值。线程具备运行条件后进入 `PROC_RUNNABLE`，由调度器选择何时把 CPU 交给它。
+
+| 实验内容 | OS 原理知识 | 在 Lab4 中的体现 |
+|---|---|---|
+| PCB、PID 和线程状态 | 进程管理与生命周期 | `alloc_proc()` 初始化 PCB，`do_fork()` 准备资源并登记后，再通过 `wakeup_proc()` 使线程可被调度。 |
+| idle 与 init | 内核自举与调度后备 | idle 沿用启动线程的内核栈。init 通过创建流程取得独立的栈和首次运行现场。 |
+| `mm`、`pgdir` 和 `satp` | 地址空间描述与页表切换 | 内核线程的 `mm` 可以为空，仍用 `boot_pgdir_pa` 对应的 Sv39 页表访问内存。 |
+| `context` 和 trapframe | 调度上下文与 Trap 恢复 | `switch_to()` 恢复调度上下文，使新线程进入 `forkret()`，再由 `__trapret` 恢复首次运行所需的寄存器。 |
+| `need_resched` 和中断状态 | 调度时机与临界区保护 | 线程可主动请求重调度，切换路径保存本核原有中断状态，并在原线程恢复运行后按原状态处理。 |
+
+构造首次现场时，`context.sp` 和 `tf->gpr.sp` 在本实验的零栈参数路径上取同一个地址，读取它们的却是两段不同的汇编。前者供 `switch_to()` 进入 `forkret()` 时使用，后者由 `RESTORE_ALL` 加载，决定 `sret` 后线程使用的栈。沿这两段汇编核对寄存器，能够解释一个没有历史现场的线程如何调用 `init_main()`。
+
+### AI 协作开发的经验
+
+B 组的实现 Prompt 先列出仓库中的 PCB、trapframe、汇编入口和测试断言，再规定五个函数的职责与修改范围。核对 AI 给出的实现时，依据实际汇编确认了 `s0`、`s1` 的用途、零栈参数的处理和 trapframe 的复制时机。这样也明确了 B、C 组的交接条件：`do_fork()` 先分配子线程栈并复制现场，再登记和唤醒。
+
+验证时按阶段记录结果。B 组单独交付时，RV64 对象文件和反汇编可用于核对字段写入与栈偏移，完整链接仍缺少 C 组接口。三组代码接入后的 `make grade` 结果则检验了内核实际运行中的页映射、进程创建和调度行为。
