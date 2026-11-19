@@ -15,8 +15,8 @@
 
 | 成员 | 负责的练习/模块 |
 |---|---|
-| 马梓涵—2413902（A） | 页映射建立与删除：`page_insert()`、`page_remove()`；线程与页表切换：`proc_run()`；分页 Challenge：Sv32/Sv39/Sv48 比较、`get_pte()` 相似代码及查找与分配是否拆分。 |
-| 朱泽帅—2411560（B） | PCB 初始化与首次运行现场：`alloc_proc()`、`proc_init()`、`kernel_thread()`、`copy_thread()`、`copy_mm()`。 |
+| 马梓涵—2413902（A） | 页映射建立与删除：`page_insert()`、`page_remove()`；线程与页表切换：`proc_run()`。 |
+| 朱泽帅—2411560（B） | PCB 初始化与首次运行现场：`alloc_proc()`、`proc_init()`、`kernel_thread()`、`copy_thread()`、`copy_mm()`；分页 Challenge：Sv32/Sv39/Sv48 比较及 `get_pte()` 的接口设计。 |
 | 张宸笛号—2412565（C） | 线程创建、调度与汇编切换：`do_fork()`、`cpu_idle()`、`schedule()`、`switch_to()`；中断 Challenge：`local_intr_save()`、`local_intr_restore()` 的原理。 |
 
 前置代码迁移、接口核对、工程合并与完整流程验证由三人合作。
@@ -29,8 +29,9 @@
 | 4.1 系统初始化与虚拟内存页操作 | 马梓涵—2413902 |
 | PCB 初始化、内核线程创建入口与首次运行现场（B 部分） | 朱泽帅—2411560 |
 | `do_fork()`、空闲循环、调度器与 `switch_to()`（C 部分） | 张宸笛号—2412565 |
-| `proc_run()` 与分页 Challenge | 马梓涵—2413902 |
+| `proc_run()` | 马梓涵—2413902 |
 | 中断 Challenge | 张宸笛号—2412565 |
+| 4.4.2 分页 Challenge | 朱泽帅—2411560 |
 | 测试与验证、知识点总结、全文整合与检查 | 三人合作 |
 
 ---
@@ -398,7 +399,7 @@ cpu_idle() → schedule() → proc_run() → switch_to()
 
 #### 4.4.2 Sv32、Sv39、Sv48 与 `get_pte()` 的接口设计
 
-**负责人（2413902—马梓涵）**
+**负责人（2411560—朱泽帅）**
 
 **（1）为什么 `get_pte()` 中的两段代码相似？**
 
