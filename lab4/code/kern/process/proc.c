@@ -347,4 +347,63 @@ void proc_run(struct proc_struct *proc)
     }
 }
 
-//LAB4 function3 YOUR CODE
+//LAB4 function3 2412565
+
+int
+do_fork(uint32_t clone_flags, uintptr_t stack, struct trapframe *tf)
+{
+    if (nr_process >= MAX_PROCESS)
+    {
+        return -E_NO_FREE_PROC;
+    }
+
+    struct proc_struct *proc = alloc_proc();
+    if (proc == NULL)
+    {
+        return -E_NO_MEM;
+    }
+
+    int ret = setup_kstack(proc);
+    if (ret != 0)
+    {
+        goto free_proc;
+    }
+
+    ret = copy_mm(clone_flags, proc);
+    if (ret != 0)
+    {
+        goto free_kstack;
+    }
+    copy_thread(proc, stack, tf);
+
+    // Publish the child only after its stack and initial context are ready.
+    bool intr_flag;
+    local_intr_save(intr_flag);
+    int pid = get_pid();
+    proc->pid = pid;
+    proc->parent = current;
+    list_add(&proc_list, &proc->list_link);
+    hash_proc(proc);
+    nr_process++;
+    wakeup_proc(proc);
+    local_intr_restore(intr_flag);
+    return pid;
+
+free_kstack:
+    put_kstack(proc);
+free_proc:
+    kfree(proc);
+    return ret;
+}
+
+void
+cpu_idle(void)
+{
+    for (;;)
+    {
+        if (current->need_resched)
+        {
+            schedule();
+        }
+    }
+}
