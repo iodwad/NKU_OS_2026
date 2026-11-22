@@ -782,20 +782,22 @@ do_kill(int pid) {
 // kernel_execve - do SYS_exec syscall to exec a user program called by user_main kernel_thread
 static int
 kernel_execve(const char *name, unsigned char *binary, size_t size) {
-    int64_t ret=0, len = strlen(name);
- //   ret = do_execve(name, len, binary, size);
-    asm volatile(
-        "li a0, %1\n"
-        "lw a1, %2\n"
-        "lw a2, %3\n"
-        "lw a3, %4\n"
-        "lw a4, %5\n"
-    	"li a7, 10\n"
-        "ebreak\n"
-        "sw a0, %0\n"
-        : "=m"(ret)
-        : "i"(SYS_exec), "m"(name), "m"(len), "m"(binary), "m"(size)
-        : "memory");
+    size_t len = strlen(name);
+    register uintptr_t a0 asm("a0") = SYS_exec;
+    register uintptr_t a1 asm("a1") = (uintptr_t)name;
+    register uintptr_t a2 asm("a2") = len;
+    register uintptr_t a3 asm("a3") = (uintptr_t)binary;
+    register uintptr_t a4 asm("a4") = size;
+    register uintptr_t a7 asm("a7") = 10;
+
+    // The kernel breakpoint handler advances epc by four bytes.
+    asm volatile (".option push\n"
+                  ".option norvc\n"
+                  "ebreak\n"
+                  ".option pop"
+                  : "+r"(a0)
+                  : "r"(a1), "r"(a2), "r"(a3), "r"(a4), "r"(a7) : "memory");
+    int ret = (int)a0;
     cprintf("ret = %d\n", ret);
     return ret;
 }
