@@ -1,0 +1,6 @@
+/obj/
+/bin/
+/.qemu.out
+/.gdbinit
+/__pycache__/
+*.pyc
